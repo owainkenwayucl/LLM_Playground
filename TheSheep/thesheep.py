@@ -48,4 +48,4 @@ if __name__ == "__main__":
 	parser.add_argument("-d", action="store_true", help="Turn on Debug mode.", default=False)
 	args = parser.parse_args()
 	
-	_main(memory=args.memory, debug=args.debug)
+	_main(memory=args.memory, debug=args.d)
