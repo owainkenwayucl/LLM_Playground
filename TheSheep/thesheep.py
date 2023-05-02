@@ -18,6 +18,10 @@ def _main(memory="answer", debug=False):
 			instructions = []
 			continue
 
+		if 'prompt' == line.strip().lower():
+			instructions = []
+			continue
+
 		instruction_text=""
 		if (memory != "none"):
 			if (len(instructions) > 0):
@@ -32,6 +36,11 @@ def _main(memory="answer", debug=False):
 			print("------ PROMPT ------")
 			print(instruction_text)
 			print("------ PROMPT ------")
+		if 'prompt' == line.strip().lower():
+			print("------ PROMPT ------")
+			print(instruction_text)
+			print("------ PROMPT ------")
+			continue
 
 		result = instruct_pipeline(instruction_text)
 
