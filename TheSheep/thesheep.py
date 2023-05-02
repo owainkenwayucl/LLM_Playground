@@ -6,7 +6,7 @@ print("Setting up...")
 instruct_pipeline = pipeline(model="databricks/dolly-v2-12b", torch_dtype=torch.bfloat16, trust_remote_code=True, device_map="auto")
 
 instructions = []
-print("The 🐑  is now ready.")
+print("The sheep is now ready.")
 while True:
 	line = input("? ")
 	if 'bye' == line.strip().lower():
@@ -26,7 +26,7 @@ while True:
 	result = instruct_pipeline(instruction_text)
 	qr = "Question: " + line + "\nResponse:"
 	for a in result:
-		print("🐑: " + a['generated_text'])
+		print("Sheep: " + a['generated_text'])
 		qr = qr + "\n" + a['generated_text']
 
 	instructions.append(qr)
