@@ -14,6 +14,10 @@ def _main(memory="answer", debug=False):
 		if 'bye' == line.strip().lower():
 			sys.exit()
 
+		if 'forget' == line.strip().lower():
+			instructions = []
+			continue
+
 		instruction_text=""
 		if (memory != "none"):
 			if (len(instructions) > 0):
