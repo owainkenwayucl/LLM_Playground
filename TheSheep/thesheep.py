@@ -18,10 +18,8 @@ def _main(memory="answer", debug=False):
 		if (memory != "none"):
 			if (len(instructions) > 0):
 				instruction_text = "Your previous responses were:\n"
-				i = 0
 				for a in instructions:
-					i = i + 1
-					instruction_text = instruction_text + str(i) + ". " + a + "\n"
+					instruction_text = instruction_text + a + "\n"
 				instruction_text = instruction_text + "\nPlease answer the following user query: "
 
 			instruction_text = instruction_text + line
