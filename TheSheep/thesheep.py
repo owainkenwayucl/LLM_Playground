@@ -22,7 +22,7 @@ def _main(memory="answer", debug=False):
 					instruction_text = instruction_text + a + "\n"
 				instruction_text = instruction_text + "\nPlease answer the following user query: "
 
-			instruction_text = instruction_text + line
+		instruction_text = instruction_text + line
 
 		if (debug):
 			print("------ PROMPT ------")
