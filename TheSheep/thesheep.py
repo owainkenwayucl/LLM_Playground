@@ -2,7 +2,8 @@ def _main(memory="answer", debug=False):
 	from transformers import pipeline
 	import torch
 	import sys
-
+	if (debug):
+		print("Memory mode: " + memory)
 	print("Setting up...")
 	instruct_pipeline = pipeline(model="databricks/dolly-v2-12b", torch_dtype=torch.bfloat16, trust_remote_code=True, device_map="auto")
 
