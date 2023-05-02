@@ -29,6 +29,11 @@ def _main(memory="answer", debug=False):
 				for a in instructions:
 					instruction_text = instruction_text + a + "\n"
 				instruction_text = instruction_text + "\nPlease answer the following user query: "
+		if 'prompt' == line.strip().lower():
+			print("------ PROMPT ------")
+			print(instruction_text)
+			print("------ PROMPT ------")
+			continue
 
 		instruction_text = instruction_text + line
 
@@ -36,11 +41,6 @@ def _main(memory="answer", debug=False):
 			print("------ PROMPT ------")
 			print(instruction_text)
 			print("------ PROMPT ------")
-		if 'prompt' == line.strip().lower():
-			print("------ PROMPT ------")
-			print(instruction_text)
-			print("------ PROMPT ------")
-			continue
 
 		result = instruct_pipeline(instruction_text)
 
