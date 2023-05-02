@@ -24,7 +24,7 @@ while True:
 	instruction_text = instruction_text + line
 
 	result = instruct_pipeline(instruction_text)
-	qr = "Q: " + line + "\nResponse:"
+	qr = "Question: " + line + "\nResponse:"
 	for a in result:
 		print("🐑: " + a['generated_text'])
 		qr = qr + "\n" + a['generated_text']
