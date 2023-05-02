@@ -18,10 +18,6 @@ def _main(memory="answer", debug=False):
 			instructions = []
 			continue
 
-		if 'prompt' == line.strip().lower():
-			instructions = []
-			continue
-
 		instruction_text=""
 		if (memory != "none"):
 			if (len(instructions) > 0):
