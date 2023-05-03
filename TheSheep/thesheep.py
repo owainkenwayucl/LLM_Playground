@@ -2,6 +2,8 @@ def _main(memory="answer", debug=False):
 	from transformers import pipeline
 	import torch
 	import sys
+	import time
+
 	if (debug):
 		print("Memory mode: " + memory)
 	print("Setting up...")
@@ -38,7 +40,9 @@ def _main(memory="answer", debug=False):
 			print(instruction_text)
 			print("------ PROMPT ------")
 
+		start = time.time()
 		result = instruct_pipeline(instruction_text)
+		elapsed = time.time() - start
 
 		qr = ""
 		if (memory == "both"):
@@ -46,7 +50,8 @@ def _main(memory="answer", debug=False):
 		for a in result:
 			print("Sheep: " + a['generated_text'])
 			qr = qr + a['generated_text']
-
+			if (debug):
+				print(" => Elapsed time: " + str(elapsed) + " seconds")
 		instructions.append(qr)
 
 if __name__ == "__main__":
