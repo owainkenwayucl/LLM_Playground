@@ -11,3 +11,9 @@ Create and instatiate a virtual environment.
 Use `pip` to install both the `requirements.txt` and `requirements-dev.txt`
 
 Run `thesheep.py`
+
+## Note:
+
+This has been tested on:
+* Myriad (GPU + CPU) + Kathleen (CPU) with python/3.9.10
+* AWS Graviton 2 with Ubuntu 22.04 (there seems to be little to no threading happening on this platform?).
