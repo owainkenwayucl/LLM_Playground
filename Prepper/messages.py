@@ -9,7 +9,7 @@ def debug(message):
 def error(message):
     sys.stderr.write(">>> ERROR <<< : " + str(message) + "\n")
 
-def log(metadata="LOG message", message):
+def log(message, metadata="LOG message"):
     print(" >>> Begin " + str(metadata) + " <<<" )
     print(str(message))
     print(" >>> End " + str(metadata) + " <<<" )
