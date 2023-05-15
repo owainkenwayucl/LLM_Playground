@@ -1,5 +1,5 @@
 import messages
-import xml.etree.ElementTree
+import xml.etree.ElementTree as ElementTree
 
 _DATA_PATH="{http://www.tei-c.org/ns/1.0}text"
 
@@ -11,5 +11,5 @@ def process(filename):
     data = tree_root.findall(_DATA_PATH)[0]
 
     output = ElementTree.tostring(data, encoding="utf-8", method="xml")
-    
-    messages.log(filename, output)
+
+    messages.log(output, filename)
