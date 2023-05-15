@@ -1,19 +1,11 @@
 #!/usr/bin/env python3
 # This script re-arranges data from the Transcribe Bentham dataset into a format that Dolly can use.
 
-import sys
-
-DEBUG=True
-
-def debug(message):
-    if (DEBUG):
-        print(">>> DEBUG <<< : " + str(message))
-
-def error(message):
-    sys.stderr.write(">>> ERROR <<< : " + str(message) + "\n")
+import messages
+import convert_file
 
 def _main(filename):
-    debug("Processing file: " + str(filename))
+    convert_file.process(filename)
 
 
 if __name__ == "__main__":
@@ -23,7 +15,7 @@ if __name__ == "__main__":
     parser.add_argument("filename", metavar="filename", type=str, nargs="+", help="Files to process.")
     args = parser.parse_args()
 	
-    DEBUG=args.d 
+    messages.DEBUG=args.d 
 
     for a in args.filename:
         _main(a)
