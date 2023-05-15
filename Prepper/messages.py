@@ -4,7 +4,7 @@ DEBUG=True
 
 def debug(message):
     if (DEBUG):
-        print(">>> DEBUG <<< : " + str(message))
+        sys.stderr.write(">>> DEBUG <<< : " + str(message) +"\n")
 
 def error(message):
     sys.stderr.write(">>> ERROR <<< : " + str(message) + "\n")
