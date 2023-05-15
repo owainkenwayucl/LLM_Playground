@@ -17,7 +17,7 @@ def _process_splittag(filename):
     temp = temp.split("</body>")[0]
 
     spaces = ["<lb/>"]
-    nulls = ["<p>","</p>"]
+    nulls = ["<p>","</p>", "<div>", "</div>"]
 
     for a in nulls:
         temp = temp.replace(a, "")
