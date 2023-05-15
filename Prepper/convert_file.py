@@ -26,7 +26,7 @@ def _process_splittag(filename):
         temp = temp.replace(a, " ")
 
     # Deletions
-    while not "<del>" in temp:
+    while "<del>" in temp:
         parts = temp.split("<del>")
         left = parts[0]
         right = parts[1]
@@ -35,7 +35,7 @@ def _process_splittag(filename):
 
         temp = left + right
 
-    
+
 
     data = temp
     
