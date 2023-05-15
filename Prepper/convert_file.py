@@ -27,10 +27,10 @@ def _process_splittag(filename):
 
     # Deletions
     while "<del>" in temp:
-        parts = temp.split("<del>")
+        parts = temp.split("<del>", 1)
         left = parts[0]
         right = parts[1]
-        parts = right.split("</del>")
+        parts = right.split("</del>", 1)
         right = parts[1]
 
         temp = left + right
