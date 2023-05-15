@@ -7,7 +7,7 @@ def process(filename):
     messages.debug("Processing file: " + str(filename))
 
     tree = ElementTree.parse(filename)
-    root = tree.getroot()
+    tree_root = tree.getroot()
     data = tree_root.findall(_DATA_PATH)[0]
 
     output = ElementTree.tostring(data, encoding="utf-8", method="xml")
