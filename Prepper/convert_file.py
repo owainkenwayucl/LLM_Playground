@@ -1,17 +1,41 @@
 import messages
-import xml.etree.ElementTree as ElementTree
+import xml.etree.ElementTree as _ElementTree
 
 _DATA_PATH="{http://www.tei-c.org/ns/1.0}text"
 
 def process(filename):
     messages.debug("Processing file: " + str(filename))
+    #_process_elementtree(filename)
+    _process_splittag(filename)
 
+def _process_splittag(filename):
+    data = ""
+    with open(filename, "r") as file:
+        data = file.read()
+
+    temp = data.split("<body>")[1]
+    temp = temp.split("</body>")[0]
+
+    spaces = ["<lb/>"]
+    nulls = ["<p>","</p>"]
+
+    for a in nulls:
+        temp = temp.replace(a, "")
+    for a in spaces:
+        temp = temp.replace(a, " ")
+
+    data = temp
+    
+    messages.log(data, filename)
+
+
+def _process_elementtree(filename):   
     try:
-        tree = ElementTree.parse(filename)
+        tree = _ElementTree.parse(filename)
         tree_root = tree.getroot()
         data = tree_root.findall(_DATA_PATH)[0]
 
-        output = ElementTree.tostring(data, encoding="utf-8", method="xml")
+        output = _ElementTree.tostring(data, encoding="utf-8", method="xml")
 
         messages.log(output, filename)
 
