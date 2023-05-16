@@ -8,10 +8,10 @@ def process(filename):
     data = ""
     with open(filename, "r") as file:
         data = file.read()
-    _process_elementtree(data)
-    #_process_splittag(data)
+    _process_elementtree(data, filename)
+    #_process_splittag(data, filename)
 
-def _process_splittag(xmlstring):
+def _process_splittag(xmlstring, filename):
     data = xmlstring
    
 
@@ -44,7 +44,7 @@ def _process_splittag(xmlstring):
     messages.log(data, filename)
 
 
-def _process_elementtree(xmlstring):   
+def _process_elementtree(xmlstring, filename):   
     try:
         tree = _ElementTree.fromString(xmlstring)
         tree_root = tree.getroot()
