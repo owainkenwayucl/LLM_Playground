@@ -5,12 +5,25 @@ import messages
 import convert_file
 
 def _main(dirname):
+    _serial_execute(_generate_file_list(dirname))
+
+def _generate_file_list(dirname):
     import os
+    files = []
     for root, dirs, files in os.walk(str(dirname)):
         for file in files:
             if file.endswith(".xml"):
                 filename = os.path.join(root, file)
-                convert_file.process(filename)
+                files.append(filename)
+    return files
+
+def _serial_execute(files):
+    for a in files:
+        convert_file.process(a)
+
+def _parallel_multiprocessing_execute():
+    messages.error("Not implemented"
+
 
 if __name__ == "__main__":
     import argparse
