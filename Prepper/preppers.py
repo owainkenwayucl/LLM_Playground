@@ -10,11 +10,13 @@ def _main(dirname, outdir):
 def _generate_file_list(dirname):
     import os
     files = []
+    messages.debug("Generating File list...")
     for root, dirs, files in os.walk(str(dirname)):
         for file in files:
             if file.endswith(".xml"):
                 filename = os.path.join(root, file)
                 files.append(filename)
+    messages.debug("File list generated.")
     return files
 
 def _serial_execute(files, outdir):
