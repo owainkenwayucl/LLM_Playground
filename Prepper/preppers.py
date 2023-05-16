@@ -8,19 +8,20 @@ def _main(dirname, outdir, processes):
     if processes <= 1:
         _serial_execute(_generate_file_list(dirname), outdir)
     else:
+        messages.debug("Enabling Parallel mode with " + str(processes) + " processes.")
         _parallel_multiprocessing_execute(files, outdir, processes)
 
 def _generate_file_list(dirname):
     import os
-    files = []
+    files_list = []
     messages.debug("Generating File list...")
     for root, dirs, files in os.walk(str(dirname)):
         for file in files:
             if file.endswith(".xml"):
                 filename = os.path.join(root, file)
-                files.append(filename)
+                files_list.append(filename)
     messages.debug("File list generated.")
-    return files
+    return files_list
 
 def _serial_execute(files, outdir):
     for a in files:
@@ -33,6 +34,8 @@ def _parallel_multiprocessing_execute(files, outdir, processes):
     if l < processes:
         messages.debug("More processes than files, setting processes to " + str(l))
         processes = l
+
+    chunksize = int(l/processes)
     messages.error("Not implemented")
 
 
