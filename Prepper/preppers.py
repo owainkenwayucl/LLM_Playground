@@ -9,7 +9,7 @@ def _main(dirname, outdir, processes):
         _serial_execute(_generate_file_list(dirname), outdir)
     else:
         messages.debug("Enabling Parallel mode with " + str(processes) + " processes.")
-        _parallel_multiprocessing_execute(files, outdir, processes)
+        _parallel_multiprocessing_execute(_generate_file_list(dirname), outdir, processes)
 
 def _generate_file_list(dirname):
     import os
