@@ -13,15 +13,15 @@ def _main(dirname, outdir, processes):
 
 def _generate_file_list(dirname):
     import os
-    files_list = []
+    fileslist = []
     messages.debug("Generating File list...")
     for root, dirs, files in os.walk(str(dirname)):
         for file in files:
             if file.endswith(".xml"):
                 filename = os.path.join(root, file)
-                files_list.append(filename)
+                fileslist.append(filename)
     messages.debug("File list generated.")
-    return files_list
+    return fileslist
 
 def _serial_execute(files, outdir):
     for a in files:
@@ -29,13 +29,23 @@ def _serial_execute(files, outdir):
 
 def _parallel_multiprocessing_execute(files, outdir, processes):
     l = len(files)
-
+    message.debug("Files detected: " + str(l))
     # fix edge case
     if l < processes:
         messages.debug("More processes than files, setting processes to " + str(l))
         processes = l
 
     chunksize = int(l/processes)
+    remainder = l % processes
+    if remainder > 0:
+        chunksize += 1
+
+    chunkedlist = [files[i:i+chunksize] for i in range(0, l, chunksize)]
+
+    clsize = []
+    for a in chunkedlist:
+        clsize.append(len(a))
+    message.debug("List sizes: " + str(clsize) + " for " sum(clsize) " total files.")
     messages.error("Not implemented")
 
 
