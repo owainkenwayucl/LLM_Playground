@@ -28,11 +28,11 @@ def _parallel_multiprocessing_execute():
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description="Data Convertor for Transcribe Bentham XML data")
-    parser.add_argument("-d", action="store_true", help="Turn on Debug mode.", default=False)
+    parser.add_argument("-D", action="store_true", help="Turn on Debug mode.", default=False)
     parser.add_argument("directory", metavar="directory", type=str, nargs="+", help="Directory tree of files to process.")
     args = parser.parse_args()
 	
-    messages.DEBUG=args.d 
+    messages.DEBUG=args.D
 
     for a in args.directory:
         _main(a)
