@@ -1,6 +1,7 @@
 import messages
 import xml.etree.ElementTree as _ElementTree
 import hashlib
+import os
 
 _DATA_PATH="{http://www.tei-c.org/ns/1.0}text"
 
