@@ -9,6 +9,10 @@ def debug(message):
 def error(message):
     sys.stderr.write(">>> ERROR <<< : " + str(message) + "\n")
 
+def debuglog(message, metadata="LOG message"):
+    if (DEBUG):
+        log(message, metadata)
+
 def log(message, metadata="LOG message"):
     print(" >>> Begin " + str(metadata) + " <<<" )
     print(str(message))

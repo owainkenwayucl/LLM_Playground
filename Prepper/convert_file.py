@@ -1,16 +1,22 @@
 import messages
 import xml.etree.ElementTree as _ElementTree
+import hashlib
 
 _DATA_PATH="{http://www.tei-c.org/ns/1.0}text"
 
-def process(filename):
+def process(filename, outputdir="."):
     messages.debug("Processing file: " + str(filename))
     data = ""
     with open(filename, "r") as file:
         data = file.read()
+    sha256 = hashlib.sha256(data.encode("UTF-8"))
     output = _process_elementtree(data, filename)
     #output = _process_splittag(data, filename)
-    messages.log(output, filename)
+    messages.debuglog(output, filename)
+
+    outfile = os.path.join(outputdir, sha256 + ".txt")
+    with open(outfile, "w") as file:
+        file.write(output)
 
 def _process_splittag(xmlstring, filename):
     data = xmlstring
