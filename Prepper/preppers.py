@@ -55,7 +55,7 @@ def _parallel_multiprocessing_execute(files, outdir, processes):
     procs = []
 
     for a in range(processes):
-        procs.append(Process(target=convert_file.process, args=(chunkedlist[a],outdir)))
+        procs.append(Process(target=_serial_execute, args=(chunkedlist[a],outdir)))
         procs[a].start()
 
 
