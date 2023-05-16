@@ -50,7 +50,7 @@ def _process_elementtree(xmlstring, filename):
 
         output = _ElementTree.tostring(data, encoding="utf-8", method="xml")
 
-        return data
+        return output
 
     except Exception as e:
         messages.error("XML Error in " + filename)
