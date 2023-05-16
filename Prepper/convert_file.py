@@ -11,13 +11,20 @@ def process(filename, outputdir="."):
     with open(filename, "r") as file:
         data = file.read()
     sha256 = str(hashlib.sha256(data.encode("UTF-8")).hexdigest())
-    output = str(_process_elementtree(data, filename))
-    #output = _process_splittag(data, filename)
-    messages.debuglog(output, filename)
 
-    outfile = os.path.join(outputdir, sha256 + ".txt")
-    with open(outfile, "w") as file:
-        file.write(output)
+    try:
+        output = str(_process_elementtree(data, filename))
+        #output = _process_splittag(data, filename)
+        messages.debuglog(output, filename)
+
+        outfile = os.path.join(outputdir, sha256 + ".txt")
+        with open(outfile, "w") as file:
+            file.write(output)
+
+    except Exception as e:
+        messages.error("Error processing " + filename)
+        messages.error(str(e))
+
 
 def _process_splittag(xmlstring, filename):
     data = xmlstring
