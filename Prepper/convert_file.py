@@ -8,13 +8,13 @@ def process(filename):
     data = ""
     with open(filename, "r") as file:
         data = file.read()
-    _process_elementtree(data, filename)
-    #_process_splittag(data, filename)
+    output = _process_elementtree(data, filename)
+    #output = _process_splittag(data, filename)
+    messages.log(output, filename)
 
 def _process_splittag(xmlstring, filename):
     data = xmlstring
    
-
     temp = data.split("<body>")[1]
     temp = temp.split("</body>")[0]
 
@@ -37,11 +37,9 @@ def _process_splittag(xmlstring, filename):
 
         temp = left + right
 
-
-
     data = temp
-    
-    messages.log(data, filename)
+
+    return data
 
 
 def _process_elementtree(xmlstring, filename):   
@@ -52,8 +50,9 @@ def _process_elementtree(xmlstring, filename):
 
         output = _ElementTree.tostring(data, encoding="utf-8", method="xml")
 
-        messages.log(output, filename)
+        return data
 
     except Exception as e:
         messages.error("XML Error in " + filename)
         messages.error(str(e))
+        return ""
