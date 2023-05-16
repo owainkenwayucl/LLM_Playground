@@ -4,19 +4,20 @@
 import messages
 import convert_file
 
-def _main(filename):
-    convert_file.process(filename)
+def _main(filename, outdir):
+    convert_file.process(filename, outdir)
 
 
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description="Data Convertor for Transcribe Bentham XML data")
     parser.add_argument("-D", action="store_true", help="Turn on Debug mode.", default=False)
+    parser.add_argument("-o", metavar="outdir", help="Output folder for processed files.", default=".")
     parser.add_argument("filename", metavar="filename", type=str, nargs="+", help="Files to process.")
     args = parser.parse_args()
 	
     messages.DEBUG=args.D
 
     for a in args.filename:
-        _main(a)
+        _main(a, args.o)
 

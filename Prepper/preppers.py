@@ -4,8 +4,8 @@
 import messages
 import convert_file
 
-def _main(dirname):
-    _serial_execute(_generate_file_list(dirname))
+def _main(dirname, outdir):
+    _serial_execute(_generate_file_list(dirname), outdir)
 
 def _generate_file_list(dirname):
     import os
@@ -17,11 +17,11 @@ def _generate_file_list(dirname):
                 files.append(filename)
     return files
 
-def _serial_execute(files):
+def _serial_execute(files, outdir):
     for a in files:
-        convert_file.process(a)
+        convert_file.process(a, outdir)
 
-def _parallel_multiprocessing_execute():
+def _parallel_multiprocessing_execute(files, outdir):
     messages.error("Not implemented")
 
 
@@ -29,11 +29,12 @@ if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description="Data Convertor for Transcribe Bentham XML data")
     parser.add_argument("-D", action="store_true", help="Turn on Debug mode.", default=False)
+    parser.add_argument("-o", metavar="outdir", help="Output folder for processed files.", default=".")
     parser.add_argument("directory", metavar="directory", type=str, nargs="+", help="Directory tree of files to process.")
     args = parser.parse_args()
 	
     messages.DEBUG=args.D
-
+    
     for a in args.directory:
-        _main(a)
+        _main(a, args.o)
 
