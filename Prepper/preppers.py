@@ -29,7 +29,7 @@ def _serial_execute(files, outdir):
 
 def _parallel_multiprocessing_execute(files, outdir, processes):
     l = len(files)
-    message.debug("Files detected: " + str(l))
+    messages.debug("Files detected: " + str(l))
     # fix edge case
     if l < processes:
         messages.debug("More processes than files, setting processes to " + str(l))
@@ -45,7 +45,7 @@ def _parallel_multiprocessing_execute(files, outdir, processes):
     clsize = []
     for a in chunkedlist:
         clsize.append(len(a))
-    message.debug("List sizes: " + str(clsize) + " for " + sum(clsize) + " total files.")
+    messages.debug("List sizes: " + str(clsize) + " for " + sum(clsize) + " total files.")
     messages.error("Not implemented")
 
 
