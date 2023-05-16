@@ -27,6 +27,12 @@ def _serial_execute(files, outdir):
         convert_file.process(a, outdir)
 
 def _parallel_multiprocessing_execute(files, outdir, processes):
+    l = len(files)
+
+    # fix edge case
+    if l < processes:
+        messages.debug("More processes than files, setting processes to " + str(l))
+        processes = l
     messages.error("Not implemented")
 
 
