@@ -45,7 +45,7 @@ def _parallel_multiprocessing_execute(files, outdir, processes):
     clsize = []
     for a in chunkedlist:
         clsize.append(len(a))
-    messages.debug("List sizes: " + str(clsize) + " for " + sum(clsize) + " total files.")
+    messages.debug("List sizes: " + str(clsize) + " for " + str(sum(clsize)) + " total files.")
     messages.error("Not implemented")
 
 
