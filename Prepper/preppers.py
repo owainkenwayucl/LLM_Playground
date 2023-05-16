@@ -28,9 +28,13 @@ def _serial_execute(files, outdir):
         convert_file.process(a, outdir)
 
 def _parallel_multiprocessing_execute(files, outdir, processes):
+    from multiprocessing import Process, Queue, cpu_count
     l = len(files)
     messages.debug("Files detected: " + str(l))
     # fix edge case
+    if processes > cpu_count():
+        messages.debug("More processes than cores, setting processes to " + str(cpu_count()))
+        processes = cpu_count()
     if l < processes:
         messages.debug("More processes than files, setting processes to " + str(l))
         processes = l
@@ -46,7 +50,19 @@ def _parallel_multiprocessing_execute(files, outdir, processes):
     for a in chunkedlist:
         clsize.append(len(a))
     messages.debug("List sizes: " + str(clsize) + " for " + str(sum(clsize)) + " total files.")
-    messages.error("Not implemented")
+
+    q = Queue()
+    procs = []
+
+    for a in range(processes):
+        procs.append(Process(target=convert_file.process, args=(chunkedlist[a],outdir)))
+        procs[a].start()
+
+
+    for a in range(processes):
+        procs[a].join()
+
+    #messages.error("Not implemented")
 
 
 if __name__ == "__main__":
