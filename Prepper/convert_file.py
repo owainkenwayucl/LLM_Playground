@@ -8,11 +8,12 @@ _DATA_PATH="{http://www.tei-c.org/ns/1.0}text"
 def process(filename, outputdir="."):
     messages.debug("Processing file: " + str(filename))
     data = ""
-    with open(filename, "r") as file:
-        data = file.read()
-    sha256 = str(hashlib.sha256(data.encode("UTF-8")).hexdigest())
-
     try:
+        with open(filename, "r") as file:
+            data = file.read()
+        sha256 = str(hashlib.sha256(data.encode("UTF-8")).hexdigest())
+
+    
         output = str(_process_elementtree(data, filename))
         #output = _process_splittag(data, filename)
         messages.debuglog(output, filename)
