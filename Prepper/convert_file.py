@@ -46,7 +46,7 @@ def _process_splittag(xmlstring, filename):
 
 def _process_elementtree(xmlstring, filename):   
     try:
-        tree = _ElementTree.fromString(xmlstring)
+        tree = _ElementTree.fromstring(xmlstring)
         tree_root = tree.getroot()
         data = tree_root.findall(_DATA_PATH)[0]
 
