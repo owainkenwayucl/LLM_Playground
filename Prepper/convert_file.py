@@ -11,7 +11,7 @@ def process(filename, outputdir="."):
     with open(filename, "r") as file:
         data = file.read()
     sha256 = str(hashlib.sha256(data.encode("UTF-8")))
-    output = _process_elementtree(data, filename)
+    output = str(_process_elementtree(data, filename))
     #output = _process_splittag(data, filename)
     messages.debuglog(output, filename)
 
