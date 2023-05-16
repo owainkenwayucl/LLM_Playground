@@ -5,13 +5,15 @@ _DATA_PATH="{http://www.tei-c.org/ns/1.0}text"
 
 def process(filename):
     messages.debug("Processing file: " + str(filename))
-    #_process_elementtree(filename)
-    _process_splittag(filename)
-
-def _process_splittag(filename):
     data = ""
     with open(filename, "r") as file:
         data = file.read()
+    _process_elementtree(data)
+    #_process_splittag(data)
+
+def _process_splittag(xmlstring):
+    data = xmlstring
+   
 
     temp = data.split("<body>")[1]
     temp = temp.split("</body>")[0]
@@ -42,9 +44,9 @@ def _process_splittag(filename):
     messages.log(data, filename)
 
 
-def _process_elementtree(filename):   
+def _process_elementtree(xmlstring):   
     try:
-        tree = _ElementTree.parse(filename)
+        tree = _ElementTree.fromString(xmlstring)
         tree_root = tree.getroot()
         data = tree_root.findall(_DATA_PATH)[0]
 
