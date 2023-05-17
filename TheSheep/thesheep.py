@@ -38,9 +38,10 @@ def _main(memory="answer", debug=False, remote=False):
 		instruction_text=""
 		if (memory != "none"):
 			if (len(instructions) > 0):
-				instruction_text = "Your previous responses were:\n"
+				instruction_text = "### Instruction: Your previous responses were:\n"
 				for a in instructions:
 					instruction_text = instruction_text + a + "\n"
+				instruction_text = instruction_text + "### End\n"
 				instruction_text = instruction_text + "\nPlease answer the following user query: "
 		if 'prompt' == line.strip().lower():
 			print("------ PROMPT ------")
