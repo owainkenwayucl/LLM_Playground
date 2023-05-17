@@ -23,6 +23,7 @@ def _main(memory="answer", debug=False, remote=False):
 	else: 
 		tokenizer = AutoTokenizer.from_pretrained("databricks/dolly-v2-12b", padding_side="left")
 		model = AutoModelForCausalLM.from_pretrained("databricks/dolly-v2-12b", device_map="auto", torch_dtype=torch.bfloat16)
+		instruct_pipeline = InstructionTextGenerationPipeline(model=model, tokenizer=tokenizer)
 
 	instructions = []
 	print("The sheep is now ready.")
@@ -57,11 +58,9 @@ def _main(memory="answer", debug=False, remote=False):
 			print("------ PROMPT ------")
 
 		start = time.time()
-		if remote:
-			result = instruct_pipeline(instruction_text)
-		else:
-			generator = InstructionTextGenerationPipeline(model=model, tokenizer=tokenizer)
-			result = generator(instruction_text)
+		
+		result = instruct_pipeline(instruction_text)
+
 		elapsed = time.time() - start
 
 		qr = ""
