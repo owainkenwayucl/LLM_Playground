@@ -76,7 +76,7 @@ def _main(memory="both", remote=False):
 		debug(" => Elapsed time: " + str(elapsed) + " seconds")
 
 		if memory == "none":
-			conversation = ConversationChain(llm=llm, verbose=DEBUG
+			conversation = ConversationChain(llm=llm, verbose=DEBUG)
 
 
 if __name__ == "__main__":
