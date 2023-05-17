@@ -8,7 +8,7 @@ def _main(memory="answer", debug=False, remote=False):
 	#   https://huggingface.co/databricks/dolly-v2-3b/blob/main/instruct_pipeline.py
 	# and put it in your PYTHONPATH
 	if not remote:
-		import instruct_pipeline
+		from instruct_pipeline import InstructionTextGenerationPipeline
 		from transformers import AutoModelForCausalLM, AutoTokenizer
 
 	import sys
@@ -60,7 +60,8 @@ def _main(memory="answer", debug=False, remote=False):
 		if remote:
 			result = instruct_pipeline(instruction_text)
 		else:
-			result = [instruct_pipeline.InstructionTextGenerationPipeline(model=model, tokenizer=tokenizer)]
+			generator = InstructionTextGenerationPipeline(model=model, tokenizer=tokenizer)
+			result = generator(instruction_text)
 		elapsed = time.time() - start
 
 		qr = ""
