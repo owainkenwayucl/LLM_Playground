@@ -1,4 +1,22 @@
-def _main(memory="answer", debug=False, remote=False):
+DEBUG = False
+
+def debug(message):
+    if (DEBUG):
+        sys.stderr.write(">>> DEBUG <<< : " + str(message) +"\n")
+
+def error(message):
+    sys.stderr.write(">>> ERROR <<< : " + str(message) + "\n")
+
+def debuglog(message, metadata="LOG message"):
+    if (DEBUG):
+        log(message, metadata)
+
+def log(message, metadata="LOG message"):
+    print(" >>> Begin " + str(metadata) + " <<<" )
+    print(str(message))
+    print(" >>> End " + str(metadata) + " <<<" )
+
+def _main(memory="both", remote=False):
 	if remote:
 		from transformers import pipeline
 	import torch
@@ -18,8 +36,8 @@ def _main(memory="answer", debug=False, remote=False):
 	from langchain import ConversationChain
 	from langchain.llms import HuggingFacePipeline
 
-	if (debug):
-		print("Memory mode: " + memory)
+	debug("Memory mode: " + memory)
+
 	print("Setting up...")
 	
 	if remote:
@@ -30,19 +48,23 @@ def _main(memory="answer", debug=False, remote=False):
 		dollypipeline = InstructionTextGenerationPipeline(model=model, tokenizer=tokenizer, return_full_text=True)
 
 	llm = HuggingFacePipeline(pipeline=dollypipeline)
-	conversation = ConversationChain(llm=llm, verbose=debug)
 
-	instructions = []
+	if not remote:
+		llm.task = HuggingFacePipeline.DEFAULT_TASK
+
+	debug(llm.task)
+
+	conversation = ConversationChain(llm=llm, verbose=DEBUG)
+
 	print("The sheep is now ready.")
-	if (debug):
-				print("(this version uses langchain)")
+	debug("this version uses langchain.")
 	while True:
 		line = input("? ")
 		if 'bye' == line.strip().lower():
 			sys.exit()
 
 		if 'forget' == line.strip().lower():
-			conversation = ConversationChain(llm=llm, verbose=debug)
+			conversation = ConversationChain(llm=llm, verbose=DEBUG)
 			continue
 
 		start = time.time()
@@ -51,11 +73,10 @@ def _main(memory="answer", debug=False, remote=False):
 		print(output)
 
 		elapsed = time.time() - start
-		if (debug):
-				print(" => Elapsed time: " + str(elapsed) + " seconds")
+		debug(" => Elapsed time: " + str(elapsed) + " seconds")
 
 		if memory == "none":
-			conversation = ConversationChain(llm=llm, verbose=debug)
+			conversation = ConversationChain(llm=llm, verbose=DEBUG
 
 
 if __name__ == "__main__":
@@ -66,4 +87,5 @@ if __name__ == "__main__":
 	parser.add_argument("-d", action="store_true", help="Turn on Debug mode.", default=False)
 	args = parser.parse_args()
 	
-	_main(memory=args.memory, debug=args.d, remote=not args.l)
+	DEBUG = args.d
+	_main(memory=args.memory, remote=not args.l)
