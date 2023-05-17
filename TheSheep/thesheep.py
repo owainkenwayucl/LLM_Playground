@@ -52,7 +52,7 @@ def _main(memory="both", remote=False):
 	llm = HuggingFacePipeline(pipeline=dollypipeline)
 
 	if not remote:
-		llm.task = HuggingFacePipeline.DEFAULT_TASKV
+		llm.task = "text-generation"
 
 	debug(llm.task)
 
