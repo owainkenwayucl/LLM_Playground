@@ -46,7 +46,7 @@ def _main(memory="answer", debug=False, remote=False):
 
 		start = time.time()
 
-		output = conversation.predict(input="Hi there!")
+		output = conversation.predict(input=line)
 		print(output)
 
 		elapsed = time.time() - start
