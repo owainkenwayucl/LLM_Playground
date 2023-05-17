@@ -29,7 +29,7 @@ def _main(memory="answer", debug=False, remote=False):
 		instruct_pipeline = InstructionTextGenerationPipeline(model=model, tokenizer=tokenizer, return_full_text=True)
 
 	llm = HuggingFacePipeline(pipeline=instruct_pipeline)
-	conversation = ConversationChain(llm=llm, verbose=True)
+	conversation = ConversationChain(llm=llm, verbose=debug)
 
 	instructions = []
 	print("The sheep is now ready.")
@@ -41,7 +41,7 @@ def _main(memory="answer", debug=False, remote=False):
 			sys.exit()
 
 		if 'forget' == line.strip().lower():
-			conversation = ConversationChain(llm=llm, verbose=True)
+			conversation = ConversationChain(llm=llm, verbose=debug)
 			continue
 
 		start = time.time()
@@ -54,7 +54,7 @@ def _main(memory="answer", debug=False, remote=False):
 				print(" => Elapsed time: " + str(elapsed) + " seconds")
 
 		if memory == "none":
-			conversation = ConversationChain(llm=llm, verbose=True)
+			conversation = ConversationChain(llm=llm, verbose=debug)
 
 
 if __name__ == "__main__":
