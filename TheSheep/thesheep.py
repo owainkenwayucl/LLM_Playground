@@ -47,14 +47,9 @@ def _main(memory="both", remote=False):
 	else: 
 		tokenizer = AutoTokenizer.from_pretrained("databricks/dolly-v2-12b", padding_side="left")
 		model = AutoModelForCausalLM.from_pretrained("databricks/dolly-v2-12b", device_map="auto", torch_dtype=torch.bfloat16)
-		dollypipeline = InstructionTextGenerationPipeline(model=model, tokenizer=tokenizer, return_full_text=True)
+		dollypipeline = InstructionTextGenerationPipeline(model=model, task="text-generation", tokenizer=tokenizer, return_full_text=True)
 
 	llm = HuggingFacePipeline(pipeline=dollypipeline)
-
-	if not remote:
-		llm.task = "text-generation"
-
-	debug(llm.task)
 
 	conversation = ConversationChain(llm=llm, verbose=DEBUG)
 
