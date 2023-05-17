@@ -4,6 +4,7 @@ def _main(memory="answer", debug=False, remote=False):
 	import torch
 
 	# local instruct pipeline
+	# Local is broken since we moved to langchain
 	# requires you to download instruct_pipeline.py from:
 	#   https://huggingface.co/databricks/dolly-v2-3b/blob/main/instruct_pipeline.py
 	# and put it in your PYTHONPATH
