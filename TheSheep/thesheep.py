@@ -1,13 +1,25 @@
-def _main(memory="answer", debug=False):
-	from transformers import pipeline
+def _main(memory="answer", debug=False, remote=False):
+	if remote:
+		from transformers import pipeline
 	import torch
+
+	# local instruct pipeline
+	if not remote:
+		from instruct_pipeline import InstructionTextGenerationPipeline
+		from transformers import AutoModelForCausalLM, AutoTokenizer
+
 	import sys
 	import time
 
 	if (debug):
 		print("Memory mode: " + memory)
 	print("Setting up...")
-	instruct_pipeline = pipeline(model="databricks/dolly-v2-12b", torch_dtype=torch.bfloat16, trust_remote_code=True, device_map="auto")
+	
+	if remote:
+		instruct_pipeline = pipeline(model="databricks/dolly-v2-12b", torch_dtype=torch.bfloat16, trust_remote_code=True, device_map="auto")
+	else: 
+		tokenizer = AutoTokenizer.from_pretrained("databricks/dolly-v2-12b", padding_side="left")
+		model = AutoModelForCausalLM.from_pretrained("databricks/dolly-v2-12b", device_map="auto", torch_dtype=torch.bfloat16)
 
 	instructions = []
 	print("The sheep is now ready.")
@@ -41,7 +53,10 @@ def _main(memory="answer", debug=False):
 			print("------ PROMPT ------")
 
 		start = time.time()
-		result = instruct_pipeline(instruction_text)
+		if remote:
+			result = instruct_pipeline(instruction_text)
+		else:
+			result = InstructionTextGenerationPipeline(model=model, tokenizer=tokenizer)
 		elapsed = time.time() - start
 
 		qr = ""
@@ -58,7 +73,8 @@ if __name__ == "__main__":
 	import argparse
 	parser = argparse.ArgumentParser(description="Simple Front-end for Dolly v2.0.")
 	parser.add_argument("-m", "--memory", metavar="memory", type=str, help="Memory style - allowed values are answer, none, both.", default="answer", choices=["none","answer","both"])
+	parser.add_argument("-r", action="store_true", help="Enable remote pipeline code download and execute", default=True)
 	parser.add_argument("-d", action="store_true", help="Turn on Debug mode.", default=False)
 	args = parser.parse_args()
 	
-	_main(memory=args.memory, debug=args.d)
+	_main(memory=args.memory, debug=args.d, remote=args.r)
