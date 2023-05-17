@@ -22,10 +22,10 @@ def _main(memory="answer", debug=False, remote=False):
 	print("Setting up...")
 	
 	if remote:
-		instruct_pipeline = pipeline(model="databricks/dolly-v2-12b", torch_dtype=torch.bfloat16, trust_remote_code=True, device_map="auto")
+		instruct_pipeline = pipeline(model="databricks/dolly-v2-12b", torch_dtype=torch.bfloat16, trust_remote_code=True, device_map="auto", return_full_text=True)
 	else: 
 		tokenizer = AutoTokenizer.from_pretrained("databricks/dolly-v2-12b", padding_side="left")
-		model = AutoModelForCausalLM.from_pretrained("databricks/dolly-v2-12b", device_map="auto", torch_dtype=torch.bfloat16)
+		model = AutoModelForCausalLM.from_pretrained("databricks/dolly-v2-12b", device_map="auto", torch_dtype=torch.bfloat16, return_full_text=True)
 		instruct_pipeline = InstructionTextGenerationPipeline(model=model, tokenizer=tokenizer)
 
 	llm = HuggingFacePipeline(pipeline=instruct_pipeline)
