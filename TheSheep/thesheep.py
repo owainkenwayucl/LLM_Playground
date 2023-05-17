@@ -4,8 +4,11 @@ def _main(memory="answer", debug=False, remote=False):
 	import torch
 
 	# local instruct pipeline
+	# requires you to download instruct_pipeline.py from:
+	#   https://huggingface.co/databricks/dolly-v2-3b/blob/main/instruct_pipeline.py
+	# and put it in your PYTHONPATH
 	if not remote:
-		from . import instruct_pipeline
+		import instruct_pipeline
 		from transformers import AutoModelForCausalLM, AutoTokenizer
 
 	import sys
