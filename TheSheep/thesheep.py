@@ -1,3 +1,5 @@
+import sys
+
 DEBUG = False
 
 def debug(message):
