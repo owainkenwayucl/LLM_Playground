@@ -60,7 +60,7 @@ def _main(memory="answer", debug=False, remote=False):
 		if remote:
 			result = instruct_pipeline(instruction_text)
 		else:
-			result = instruct_pipeline.InstructionTextGenerationPipeline(model=model, tokenizer=tokenizer)
+			result = [instruct_pipeline.InstructionTextGenerationPipeline(model=model, tokenizer=tokenizer)]
 		elapsed = time.time() - start
 
 		qr = ""
