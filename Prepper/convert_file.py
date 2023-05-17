@@ -14,8 +14,8 @@ def process(filename, outputdir="."):
         sha256 = str(hashlib.sha256(data.encode("UTF-8")).hexdigest())
 
     
-        output = str(_process_elementtree(data, filename))
-        #output = _process_splittag(data, filename)
+        #output = str(_process_elementtree(data, filename))
+        output = _process_splittag(data, filename)
         messages.debuglog(output, filename)
 
         outfile = os.path.join(outputdir, sha256 + ".txt")
