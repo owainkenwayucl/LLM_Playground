@@ -29,6 +29,8 @@ def simple_repl(debug=True):
 	line = input("? ")
 
 	while not line.lower().strip() == "bye":
+		start = time.time()
 		print(conversation.predict(input=line))
+		print("Time taken: " + str(time.time() - start))
 		line = input("? ")
 	
