@@ -35,9 +35,9 @@ def _process_splittag(xmlstring, filename):
     temp = temp.split("</body>")[0]
 
     # Easy replacements
-    spaces = ["<lb/>", "</hi>"]
-    nulls = ["<p>","</p>", "<div>", "</div>"]
-    longs = ["hi"]
+    spaces = ["<lb/>", "</hi>", "<sic>", "</sic>","<add>","</add>","<unclear>","</unclear>"]
+    nulls = ["<p>","</p>", "<div>", "</div>", "<note>", "</note>","<head>","</head>", "</pb>"]
+    longs = ["hi", "p", "div"]
 
     for a in nulls:
         temp = temp.replace(a, "")
