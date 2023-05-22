@@ -36,12 +36,22 @@ def _process_splittag(xmlstring, filename):
 
     # Easy replacements
     spaces = ["<lb/>"]
-    nulls = ["<p>","</p>", "<div>", "</div>"]
+    nulls = ["<p>","</p>", "<div>", "</div>", "</hi>"]
+    longs = ["hi"]
 
     for a in nulls:
         temp = temp.replace(a, "")
     for a in spaces:
         temp = temp.replace(a, " ")
+    for a in longs:
+        while "<"+a in temp:
+            parts = temp.split("<" + a, 1)
+            left = parts[0]
+            right = parts[1]
+            parts = right.split(">", 1)
+            right = parts[1]
+
+            temp = left + right
 
     # Deletions
     while "<del>" in temp:
