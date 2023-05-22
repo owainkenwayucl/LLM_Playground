@@ -16,7 +16,7 @@ def process(filename, outputdir="."):
     
         #output = str(_process_elementtree(data, filename))
         output = _process_splittag(data, filename)
-        output = str(_process_elementtree(output, filename))
+        #output = str(_process_elementtree(output, filename))
         messages.debuglog(output, filename)
 
         outfile = os.path.join(outputdir, sha256 + ".txt")
