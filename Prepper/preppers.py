@@ -4,6 +4,8 @@
 import messages
 import convert_file
 
+_FILE_PREFIX="JB_"
+
 def _main(dirname, outdir, processes):
     if processes <= 1:
         _serial_execute(_generate_file_list(dirname), outdir)
@@ -17,7 +19,7 @@ def _generate_file_list(dirname):
     messages.debug("Generating File list...")
     for root, dirs, files in os.walk(str(dirname)):
         for file in files:
-            if file.endswith(".xml"):
+            if file.endswith(".xml") and file.startswith(_FILE_PREFIX):
                 filename = os.path.join(root, file)
                 fileslist.append(filename)
     messages.debug("File list generated.")
