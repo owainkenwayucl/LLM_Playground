@@ -79,9 +79,9 @@ if __name__ == "__main__":
 	import argparse
 	parser = argparse.ArgumentParser(description="Simple Front-end for Dolly v2.0.")
 	parser.add_argument("-m", "--memory", metavar="memory", type=str, help="Memory style - allowed values are none, both.", default="both", choices=["none", "both"])
-	parser.add_argument("-l", action="store_true", help="Enable local pipeline code execute")
+	parser.add_argument("-r", action="store_true", help="Enable remote pipeline code execute")
 	parser.add_argument("-d", action="store_true", help="Turn on Debug mode.", default=False)
 	args = parser.parse_args()
 	
 	DEBUG = args.d
-	_main(memory=args.memory, remote=not args.l)
+	_main(memory=args.memory, remote=args.r)
