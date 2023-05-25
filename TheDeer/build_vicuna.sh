@@ -11,7 +11,7 @@ LLAMA_PATH=${LLAMA_PATH:-"${HOME}/Scratch/llama"}
 
 module load openssl/1.1.1t python/3.11.3
 
-virtualenv vicuna_runtume
+virtualenv vicuna_runtime
 source vicuna_runtime/bin/activate
 
 pip install fschat
