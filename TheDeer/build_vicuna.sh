@@ -9,7 +9,7 @@ set -e
 
 LLAMA_PATH=${LLAMA_PATH:-"${HOME}/Scratch/llama"}
 
-module load openssl/1.1.1t python/3.11.3
+module load python/3.9.10
 
 rm -rf vicuna_runtime
 virtualenv vicuna_runtime
