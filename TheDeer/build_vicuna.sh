@@ -7,6 +7,8 @@
 
 set -e
 
+export PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python
+
 LLAMA_PATH=${LLAMA_PATH:-"${HOME}/Scratch/llama"}
 
 module load python/3.9.10
