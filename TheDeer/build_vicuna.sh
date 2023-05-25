@@ -11,7 +11,7 @@ export PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python
 
 LLAMA_PATH=${LLAMA_PATH:-"${HOME}/Scratch/llama"}
 
-module load python/3.9.10
+module load openssl/1.1.1t python/3.11.3
 
 rm -rf vicuna_runtime
 virtualenv vicuna_runtime
@@ -31,6 +31,6 @@ python3 -m fastchat.model.apply_delta \
     --delta-path lmsys/vicuna-7b-delta-v1.1
 
 python3 -m fastchat.model.apply_delta \
-    --base-model-path ${LLAMA_PATH}/llama-13b_hf \
+    --base-model-path ${LLAMA_PATH}/13B_hf \
     --target-model-path vicuna-13b \
     --delta-path lmsys/vicuna-13b-delta-v1.1
