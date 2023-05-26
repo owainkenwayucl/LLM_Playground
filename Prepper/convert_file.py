@@ -79,7 +79,7 @@ def _process_strip_named_tags(xmlstring, filename):
 
 # This routine plits the string on body tags and then uses the manual string stripping
 def _process_splittag(xmlstring, filename):
-	data = xmlstring
+	data = str(xmlstring)
    
 	temp = data.split("<body>")[1]
 	temp = temp.split("</body>")[0]
