@@ -56,12 +56,12 @@ def _process_strip_named_tags(xmlstring, filename):
     for a in spaces:
         temp = temp.replace(a, " ")
     for a in longs:
-        while "<"+a in temp:
+        while "<"+ a + " " in temp:
             parts = temp.split("<" + a, 1)
             left = parts[0]
             right = parts[1]
             parts = right.split(">", 1)
-            right = parts[1]
+           right = parts[1]
 
             temp = left + " " + right
 
