@@ -35,6 +35,7 @@ def process(filename, outputdir=".", mode="split"):
 
 def _process_hybrid(xmlstring, filename):
     messages.error("Not implemented.")
+    return ""
 
 def _process_splittag(xmlstring, filename):
     data = xmlstring
