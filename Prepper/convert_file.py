@@ -5,7 +5,7 @@ import os
 
 _DATA_PATH="{http://www.tei-c.org/ns/1.0}text"
 
-def process(filename, outputdir="."):
+def process(filename, outputdir=".", mode="split"):
     messages.debug("Processing file: " + str(filename))
     data = ""
     try:
@@ -15,8 +15,12 @@ def process(filename, outputdir="."):
 
     
         #output = str(_process_elementtree(data, filename))
-        output = _process_splittag(data, filename)
-        #output = str(_process_elementtree(output, filename))
+        if mode == "split":
+            output = str(_process_splittag(data, filename))
+        elif node == "elementtree":
+            output = str(_process_elementtree(data, filename))
+        else:
+            messages.error("Invalid process method: " + mode)
         messages.debuglog(output, filename)
 
         outfile = os.path.join(outputdir, sha256 + ".txt")
@@ -74,7 +78,7 @@ def _process_elementtree(xmlstring, filename):
         tree_root = tree.getroot()
         data = tree_root.findall(_DATA_PATH)[0]
 
-        output = _ElementTree.tostring(data, encoding="utf-8", method="xml")
+        output = _ElementTree.tostring(data, encoding="utf-8", method="text")
 
         return output
 

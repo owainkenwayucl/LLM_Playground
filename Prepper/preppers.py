@@ -6,12 +6,12 @@ import convert_file
 
 _FILE_PREFIX="JB_"
 
-def _main(dirname, outdir, processes):
+def _main(dirname, outdir, processes, mode):
     if processes <= 1:
-        _serial_execute(_generate_file_list(dirname), outdir)
+        _serial_execute(_generate_file_list(dirname), outdir, mode)
     else:
         messages.debug("Enabling Parallel mode with " + str(processes) + " processes.")
-        _parallel_multiprocessing_execute(_generate_file_list(dirname), outdir, processes)
+        _parallel_multiprocessing_execute(_generate_file_list(dirname), outdir, processes, mode)
 
 def _generate_file_list(dirname):
     import os
@@ -25,11 +25,11 @@ def _generate_file_list(dirname):
     messages.debug("File list generated.")
     return fileslist
 
-def _serial_execute(files, outdir):
+def _serial_execute(files, outdir, mode):
     for a in files:
-        convert_file.process(a, outdir)
+        convert_file.process(a, outdir, mode)
 
-def _parallel_multiprocessing_execute(files, outdir, processes):
+def _parallel_multiprocessing_execute(files, outdir, processes, mode):
     from multiprocessing import Process, Queue, cpu_count
     l = len(files)
     messages.debug("Files detected: " + str(l))
@@ -57,7 +57,7 @@ def _parallel_multiprocessing_execute(files, outdir, processes):
     procs = []
 
     for a in range(processes):
-        procs.append(Process(target=_serial_execute, args=(chunkedlist[a],outdir)))
+        procs.append(Process(target=_serial_execute, args=(chunkedlist[a],outdir,mode)))
         procs[a].start()
 
 
@@ -73,11 +73,12 @@ if __name__ == "__main__":
     parser.add_argument("-D", action="store_true", help="Turn on Debug mode.", default=False)
     parser.add_argument("-o", metavar="outdir", type=str, help="Output folder for processed files.", default=".")
     parser.add_argument("-p", metavar="processes", type=int, help="Number of processes to use", default=1)
+    parser.add_argument("-m", metavar="mode", type=str, help="Processing routine", default="split", choices=["split", "elementtree"])
     parser.add_argument("directory", metavar="directory", type=str, nargs="+", help="Directory tree of files to process.")
     args = parser.parse_args()
 	
     messages.DEBUG=args.D
     
     for a in args.directory:
-        _main(a, args.o, args.p)
+        _main(a, args.o, args.p, args.m)
 
