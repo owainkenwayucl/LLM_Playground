@@ -16,8 +16,8 @@ def process(filename, outputdir=".", mode="split"):
 	data = ""
 	try:
 		with open(filename, "r") as file:
-			data = file.read()
-		sha256 = str(hashlib.sha256(data.encode("UTF-8")).hexdigest())
+			data = file.read().encode("UTF-8")
+		sha256 = str(hashlib.sha256(data).hexdigest())
 
 		if mode == "split":
 			output = _process_splittag(data, filename)
