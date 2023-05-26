@@ -4,6 +4,11 @@ import hashlib
 import os
 
 _DATA_PATH="{http://www.tei-c.org/ns/1.0}text"
+
+# Modes
+# 1. Split the xml string on <body> tags and then manually strip known tags (incomplete)
+# 2. Use ElementTree.tostring to remove all tags (loses meaning)
+# 3. Hybrid uses a mix of 1. and 2. (should be best?) 
 MODES = ["split", "elementtree", "hybrid"]
 
 def process(filename, outputdir=".", mode="split"):
@@ -32,16 +37,14 @@ def process(filename, outputdir=".", mode="split"):
         messages.error("Error processing " + filename)
         messages.error(str(e))
 
-
+# This routine combines manual tag stripping with element tree stripping
 def _process_hybrid(xmlstring, filename):
-    messages.error("Not implemented.")
-    return ""
+    stripped = _process_strip_named_tags(xmlstring, filename)
+    return _process_elementtree(stripped, filename)
 
-def _process_splittag(xmlstring, filename):
-    data = xmlstring
-   
-    temp = data.split("<body>")[1]
-    temp = temp.split("</body>")[0]
+# This routine strips out known tags.
+def _process_strip_named_tags(xmlstring, filename):
+    temp = xmlstring
 
     # Easy replacements
     spaces = ["<lb/>", "</hi>", "<sic>", "</sic>","<add>","</add>","<unclear>","</unclear>","<foreign>","</foreign>"]
@@ -72,11 +75,18 @@ def _process_splittag(xmlstring, filename):
 
         temp = left + right
 
-    data = temp
+    return temp
 
-    return data
+# This routine plits the string on body tags and then uses the manual string stripping
+def _process_splittag(xmlstring, filename):
+    data = xmlstring
+   
+    temp = data.split("<body>")[1]
+    temp = temp.split("</body>")[0]
 
+    return _process_strip_named_tags(temp, filename)
 
+# This routine abuses elementree.tostring to remove remaining tags.
 def _process_elementtree(xmlstring, filename):   
     try:
         tree = _ElementTree.ElementTree(_ElementTree.fromstring(xmlstring))
