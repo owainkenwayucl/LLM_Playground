@@ -4,6 +4,7 @@ import hashlib
 import os
 
 _DATA_PATH="{http://www.tei-c.org/ns/1.0}text"
+MODES = ["split", "elementtree", "hybrid"]
 
 def process(filename, outputdir=".", mode="split"):
     messages.debug("Processing file: " + str(filename))
@@ -13,11 +14,12 @@ def process(filename, outputdir=".", mode="split"):
             data = file.read()
         sha256 = str(hashlib.sha256(data.encode("UTF-8")).hexdigest())
 
-
         if mode == "split":
             output = _process_splittag(data, filename)
         elif mode == "elementtree":
             output = _process_elementtree(data, filename)
+        elif mode == "hybrid:"
+            output = _process_hybrid(data, filename)
         else:
             messages.error("Invalid process method: " + mode)
         messages.debuglog(output, filename)
@@ -30,6 +32,9 @@ def process(filename, outputdir=".", mode="split"):
         messages.error("Error processing " + filename)
         messages.error(str(e))
 
+
+def _process_hybrid(xmlstring, filename):
+    messages.error("Not implemented.")
 
 def _process_splittag(xmlstring, filename):
     data = xmlstring
