@@ -20,10 +20,10 @@ def process(filename, outputdir=".", mode="split"):
             output = _process_elementtree(data, filename)
         else:
             messages.error("Invalid process method: " + mode)
-        messages.debuglog(output.decode("utf-8"), filename)
+        messages.debuglog(output, filename)
 
         outfile = os.path.join(outputdir, sha256 + ".txt")
-        with open(outfile, "wb") as file:
+        with open(outfile, "w") as file:
             file.write(output)
 
     except Exception as e:
@@ -79,7 +79,7 @@ def _process_elementtree(xmlstring, filename):
 
         output = _ElementTree.tostring(data, encoding="utf-8", method="text")
 
-        return output
+        return output.decode("utf-8")
 
     except Exception as e:
         messages.error("XML Error in " + filename)
