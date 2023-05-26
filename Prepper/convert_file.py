@@ -18,7 +18,7 @@ def process(filename, outputdir=".", mode="split"):
             output = _process_splittag(data, filename)
         elif mode == "elementtree":
             output = _process_elementtree(data, filename)
-        elif mode == "hybrid:"
+        elif mode == "hybrid":
             output = _process_hybrid(data, filename)
         else:
             messages.error("Invalid process method: " + mode)
