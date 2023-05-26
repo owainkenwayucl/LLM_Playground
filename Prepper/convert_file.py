@@ -100,5 +100,5 @@ def _process_elementtree(xmlstring, filename):
 	except Exception as e:
 		messages.error("XML Error in " + filename)
 		messages.error(str(e))
-		messages.error(xmlstring)
+		messages.debug(xmlstring)
 		return ""
