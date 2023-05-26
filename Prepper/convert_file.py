@@ -20,7 +20,7 @@ def process(filename, outputdir=".", mode="split"):
             output = _process_elementtree(data, filename)
         else:
             messages.error("Invalid process method: " + mode)
-        messages.debuglog(str(output), filename)
+        messages.debuglog(output.decode("utf-8"), filename)
 
         outfile = os.path.join(outputdir, sha256 + ".txt")
         with open(outfile, "wb") as file:
