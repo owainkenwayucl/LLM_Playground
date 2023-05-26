@@ -13,11 +13,10 @@ def process(filename, outputdir=".", mode="split"):
             data = file.read()
         sha256 = str(hashlib.sha256(data.encode("UTF-8")).hexdigest())
 
-    
-        #output = str(_process_elementtree(data, filename))
+
         if mode == "split":
             output = str(_process_splittag(data, filename))
-        elif node == "elementtree":
+        elif mode == "elementtree":
             output = str(_process_elementtree(data, filename))
         else:
             messages.error("Invalid process method: " + mode)
