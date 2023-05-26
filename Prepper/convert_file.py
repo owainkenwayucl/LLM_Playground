@@ -15,15 +15,15 @@ def process(filename, outputdir=".", mode="split"):
 
 
         if mode == "split":
-            output = str(_process_splittag(data, filename))
+            output = _process_splittag(data, filename)
         elif mode == "elementtree":
-            output = str(_process_elementtree(data, filename))
+            output = _process_elementtree(data, filename)
         else:
             messages.error("Invalid process method: " + mode)
-        messages.debuglog(output, filename)
+        messages.debuglog(str(output), filename)
 
         outfile = os.path.join(outputdir, sha256 + ".txt")
-        with open(outfile, "w") as file:
+        with open(outfile, "wb") as file:
             file.write(output)
 
     except Exception as e:
