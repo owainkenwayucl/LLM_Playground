@@ -108,8 +108,10 @@ def _process_elementtree(xmlstring, filename):
 def _process_beautifulsoup(xmlstring, filename):
 	try:
 		from bs4 import BeautifulSoup
-		soup = BeautifulSoup(xmlstring, features="xml")
-		output = soup.get_text()
+		doc_soup = BeautifulSoup(xmlstring, features="xml")
+		body_text = str(doc_soup.find_all("body")[0])
+		body_soup = BeautifulSoup(body_text, features="xml") # horrible
+		output = body_soup.get_text()
 		return output
 
 	except Exception as e:
