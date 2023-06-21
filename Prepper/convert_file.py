@@ -109,7 +109,7 @@ def _process_beautifulsoup(xmlstring, filename):
 	try:
 		from bs4 import BeautifulSoup
 		soup = BeautifulSoup(xmlstring, features="xml")
-		output = BeautifulSoup(soup.TEI.text, features="xml").get_text()
+		output = soup.get_text()
 		return output
 
 	except Exception as e:
