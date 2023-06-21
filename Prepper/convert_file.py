@@ -9,7 +9,7 @@ _DATA_PATH="{http://www.tei-c.org/ns/1.0}text"
 # 1. Split the xml string on <body> tags and then manually strip known tags (incomplete)
 # 2. Use ElementTree.tostring to remove all tags (loses meaning)
 # 3. Hybrid uses a mix of 1. and 2. (should be best?) 
-MODES = ["split", "elementtree", "hybrid"]
+MODES = ["split", "elementtree", "hybrid", "beautifulsoup"]
 
 def process(filename, outputdir=".", mode="split"):
 	messages.debug("Processing file: " + str(filename))
@@ -25,6 +25,8 @@ def process(filename, outputdir=".", mode="split"):
 			output = _process_elementtree(data, filename)
 		elif mode == "hybrid":
 			output = _process_hybrid(data, filename)
+		elif mode == "beautifulsoup":
+			output = _process_beautifulsoup(data, filename)
 		else:
 			messages.error("Invalid process method: " + mode)
 		messages.debuglog(output, filename)
@@ -96,6 +98,18 @@ def _process_elementtree(xmlstring, filename):
 		output = _ElementTree.tostring(data, encoding="utf-8", method="text")
 
 		return output.decode("utf-8")
+
+	except Exception as e:
+		messages.error("XML Error in " + filename)
+		messages.error(str(e))
+		messages.debug(xmlstring)
+		return ""
+
+def _process_beautifulsoup(xmlstring, filename):
+	try:
+		from bs4 import BeautifulSoup
+		soup = BeautifulSoup(xmlstring, 'lxml')
+		return soup.prettify()
 
 	except Exception as e:
 		messages.error("XML Error in " + filename)
