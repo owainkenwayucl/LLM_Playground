@@ -108,7 +108,7 @@ def _process_elementtree(xmlstring, filename):
 def _process_beautifulsoup(xmlstring, filename):
 	try:
 		from bs4 import BeautifulSoup
-		soup = BeautifulSoup(xmlstring, 'lxml')
+		soup = BeautifulSoup(xmlstring, "lxml", features="xml")
 		return soup.prettify()
 
 	except Exception as e:
