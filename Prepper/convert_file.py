@@ -116,8 +116,10 @@ def _process_elementtree(xmlstring, filename):
 def _process_sheep(xmlstring, filename):
 	if not _SHEEP_CONFIGURED:
 		_setup_sheep()
-	
-	return _LLM_ENDPOINT(_PROMPT + xmlstring)[0]
+	if _PLATFORM_GRAPHCORE:
+		return _LLM_ENDPOINT(_PROMPT + xmlstring)[0]
+	else:
+		return _LLM_ENDPOINT(_PROMPT + xmlstring)[0]["generated_text"]
 
 def _setup_sheep():
 	messages.debug("Setting up LLM toolchain")
@@ -145,7 +147,7 @@ def _setup_sheep():
 
 		tokenizer = AutoTokenizer.from_pretrained("databricks/dolly-v2-12b", padding_side="left")
 		model = AutoModelForCausalLM.from_pretrained("databricks/dolly-v2-12b", device_map="auto", torch_dtype=torch.bfloat16)
-		pipeline = InstructionTextGenerationPipeline(model=model, task="text-generation", tokenizer=tokenizer, return_full_text=True)
+		pipeline = InstructionTextGenerationPipeline(model=model, task="text-generation", tokenizer=tokenizer, return_full_text=False)
 
 	global _LLM_ENDPOINT
 	global _SHEEP_CONFIGURED
