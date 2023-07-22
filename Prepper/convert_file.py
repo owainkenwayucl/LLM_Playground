@@ -121,6 +121,7 @@ def _setup_sheep():
 	messages.debug("Setting up LLM toolchain")
 	import torch
 	if _PLATFORM_GRAPHCORE:
+		messages.debug("Graphcore environment detected.")
 		number_of_ipus = int(os.getenv("NUM_AVAILABLE_IPU", 16))
 		number_of_ipus
 
