@@ -9,8 +9,8 @@ _SHEEP_CONFIGURED = False
 _LLM_ENDPOINT = None
 _PLATFORM_GRAPHCORE = False
 _PROMPT = "You are an AI tasked with processing XML data and converting it into plain text by interpreting tags. As an AI tasked with this difficult job, you are professional and not chatty. Please process up the following XML snippet: "
-_MODEL = "OpenAssistant/oasst-sft-4-pythia-12b-epoch-3.5"
-#_MODEL = "databricks/dolly-v2-12b"
+#_MODEL = "OpenAssistant/oasst-sft-4-pythia-12b-epoch-3.5"
+_MODEL = "databricks/dolly-v2-12b"
 
 # Modes
 # 1. Split the xml string on <body> tags and then manually strip known tags (incomplete)
