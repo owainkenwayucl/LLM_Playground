@@ -7,7 +7,7 @@ _DATA_PATH="{http://www.tei-c.org/ns/1.0}text"
 _SHEEP_CONFIGURED = False
 _LLM_ENDPOINT = None
 _PLATFORM_GRAPHCORE = False
-_PROMPT = "You are an AI tasked with cleaning up XML data and indentifying which pieces are written by Jeremy Bentham. Please extract the text written by Bentham in the following XML snippet: "
+_PROMPT = "You are an AI tasked with processing XML data and converting it into plain text by interpeting tags. Please process up the following XML snippet: "
 
 # Modes
 # 1. Split the xml string on <body> tags and then manually strip known tags (incomplete)
@@ -115,7 +115,7 @@ def _process_sheep(xmlstring, filename):
 	if not _SHEEP_CONFIGURED:
 		_setup_sheep()
 	
-	return _LLM_ENDPOINT(_PROMPT + xmlstring)
+	return _LLM_ENDPOINT(_PROMPT + xmlstring)[0]
 
 def _setup_sheep():
 	messages.debug("Setting up LLM toolchain")
