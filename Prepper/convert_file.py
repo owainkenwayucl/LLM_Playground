@@ -145,6 +145,8 @@ def _setup_sheep():
 		model = AutoModelForCausalLM.from_pretrained("databricks/dolly-v2-12b", device_map="auto", torch_dtype=torch.bfloat16)
 		pipeline = InstructionTextGenerationPipeline(model=model, task="text-generation", tokenizer=tokenizer, return_full_text=True)
 
+	global _LLM_ENDPOINT
+	global _SHEEP_CONFIGURED
 	_LLM_ENDPOINT = pipeline
 	_SHEEP_CONFIGURED = True
 	messages.debug("Setup Complete.")

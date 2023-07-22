@@ -74,10 +74,12 @@ if __name__ == "__main__":
 	parser.add_argument("-o", metavar="outdir", type=str, help="Output folder for processed files.", default=".")
 	parser.add_argument("-p", metavar="processes", type=int, help="Number of processes to use", default=1)
 	parser.add_argument("-m", metavar="mode", type=str, help="Processing routine", default=convert_file.MODES[0], choices=convert_file.MODES)
+	parser.add_argument("-g", action='store_true', help='Use Graphcore IPU.')
 	parser.add_argument("directory", metavar="directory", type=str, nargs="+", help="Directory tree of files to process.")
 	args = parser.parse_args()
 	
 	messages.DEBUG=args.D
+	convert_file._PLATFORM_GRAPHCORE = args.g
 	
 	for a in args.directory:
 		_main(a, args.o, args.p, args.m)
