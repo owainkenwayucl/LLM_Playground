@@ -2,6 +2,7 @@ import messages
 import xml.etree.ElementTree as _ElementTree
 import hashlib
 import os
+import sys
 
 _DATA_PATH="{http://www.tei-c.org/ns/1.0}text"
 _SHEEP_CONFIGURED = False
@@ -16,6 +17,7 @@ _PROMPT = "You are an AI tasked with processing XML data and converting it into 
 MODES = ["split", "elementtree", "hybrid", "beautifulsoup", "sheep"]
 
 def process(filename, outputdir=".", mode="split"):
+	sys.argv = [sys.argv[0]] # fix weird poplar bug
 	messages.debug("Processing file: " + str(filename))
 	data = ""
 	try:
