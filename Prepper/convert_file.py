@@ -4,6 +4,10 @@ import hashlib
 import os
 
 _DATA_PATH="{http://www.tei-c.org/ns/1.0}text"
+_SHEEP_CONFIGURED = False
+_LLM_ENDPOINT = None
+_PLATFOMR_GRAPHCORE = False
+_PROMPT = "You are an AI tasked with cleaning up XML data and indentifying which pieces are written by Jeremy Bentham. Please extract the text written by Bentham in the following XML snippet: "
 
 # Modes
 # 1. Split the xml string on <body> tags and then manually strip known tags (incomplete)
@@ -104,6 +108,42 @@ def _process_elementtree(xmlstring, filename):
 		messages.error(str(e))
 		messages.debug(xmlstring)
 		return ""
+
+def _process_sheep(xmlstring, filename):
+	if not _SHEEP_CONFIGURED:
+		_setup_sheep()
+	
+	return _LLM_ENDPOINT(_PROMPT + xmlstring)
+
+def _setup_sheep():
+	messages.debug("Setting up LLM toolchain")
+	import torch
+	if _PLATFOMR_GRAPHCORE:
+		number_of_ipus = int(os.getenv("NUM_AVAILABLE_IPU", 16))
+		number_of_ipus
+
+		from utils.setup import dolly_config_setup
+
+		config_name = "dolly_pod4" if number_of_ipus == 4 else "dolly_pod16"
+		config, *_ = dolly_config_setup("config/inference.yml", "release", config_name)
+		config
+
+		import api
+
+		sequence_length = 1024
+		micro_batch_size = 4
+
+		pipeline = api.DollyPipeline(config, sequence_length=sequence_length, micro_batch_size=micro_batch_size)
+	else:		
+		from instruct_pipeline import InstructionTextGenerationPipeline
+		from transformers import AutoModelForCausalLM, AutoTokenizer
+
+		tokenizer = AutoTokenizer.from_pretrained("databricks/dolly-v2-12b", padding_side="left")
+		model = AutoModelForCausalLM.from_pretrained("databricks/dolly-v2-12b", device_map="auto", torch_dtype=torch.bfloat16)
+		pipeline = InstructionTextGenerationPipeline(model=model, task="text-generation", tokenizer=tokenizer, return_full_text=True)
+
+	_LLM_ENDPOINT = pipeline
+	_SHEEP_CONFIGURED = True
 
 def _process_beautifulsoup(xmlstring, filename):
 	try:
