@@ -9,6 +9,8 @@ _SHEEP_CONFIGURED = False
 _LLM_ENDPOINT = None
 _PLATFORM_GRAPHCORE = False
 _PROMPT = "You are an AI tasked with processing XML data and converting it into plain text by interpreting tags. As an AI tasked with this difficult job, you are professional and not chatty. Please process up the following XML snippet: "
+_MODEL = "OpenAssistant/oasst-sft-4-pythia-12b-epoch-3.5"
+#_MODEL = "databricks/dolly-v2-12b"
 
 # Modes
 # 1. Split the xml string on <body> tags and then manually strip known tags (incomplete)
@@ -140,13 +142,13 @@ def _setup_sheep():
 		sequence_length = 1024
 		micro_batch_size = 4
 
-		pipeline = api.DollyPipeline(config, sequence_length=sequence_length, micro_batch_size=micro_batch_size)
+		pipeline = api.DollyPipeline(config, sequence_length=sequence_length, micro_batch_size=micro_batch_size, hf_dolly_checkpoint=_MODEL)
 	else:		
 		from instruct_pipeline import InstructionTextGenerationPipeline
 		from transformers import AutoModelForCausalLM, AutoTokenizer
 
-		tokenizer = AutoTokenizer.from_pretrained("databricks/dolly-v2-12b", padding_side="left")
-		model = AutoModelForCausalLM.from_pretrained("databricks/dolly-v2-12b", device_map="auto", torch_dtype=torch.bfloat16)
+		tokenizer = AutoTokenizer.from_pretrained(_MODEL, padding_side="left")
+		model = AutoModelForCausalLM.from_pretrained(_MODEL, device_map="auto", torch_dtype=torch.bfloat16)
 		pipeline = InstructionTextGenerationPipeline(model=model, task="text-generation", tokenizer=tokenizer, return_full_text=False)
 
 	global _LLM_ENDPOINT
