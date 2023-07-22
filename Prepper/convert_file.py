@@ -31,7 +31,7 @@ def process(filename, outputdir=".", mode="split"):
 			output = _process_hybrid(data, filename)
 		elif mode == "beautifulsoup":
 			output = _process_beautifulsoup(data, filename)
-		elif mode == "sheep"
+		elif mode == "sheep":
 			output = _process_sheep(data, filename)
 		else:
 			messages.error("Invalid process method: " + mode)
