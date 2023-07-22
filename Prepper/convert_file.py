@@ -6,14 +6,14 @@ import os
 _DATA_PATH="{http://www.tei-c.org/ns/1.0}text"
 _SHEEP_CONFIGURED = False
 _LLM_ENDPOINT = None
-_PLATFOMR_GRAPHCORE = False
+_PLATFORM_GRAPHCORE = False
 _PROMPT = "You are an AI tasked with cleaning up XML data and indentifying which pieces are written by Jeremy Bentham. Please extract the text written by Bentham in the following XML snippet: "
 
 # Modes
 # 1. Split the xml string on <body> tags and then manually strip known tags (incomplete)
 # 2. Use ElementTree.tostring to remove all tags (loses meaning)
 # 3. Hybrid uses a mix of 1. and 2. (should be best?) 
-MODES = ["split", "elementtree", "hybrid", "beautifulsoup"]
+MODES = ["split", "elementtree", "hybrid", "beautifulsoup", "sheep"]
 
 def process(filename, outputdir=".", mode="split"):
 	messages.debug("Processing file: " + str(filename))
@@ -31,6 +31,8 @@ def process(filename, outputdir=".", mode="split"):
 			output = _process_hybrid(data, filename)
 		elif mode == "beautifulsoup":
 			output = _process_beautifulsoup(data, filename)
+		elif mode == "sheep"
+			output = _process_sheep(data, filename)
 		else:
 			messages.error("Invalid process method: " + mode)
 		messages.debuglog(output, filename)
@@ -144,6 +146,7 @@ def _setup_sheep():
 
 	_LLM_ENDPOINT = pipeline
 	_SHEEP_CONFIGURED = True
+	messages.debug("Setup Complete.")
 
 def _process_beautifulsoup(xmlstring, filename):
 	try:
