@@ -120,7 +120,7 @@ def _process_sheep(xmlstring, filename):
 def _setup_sheep():
 	messages.debug("Setting up LLM toolchain")
 	import torch
-	if _PLATFOMR_GRAPHCORE:
+	if _PLATFORM_GRAPHCORE:
 		number_of_ipus = int(os.getenv("NUM_AVAILABLE_IPU", 16))
 		number_of_ipus
 
