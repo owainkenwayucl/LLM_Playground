@@ -8,7 +8,7 @@ _DATA_PATH="{http://www.tei-c.org/ns/1.0}text"
 _SHEEP_CONFIGURED = False
 _LLM_ENDPOINT = None
 _PLATFORM_GRAPHCORE = False
-_PROMPT = "You are an AI tasked with processing XML data and converting it into plain text by interpeting tags. Please process up the following XML snippet: "
+_PROMPT = "You are an AI tasked with processing XML data and converting it into plain text by interpreting tags. Please process up the following XML snippet: "
 
 # Modes
 # 1. Split the xml string on <body> tags and then manually strip known tags (incomplete)
