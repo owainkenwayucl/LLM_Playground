@@ -16,7 +16,7 @@ _MODEL = "databricks/dolly-v2-12b"
 # 1. Split the xml string on <body> tags and then manually strip known tags (incomplete)
 # 2. Use ElementTree.tostring to remove all tags (loses meaning)
 # 3. Hybrid uses a mix of 1. and 2. (should be best?) 
-MODES = ["split", "elementtree", "hybrid", "beautifulsoup", "sheep"]
+MODES = ["split", "elementtree", "hybrid", "beautifulsoup", "sheep", "hybridsoup"]
 
 def process(filename, outputdir=".", mode="split"):
 	sys.argv = [sys.argv[0]] # fix weird poplar bug
@@ -37,6 +37,8 @@ def process(filename, outputdir=".", mode="split"):
 			output = _process_beautifulsoup(data, filename)
 		elif mode == "sheep":
 			output = _process_sheep(data, filename)
+		elif mode == "hybridsoup":
+			output = _process_beautifulsoup_hybrid(data,filename)
 		else:
 			messages.error("Invalid process method: " + mode)
 		messages.debuglog(output, filename)
@@ -170,6 +172,22 @@ def _process_beautifulsoup(xmlstring, filename):
 		from bs4 import BeautifulSoup
 		doc_soup = BeautifulSoup(xmlstring, features="xml")
 		body_text = str(doc_soup.find_all("body")[0])
+		body_soup = BeautifulSoup(body_text, features="xml") # horrible
+		output = body_soup.get_text()
+		return output
+
+	except Exception as e:
+		messages.error("XML Error in " + filename)
+		messages.error(str(e))
+		messages.debug(xmlstring)
+		return ""
+
+def _process_beautifulsoup_hybrid(xmlstring, filename):
+	try:
+		from bs4 import BeautifulSoup
+		doc_soup = BeautifulSoup(xmlstring, features="xml")
+		body_text = str(doc_soup.find_all("body")[0])
+		body_text = _process_strip_named_tags(body_text,filename)
 		body_soup = BeautifulSoup(body_text, features="xml") # horrible
 		output = body_soup.get_text()
 		return output
