@@ -62,6 +62,7 @@ def _process_strip_named_tags(xmlstring, filename):
 	spaces = ["<lb/>", "</hi>", "<sic>", "</sic>","<add>","</add>","<unclear>","</unclear>","<foreign>","</foreign>"]
 	nulls = ["<p>","</p>", "<div>", "</div>", "<note>", "</note>","<head>","</head>", "<pb/>", "<gap/>"]
 	longs = ["hi", "p", "div"]
+	elipsis = ["...", "…"]
 
 	for a in nulls:
 		temp = temp.replace(a, "")
@@ -77,6 +78,16 @@ def _process_strip_named_tags(xmlstring, filename):
 
 			temp = left + " " + right
 
+	for a in elipsis:
+		while "<"+ a + " " in temp:
+			parts = temp.split("<" + a, 1)
+			left = parts[0]
+			right = parts[1]
+			parts = right.split(">", 1)
+			q = parts[0]
+			right = parts[1]
+
+			temp = left + "[..." + q + "]" + right
 	# Deletions
 	while "<del>" in temp:
 		parts = temp.split("<del>", 1)
