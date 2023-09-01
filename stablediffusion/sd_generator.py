@@ -57,7 +57,7 @@ def setup_pipeline(model, width, height):
 
     return pipe
 
-def inference(pipe, prompt, num_gen, fname, image_width, image_height):
+def inference(pipe, prompt, num_gen=4, fname="output", image_width=512, image_height=512):
     r = []
     for a in range(num_gen):
         out = pipe(prompt, height=image_height, width=image_width, guidance_scale=7.5).images[0]
