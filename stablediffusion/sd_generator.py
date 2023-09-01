@@ -41,9 +41,13 @@ def main(prompt, model, width, height, number, fname):
     else:
         import torch
         from diffusers import StableDiffusionPipeline
-        try: 
+
+        if torch.cuda.device_count() > 0:
+            print("Running on GPU")
             pipe = StableDiffusionPipeline.from_pretrained(model, torch_dtype=torch.float16)
-        except:
+            pipe = pipe.to("cuda")
+        else:
+            print("Running on CPU")
             pipe = StableDiffusionPipeline.from_pretrained(model, torch_dtype=torch.float32)
 
     for a in range(num_gen):
