@@ -2,7 +2,7 @@ def main(prompt, model, width, height, number, fname):
     pipeline = setup_pipeline(model, width, height)
     inference(pipeline, prompt, number, fname, width, height)
 
-def setup_pipeline(model, width, height)
+def setup_pipeline(model, width, height):
 
     import os
     from PIL import Image
