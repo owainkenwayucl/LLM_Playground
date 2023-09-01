@@ -64,4 +64,4 @@ if __name__ == "__main__":
 
     prompt = "an Atlas battlemech from the battletech universe liberating an alien city, oil paint"
 
-    main(prompt, model, image_width, image_height, num_get)
+    main(prompt, model, image_width, image_height, num_gen, "output")
