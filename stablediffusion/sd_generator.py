@@ -1,6 +1,6 @@
 def main(prompt, model, width, height, number, fname):
     pipeline = setup_pipeline(model, width, height)
-    inference(pipeline, prompt, number, fname, width, height)
+    _ = inference(pipeline, prompt, number, fname, width, height)
 
 def setup_pipeline(model, width, height):
 
@@ -58,9 +58,12 @@ def setup_pipeline(model, width, height):
     return pipe
 
 def inference(pipe, prompt, num_gen, fname, image_width, image_height):
+    r = []
     for a in range(num_gen):
         out = pipe(prompt, height=image_height, width=image_width, guidance_scale=7.5).images[0]
         out.save(f"{fname}{a}.png")
+        r.append(out)
+    return r
 
 if __name__ == "__main__":
 
