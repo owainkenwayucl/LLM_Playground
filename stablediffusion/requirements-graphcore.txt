@@ -1,0 +1,5 @@
+# Note you must also have poptorch installed from your Graphcore installation
+optimum-graphcore
+matplotlib
+jupyterlab
+ipywidgets
