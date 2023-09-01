@@ -1,4 +1,9 @@
 def main(prompt, model, width, height, number, fname):
+    pipeline = setup_pipeline(model, width, height)
+    inference(pipeline, prompt, number, fname, width, height)
+
+def setup_pipeline(model, width, height)
+
     import os
     from PIL import Image
 
@@ -6,7 +11,7 @@ def main(prompt, model, width, height, number, fname):
 
     image_width = width
     image_height = height
-    num_gen = number
+
 
     try:
         import poptorch
@@ -50,6 +55,9 @@ def main(prompt, model, width, height, number, fname):
             print("Running on CPU")
             pipe = StableDiffusionPipeline.from_pretrained(model, torch_dtype=torch.float32)
 
+    return pipe
+
+def inference(pipe, prompt, num_gen, fname, image_width, image_height):
     for a in range(num_gen):
         out = pipe(prompt, height=image_height, width=image_width, guidance_scale=7.5).images[0]
         out.save(f"{fname}{a}.png")
