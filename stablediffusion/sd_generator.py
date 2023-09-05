@@ -54,18 +54,28 @@ def main(prompt, model, width, height, number, fname):
         out = pipe(prompt, height=image_height, width=image_width, guidance_scale=7.5).images[0]
         out.save(f"{fname}{a}.png")
 
+def ask(prompt, default):
+    response = input(f"{prompt}[{default}]? ")
+    response = response.strip()
+    if response == "":
+        response = default
+
+    return response
+
 if __name__ == "__main__":
 
     model_1_4="CompVis/stable-diffusion-v1-4"
     model_1_5="runwayml/stable-diffusion-v1-5"
     model_2_0="stabilityai/stable-diffusion-2"
 
-    model = model_1_4
+    model = ask("Model", model_1_4)
 
-    image_width = 512
-    image_height = 512
-    num_gen = 20
+    image_width = int(ask("Width", str(512)))
+    image_height = int(ask("Height", str(512)))
+    num_gen = int(ask("Number to generate", str(20)))
 
-    prompt = "an Atlas battlemech from the battletech universe liberating an alien city, oil paint"
+    prompt = "space pineapple, oil paint"
+    prompt = ask("Prompt", prompt)
+    fname = ask("File name", "output")
 
-    main(prompt, model, image_width, image_height, num_gen, "output")
+    main(prompt, model, image_width, image_height, num_gen, fname)
