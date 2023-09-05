@@ -79,6 +79,7 @@ if __name__ == "__main__":
     model_1_5="runwayml/stable-diffusion-v1-5"
     model_2_0="stabilityai/stable-diffusion-2"
 
+    print("Known working models: {model_1_4},{model_1_5} and {model_2_0}")
     model = ask("Model", model_1_4)
 
     image_width = int(ask("Width", str(512)))
