@@ -96,6 +96,6 @@ if __name__ == "__main__":
     prompt = ask("Prompt", prompt)
     fname = ask("File name", "output")
     guidance_scale = int(ask("Guidance scale", str(7.5)))
-    iterations = int(ask("Inference iterations", str(1))
+    iterations = int(ask("Inference iterations", str(1)))
 
     main(prompt, model, image_width, image_height, num_gen, fname, guidance_scale, iterations)
