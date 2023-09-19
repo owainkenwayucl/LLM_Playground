@@ -1,8 +1,8 @@
-def main(prompt, model, width, height, number, fname):
-    pipeline = setup_pipeline(model, width, height)
-    _ = inference(pipeline, prompt, number, fname, width, height)
+def main(prompt, model, width, height, number, fname, guidance_scale, iterations):
+    pipeline = setup_pipeline(model, width, height, guidance_scale, iterations)
+    _ = inference(pipeline, prompt, number, fname, width, height, guidance_scale, iterations)
 
-def setup_pipeline(model, width, height):
+def setup_pipeline(model, width, height, guidance_scale=7.5, iterations=1):
 
     import os
     from PIL import Image
@@ -41,7 +41,10 @@ def setup_pipeline(model, width, height):
         )
         pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
         print("Doing precompile.")
-        out = pipe("pineapple", height=image_height, width=image_width, guidance_scale=7.5).images[0]
+        if iterations > 1:
+            out = pipe("pineapple", height=image_height, width=image_width, num_inference_steps=iterations, guidance_scale=guidance_scale).images[0]
+        else:
+            out = pipe("pineapple", height=image_height, width=image_width, guidance_scale=guidance_scale).images[0]
         out.save(f"compile.png")
     else:
         import torch
@@ -57,10 +60,13 @@ def setup_pipeline(model, width, height):
 
     return pipe
 
-def inference(pipe, prompt, num_gen=4, fname="output", image_width=512, image_height=512):
+def inference(pipe, prompt, num_gen=4, fname="output", image_width=512, image_height=512, guidance_scale=7.5, iterations=1):
     r = []
     for a in range(num_gen):
-        out = pipe(prompt, height=image_height, width=image_width, guidance_scale=7.5).images[0]
+        if iterations > 1:
+            out = pipe(prompt, height=image_height, width=image_width, num_inference_steps=iterations, guidance_scale=guidance_scale).images[0]
+        else: 
+            out = pipe(prompt, height=image_height, width=image_width, guidance_scale=guidance_scale).images[0]
         out.save(f"{fname}{a}.png")
         r.append(out)
     return r
@@ -89,5 +95,7 @@ if __name__ == "__main__":
     prompt = "space pineapple, oil paint"
     prompt = ask("Prompt", prompt)
     fname = ask("File name", "output")
+    guidance_scale = int(ask("Guidance scale", str(7.5)))
+    iterations = int(ask("Inference iterations", str(1))
 
-    main(prompt, model, image_width, image_height, num_gen, fname)
+    main(prompt, model, image_width, image_height, num_gen, fname, guidance_scale, iterations)
