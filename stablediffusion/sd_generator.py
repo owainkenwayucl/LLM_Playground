@@ -51,9 +51,13 @@ def setup_pipeline(model, width, height, guidance_scale=7.5, iterations=1):
         from diffusers import StableDiffusionPipeline
 
         if torch.cuda.device_count() > 0:
-            print("Running on GPU")
+            print("Running on Nvidia GPU")
             pipe = StableDiffusionPipeline.from_pretrained(model, torch_dtype=torch.float16)
             pipe = pipe.to("cuda")
+        elif torch.backends.mps.is_available():
+            print("Running on Apple GPU")
+            pipe = StableDiffusionPipeline.from_pretrained(model, torch_dtype=torch.float32)
+            pipe = pipe.to("mps")
         else:
             print("Running on CPU")
             pipe = StableDiffusionPipeline.from_pretrained(model, torch_dtype=torch.float32)
@@ -90,12 +94,12 @@ if __name__ == "__main__":
 
     image_width = int(ask("Width", str(512)))
     image_height = int(ask("Height", str(512)))
-    num_gen = int(ask("Number to generate", str(20)))
+    num_gen = int(ask("Number to generate", str(1)))
 
     prompt = "space pineapple, oil paint"
     prompt = ask("Prompt", prompt)
     fname = ask("File name", "output")
-    guidance_scale = int(ask("Guidance scale", str(7.5)))
+    guidance_scale = float(ask("Guidance scale", str(7.5)))
     iterations = int(ask("Inference iterations", str(1)))
 
     main(prompt, model, image_width, image_height, num_gen, fname, guidance_scale, iterations)
