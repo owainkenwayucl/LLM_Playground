@@ -1,10 +1,34 @@
+# Globals (I know!)
+import os
+n_ipu = int(os.getenv("NUM_AVAILABLE_IPU", 8))
+
 def main(prompt, model, width, height, number, fname, guidance_scale, iterations):
     pipeline = setup_pipeline(model, width, height, guidance_scale, iterations)
     _ = inference(pipeline, prompt, number, fname, width, height, guidance_scale, iterations)
 
+def detect_platform():
+    import torch
+    cpu = {"name": "CPU", "device":"cpu", "size":torch.float32}
+    graphcore = {"name": "Graphcore", "device":"ipu", "size":torch.float16}
+    nvidia = {"name": "Nvidia", "device":"gpu", "size":torch.float16}
+    metal = {"name": "Apple Metal", "device":"mps", "size":torch.float32}
+
+    r = cpu
+    try: 
+        import poptorch
+        print(f"Running on {n_ipu} Graphcore IPU(s)")
+        r = graphcore
+    except:
+        if torch.cuda.device_count() > 0:
+            print("Running on Nvidia GPU")
+            r = nvidia
+        elif torch.backends.mps.is_available():
+            print("Running on Apple GPU")
+            r = metal      
+    return r
+
 def setup_pipeline(model, width, height, guidance_scale=7.5, iterations=1):
 
-    import os
     from PIL import Image
 
     graphcore = False
@@ -12,27 +36,17 @@ def setup_pipeline(model, width, height, guidance_scale=7.5, iterations=1):
     image_width = width
     image_height = height
 
-
-    try:
-        import poptorch
-        graphcore = True
-        print("Graphcore detected!")
-    except:
-        graphcore = False
-        print("Graphcore not detected!")
-
-    if graphcore:
+    if platform["name"] == "Graphcore":
         import torch
         from diffusers import DPMSolverMultistepScheduler
 
         from optimum.graphcore.diffusers import IPUStableDiffusionPipeline
 
-        n_ipu = int(os.getenv("NUM_AVAILABLE_IPU", 8))
         executable_cache_dir = os.getenv("POPLAR_EXECUTABLE_CACHE_DIR", "./exe_cache") + "/stablediffusion2_text2img"
         pipe = IPUStableDiffusionPipeline.from_pretrained(
             model,
             revision="fp16", 
-            torch_dtype=torch.float16,
+            torch_dtype=platform["size"],
             requires_safety_checker=False,
             n_ipu=n_ipu,
             num_prompts=1,
@@ -41,30 +55,17 @@ def setup_pipeline(model, width, height, guidance_scale=7.5, iterations=1):
         )
         pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
         print("Doing precompile.")
-        if iterations > 1:
-            out = pipe("pineapple", height=image_height, width=image_width, num_inference_steps=iterations, guidance_scale=guidance_scale).images[0]
-        else:
-            out = pipe("pineapple", height=image_height, width=image_width, guidance_scale=guidance_scale).images[0]
-        out.save(f"compile.png")
+        temp = inference(pipe, "pineapple", 1, "compile", width, height, guidance_scale, iterations)
     else:
         import torch
         from diffusers import StableDiffusionPipeline
 
-        if torch.cuda.device_count() > 0:
-            print("Running on Nvidia GPU")
-            pipe = StableDiffusionPipeline.from_pretrained(model, torch_dtype=torch.float16)
-            pipe = pipe.to("cuda")
-        elif torch.backends.mps.is_available():
-            print("Running on Apple GPU")
-            pipe = StableDiffusionPipeline.from_pretrained(model, torch_dtype=torch.float32)
-            pipe = pipe.to("mps")
-        else:
-            print("Running on CPU")
-            pipe = StableDiffusionPipeline.from_pretrained(model, torch_dtype=torch.float32)
+        pipe = StableDiffusionPipeline.from_pretrained(model, torch_dtype=platform["size"])
+        pipe = pipe.to(platform["device"])
 
     return pipe
 
-def inference(pipe, prompt, num_gen=4, fname="output", image_width=512, image_height=512, guidance_scale=7.5, iterations=1):
+def inference(pipe, prompt, num_gen=1, fname="output", image_width=512, image_height=512, guidance_scale=7.5, iterations=1):
     r = []
     for a in range(num_gen):
         if iterations > 1:
@@ -82,6 +83,8 @@ def ask(prompt, default):
         response = default
 
     return response
+
+platform = detect_platform()
 
 if __name__ == "__main__":
 
