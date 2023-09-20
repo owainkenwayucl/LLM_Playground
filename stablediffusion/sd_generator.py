@@ -3,7 +3,7 @@ import os
 n_ipu = int(os.getenv("NUM_AVAILABLE_IPU", 8))
 
 def main(prompt, model, width, height, number, fname, guidance_scale, iterations):
-    pipeline = setup_pipeline(model, width, height, guidance_scale, iterations)
+    pipeline = setup_pipeline(model)
     _ = inference(pipeline, prompt, number, fname, width, height, guidance_scale, iterations)
 
 def detect_platform():
@@ -27,7 +27,7 @@ def detect_platform():
             r = metal      
     return r
 
-def setup_pipeline(model, width, height, guidance_scale=7.5, iterations=1):
+def setup_pipeline(model):
 
     graphcore = False
 
@@ -49,8 +49,7 @@ def setup_pipeline(model, width, height, guidance_scale=7.5, iterations=1):
             common_ipu_config_kwargs={"executable_cache_dir": executable_cache_dir}
         )
         pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
-        print("Doing precompile.")
-        temp = inference(pipe, "pineapple", 1, "compile", width, height, guidance_scale, iterations)
+
     else:
         import torch
         from diffusers import StableDiffusionPipeline
