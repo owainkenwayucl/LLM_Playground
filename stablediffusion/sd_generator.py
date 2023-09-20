@@ -33,9 +33,6 @@ def setup_pipeline(model, width, height, guidance_scale=7.5, iterations=1):
 
     graphcore = False
 
-    image_width = width
-    image_height = height
-
     if platform["name"] == "Graphcore":
         import torch
         from diffusers import DPMSolverMultistepScheduler
