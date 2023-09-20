@@ -29,8 +29,6 @@ def detect_platform():
 
 def setup_pipeline(model, width, height, guidance_scale=7.5, iterations=1):
 
-    from PIL import Image
-
     graphcore = False
 
     if platform["name"] == "Graphcore":
