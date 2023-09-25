@@ -27,7 +27,7 @@ def detect_platform():
             r = metal      
     return r
 
-def setup_pipeline(model):
+def setup_pipeline(model, ipus=n_ipu):
 
     graphcore = False
 
@@ -37,13 +37,16 @@ def setup_pipeline(model):
 
         from optimum.graphcore.diffusers import IPUStableDiffusionPipeline
 
+        if ipus > n_ipu:
+            print(f">>> Warning: {ipus} is larger than available IPUs {n_ipu}.")
+
         executable_cache_dir = os.getenv("POPLAR_EXECUTABLE_CACHE_DIR", "./exe_cache") + "/stablediffusion2_text2img"
         pipe = IPUStableDiffusionPipeline.from_pretrained(
             model,
             revision="fp16", 
             torch_dtype=platform["size"],
             requires_safety_checker=False,
-            n_ipu=n_ipu,
+            n_ipu=ipus,
             num_prompts=1,
             num_images_per_prompt=1,
             common_ipu_config_kwargs={"executable_cache_dir": executable_cache_dir}
