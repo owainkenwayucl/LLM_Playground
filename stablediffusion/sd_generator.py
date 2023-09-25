@@ -1,6 +1,6 @@
 # Globals (I know!)
 import os
-n_ipu = int(os.getenv("NUM_AVAILABLE_IPU", 8))
+n_ipu = int(os.getenv("NUM_AVAILABLE_IPU", 4))
 
 def main(prompt, model, width, height, number, fname, guidance_scale, iterations):
     pipeline = setup_pipeline(model)
