@@ -88,18 +88,19 @@ if __name__ == "__main__":
     model_1_4="CompVis/stable-diffusion-v1-4"
     model_1_5="runwayml/stable-diffusion-v1-5"
     model_2_0="stabilityai/stable-diffusion-2"
+    model_2_1="stabilityai/stable-diffusion-2-1"
 
-    print(f"Known working models: {model_1_4}, {model_1_5} and {model_2_0}")
-    model = ask("Model", model_1_4)
+    print(f"Known working models: {model_1_4}, {model_1_5}, {model_2_0} and {model_2_1}")
+    model = ask("Model", model_2_1)
 
-    image_width = int(ask("Width", str(512)))
-    image_height = int(ask("Height", str(512)))
+    image_width = int(ask("Width", str(768)))
+    image_height = int(ask("Height", str(768)))
     num_gen = int(ask("Number to generate", str(1)))
 
     prompt = "space pineapple, oil paint"
     prompt = ask("Prompt", prompt)
     fname = ask("File name", "output")
-    guidance_scale = float(ask("Guidance scale", str(7.5)))
-    iterations = int(ask("Inference iterations", str(1)))
+    guidance_scale = float(ask("Guidance scale", str(9.0)))
+    iterations = int(ask("Inference iterations", str(50)))
 
     main(prompt, model, image_width, image_height, num_gen, fname, guidance_scale, iterations)
