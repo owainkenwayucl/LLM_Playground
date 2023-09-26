@@ -10,7 +10,7 @@ def detect_platform():
     import torch
     cpu = {"name": "CPU", "device":"cpu", "size":torch.float32}
     graphcore = {"name": "Graphcore", "device":"ipu", "size":torch.float16}
-    nvidia = {"name": "Nvidia", "device":"gpu", "size":torch.float16}
+    nvidia = {"name": "Nvidia", "device":"cuda", "size":torch.float16}
     metal = {"name": "Apple Metal", "device":"mps", "size":torch.float32}
 
     r = cpu
