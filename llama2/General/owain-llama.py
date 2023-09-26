@@ -1,23 +1,33 @@
 import huggingface_hub
-from transformers import AutoTokenizer
-import transformers
-import torch
 import os
 import sys
+import api
 import time
+from utils.setup import llama_config_setup
+
+number_of_ipus = int(os.getenv("NUM_AVAILABLE_IPU", 16))
+executable_cache_dir = os.path.join(os.getenv("POPLAR_EXECUTABLE_CACHE_DIR", "./exe_cache"), "llama2")
+os.environ["POPXL_CACHE_DIR"] = executable_cache_dir
 
 model_size = "7b"
 
 checkpoint_name = f"meta-llama/Llama-2-{model_size}-chat-hf"    
+config, *_ = llama_config_setup(
+    "config/inference.yml", 
+    "release", 
+    f"llama2_{model_size}_pod4" if number_of_ipus == 4 else f"llama2_{model_size}_pod16"
+)
+
+sequence_length = 4096
+micro_batch_size = 1
 
 start = time.time()
-tokenizer = AutoTokenizer.from_pretrained(checkpoint_name)
 
-llama_pipeline = transformers.pipeline(
-    "text-generation",
-    model=model,
-    torch_dtype=torch.float16,
-    device_map="auto",
+llama_pipeline = api.LlamaPipeline(
+    config, 
+    sequence_length=sequence_length, 
+    micro_batch_size=micro_batch_size,
+    hf_llama_checkpoint=checkpoint_name
 )
 
 print(f"Model preparation time: {time.time() - start}s")
@@ -51,7 +61,7 @@ while True:
     print(prompt)
     print("---")
 
-    output = llama_pipeline(prompt, do_sample=True, top_k=10, num_return_sequences=1, eos_token_id=tokenizer.eos_token_id, max_length=200)[0]
+    output = llama_pipeline(prompt)
     print(output)
 
     prompt = prompt + " ".join(output) + " </s><s> [INST] "
