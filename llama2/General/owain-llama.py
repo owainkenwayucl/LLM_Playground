@@ -51,7 +51,7 @@ while True:
     print(prompt)
     print("---")
 
-    output = llama_pipeline(prompt, do_sample=True, top_k=10, num_return_sequences=1, eos_token_id=tokenizer.eos_token_id, max_length=200)[0]["generated_text"].split("[/INST]")[-1]
+    output = llama_pipeline(prompt, do_sample=True, top_k=10, num_return_sequences=1, eos_token_id=tokenizer.eos_token_id, max_length=len(prompt) + 200)[0]["generated_text"].split("[/INST]")[-1]
     print(output)
 
     prompt = prompt + " ".join(output) + " </s><s> [INST] "
