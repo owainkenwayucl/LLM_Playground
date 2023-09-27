@@ -16,7 +16,7 @@ tokenizer = AutoTokenizer.from_pretrained(checkpoint_name)
 llama_pipeline = transformers.pipeline(
     "text-generation",
     model=checkpoint_name,
-    torch_dtype=torch.float16,
+    torch_dtype=torch.float32,
     device_map="auto",
 )
 
