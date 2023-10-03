@@ -1,5 +1,6 @@
 # Globals (I know!)
 import os
+import time
 n_ipu = int(os.getenv("NUM_AVAILABLE_IPU", 8))
 
 def main(prompt, model, width, height, number, fname, guidance_scale, iterations):
@@ -64,13 +65,18 @@ def setup_pipeline(model, ipus=n_ipu):
 
 def inference(pipe, prompt, num_gen=1, fname="output", image_width=512, image_height=512, guidance_scale=7.5, iterations=1):
     r = []
+    t = []
     for a in range(num_gen):
+        start = time.time():
         if iterations > 1:
             out = pipe(prompt, height=image_height, width=image_width, num_inference_steps=iterations, guidance_scale=guidance_scale).images[0]
         else: 
             out = pipe(prompt, height=image_height, width=image_width, guidance_scale=guidance_scale).images[0]
         out.save(f"{fname}{a}.png")
         r.append(out)
+        elapsed = time.time() - start
+        t.append(elapsed)
+    print(f"Timing data for run: {t}")
     return r
 
 def ask(prompt, default):
