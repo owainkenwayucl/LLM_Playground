@@ -13,19 +13,21 @@ def main(prompt, model, width, height, number, fname, guidance_scale, iterations
 
 
 def setup_rescale_pipeline(model, ipus=n_ipu):
-
+    import torch
     graphcore = False
 
     if platform["name"] == "Graphcore":
         d = "cpu"
+        s = torch.float32
 
     else:
         d = platform["device"]
+        s = platform["size"]
  
     import torch
     from diffusers import StableDiffusionUpscalePipeline
 
-    pipe = StableDiffusionUpscalePipeline.from_pretrained(model, torch_dtype=platform["size"])
+    pipe = StableDiffusionUpscalePipeline.from_pretrained(model, torch_dtype=s)
     pipe = pipe.to(d)
 
     return pipe
