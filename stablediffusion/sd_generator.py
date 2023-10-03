@@ -67,7 +67,7 @@ def inference(pipe, prompt, num_gen=1, fname="output", image_width=512, image_he
     r = []
     t = []
     for a in range(num_gen):
-        start = time.time():
+        start = time.time()
         if iterations > 1:
             out = pipe(prompt, height=image_height, width=image_width, num_inference_steps=iterations, guidance_scale=guidance_scale).images[0]
         else: 
