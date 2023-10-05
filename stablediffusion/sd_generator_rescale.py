@@ -56,14 +56,16 @@ if __name__ == "__main__":
     model_1_5="runwayml/stable-diffusion-v1-5"
     model_2_0="stabilityai/stable-diffusion-2"
     model_2_1="stabilityai/stable-diffusion-2-1"
+    model_2_0_base="stabilityai/stable-diffusion-2-base"
+    model_2_1_base="stabilityai/stable-diffusion-2-1-base"
 
-    print(f"Known working models: {model_1_4}, {model_1_5}, {model_2_0} and {model_2_1}")
-    model = ask("Model", model_1_5)
+    print(f"Known working models: {model_1_4}, {model_1_5}, {model_2_0_base}, {model_2_0}, {model_2_1_base} and {model_2_1}")
+    model = ask("Model", model_2_1_base)
 
 #    image_width = int(ask("Width", str(768)))
 #    image_height = int(ask("Height", str(768)))
-    image_width = 256
-    image_height = 256
+    image_width = 512
+    image_height = 512
     num_gen = int(ask("Number to generate", str(1)))
 
     prompt = "space pineapple, oil paint"
