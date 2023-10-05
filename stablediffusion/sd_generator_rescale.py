@@ -71,8 +71,8 @@ if __name__ == "__main__":
     prompt = "space pineapple, oil paint"
     prompt = ask("Prompt", prompt)
     fname = ask("File name", "output")
-    guidance_scale = float(ask("Guidance scale", str(7.5)))
-    iterations = int(ask("Inference iterations", str(1)))
+    guidance_scale = float(ask("Guidance scale", str(9.0)))
+    iterations = int(ask("Inference iterations", str(50)))
     dorescale = ask("Use x4 upscaler", "yes").lower() == "yes"
 
     main(prompt, model, image_width, image_height, num_gen, fname, guidance_scale, iterations, dorescale)
