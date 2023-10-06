@@ -63,7 +63,7 @@ def setup_pipeline(model, ipus=n_ipu):
 
     return pipe
 
-def inference(pipe, prompt, num_gen=1, fname="output", image_width=512, image_height=512, guidance_scale=7.5, iterations=1):
+def inference(pipe, prompt, num_gen=1, fname="output", image_width=512, image_height=512, guidance_scale=7.5, iterations=1, save=True):
     r = []
     t = []
     for a in range(num_gen):
@@ -72,7 +72,8 @@ def inference(pipe, prompt, num_gen=1, fname="output", image_width=512, image_he
             out = pipe(prompt, height=image_height, width=image_width, num_inference_steps=iterations, guidance_scale=guidance_scale).images[0]
         else: 
             out = pipe(prompt, height=image_height, width=image_width, guidance_scale=guidance_scale).images[0]
-        out.save(f"{fname}{a}.png")
+        if save:
+            out.save(f"{fname}{a}.png")
         r.append(out)
         elapsed = time.time() - start
         t.append(elapsed)
