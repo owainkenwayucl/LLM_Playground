@@ -47,6 +47,7 @@ def setup_pipeline(model, ipus=n_ipu):
             revision="fp16", 
             torch_dtype=platform["size"],
             requires_safety_checker=False,
+            safety_checker=None,
             n_ipu=ipus,
             num_prompts=1,
             num_images_per_prompt=1,
@@ -58,7 +59,7 @@ def setup_pipeline(model, ipus=n_ipu):
         import torch
         from diffusers import StableDiffusionPipeline
 
-        pipe = StableDiffusionPipeline.from_pretrained(model, torch_dtype=platform["size"])
+        pipe = StableDiffusionPipeline.from_pretrained(model, torch_dtype=platform["size"], safety_checker=None, requires_safety_checker=False)
         pipe = pipe.to(platform["device"])
 
     return pipe
