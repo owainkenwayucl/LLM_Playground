@@ -1,9 +1,26 @@
 # Globals (I know!)
 import os
 import time
-n_ipu = int(os.getenv("NUM_AVAILABLE_IPU", 8))
 
-def main(prompt, model, width, height, number, fname, guidance_scale, iterations):
+n_ipu = int(os.getenv("NUM_AVAILABLE_IPU", 8))
+model_1_4="CompVis/stable-diffusion-v1-4"
+model_1_5="runwayml/stable-diffusion-v1-5"
+model_2_0="stabilityai/stable-diffusion-2"
+model_2_1="stabilityai/stable-diffusion-2-1"
+model_2_0_base="stabilityai/stable-diffusion-2-base"
+model_2_1_base="stabilityai/stable-diffusion-2-1-base"
+
+prompt = "space pineapple, oil paint"
+model = model_2_1
+
+DEFAULT_NUM_GEN=1
+DEFAULT_HEIGHT=768
+DEFAULT_WIDTH=768
+DEFAULT_ITERATIONS=50
+DEFAULT_FNAME="output"
+DEFAULT_GUIDANCE_SCALE=5.0
+
+def main(prompt=prompt, model=model, width=DEFAULT_WIDTH, height=DEFAULT_HEIGHT, number=DEFAULT_NUM_GEN, fname=DEFAULT_FNAME, guidance_scale=DEFAULT_GUIDANCE_SCALE, iterations=DEFAULT_ITERATIONS):
     pipeline = setup_pipeline(model)
     _ = inference(pipeline, prompt, number, fname, width, height, guidance_scale, iterations)
 
@@ -64,7 +81,7 @@ def setup_pipeline(model, ipus=n_ipu):
 
     return pipe
 
-def inference(pipe, prompt, num_gen=1, fname="output", image_width=512, image_height=512, guidance_scale=7.5, iterations=1, save=True):
+def inference(pipe, prompt, num_gen=DEFAULT_NUM_GEN, fname=DEFAULT_NUM_GEN, image_width=DEFAULT_WIDTH, image_height=DEFAULT_HEIGHT, guidance_scale=DEFAULT_GUIDANCE_SCALE, iterations=DEFAULT_ITERATIONS, save=True):
     r = []
     t = []
     for a in range(num_gen):
@@ -93,24 +110,16 @@ platform = detect_platform()
 
 if __name__ == "__main__":
 
-    model_1_4="CompVis/stable-diffusion-v1-4"
-    model_1_5="runwayml/stable-diffusion-v1-5"
-    model_2_0="stabilityai/stable-diffusion-2"
-    model_2_1="stabilityai/stable-diffusion-2-1"
-    model_2_0_base="stabilityai/stable-diffusion-2-base"
-    model_2_1_base="stabilityai/stable-diffusion-2-1-base"
-
     print(f"Known working models: {model_1_4}, {model_1_5}, {model_2_0_base}, {model_2_0}, {model_2_1_base} and {model_2_1}")
-    model = ask("Model", model_2_1)
+    model = ask("Model", model)
 
-    image_width = int(ask("Width", str(768)))
-    image_height = int(ask("Height", str(768)))
-    num_gen = int(ask("Number to generate", str(1)))
-
-    prompt = "space pineapple, oil paint"
+    image_width = int(ask("Width", str(DEFAULT_WIDTH)))
+    image_height = int(ask("Height", str(DEFAULT_HEIGHT)))
+    num_gen = int(ask("Number to generate", str(DEFAULT_NUM_GEN)))
+    
     prompt = ask("Prompt", prompt)
-    fname = ask("File name", "output")
-    guidance_scale = float(ask("Guidance scale", str(9.0)))
-    iterations = int(ask("Inference iterations", str(50)))
+    fname = ask("File name", DEFAULT_FNAME)
+    guidance_scale = float(ask("Guidance scale", str(DEFAULT_GUIDANCE_SCALE)))
+    iterations = int(ask("Inference iterations", str(DEFAULT_ITERATIONS)))
 
     main(prompt, model, image_width, image_height, num_gen, fname, guidance_scale, iterations)
