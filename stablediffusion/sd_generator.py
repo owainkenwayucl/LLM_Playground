@@ -45,7 +45,7 @@ def detect_platform():
             r = metal      
     return r
 
-def setup_pipeline(model, ipus=n_ipu):
+def setup_pipeline(model=model, ipus=n_ipu):
 
     graphcore = False
 
@@ -81,7 +81,7 @@ def setup_pipeline(model, ipus=n_ipu):
 
     return pipe
 
-def inference(pipe, prompt, num_gen=DEFAULT_NUM_GEN, fname=DEFAULT_NUM_GEN, image_width=DEFAULT_WIDTH, image_height=DEFAULT_HEIGHT, guidance_scale=DEFAULT_GUIDANCE_SCALE, iterations=DEFAULT_ITERATIONS, save=True):
+def inference(pipe, prompt=prompt, num_gen=DEFAULT_NUM_GEN, fname=DEFAULT_FNAME, image_width=DEFAULT_WIDTH, image_height=DEFAULT_HEIGHT, guidance_scale=DEFAULT_GUIDANCE_SCALE, iterations=DEFAULT_ITERATIONS, save=True):
     r = []
     t = []
     for a in range(num_gen):
