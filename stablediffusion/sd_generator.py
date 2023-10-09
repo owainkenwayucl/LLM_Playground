@@ -25,8 +25,8 @@ def main(prompt=prompt, model=model, width=DEFAULT_WIDTH, height=DEFAULT_HEIGHT,
     _ = inference(pipeline, prompt, number, fname, width, height, guidance_scale, iterations)
 
 def parallel_main(prompt=prompt, model=model, width=DEFAULT_WIDTH, height=DEFAULT_HEIGHT, number=DEFAULT_NUM_GEN, fname=DEFAULT_FNAME, guidance_scale=DEFAULT_GUIDANCE_SCALE, iterations=DEFAULT_ITERATIONS):
-    piplelines = setup_parallel_pipelines()
-    _ = parallel_inference(pipeline, prompt, number, fname, width, height, guidance_scale, iterations)
+    _ = setup_parallel_pipelines()
+    _ = parallel_inference(model, prompt, number, fname, width, height, guidance_scale, iterations)
 
 def detect_platform():
     import torch
@@ -89,22 +89,10 @@ def setup_pipeline(model=model, ipus=n_ipu, platform=platform):
 
     return pipe
 
-def setup_parallel_pipelines(model = model):
-    import torch
-    if not platform["name"] == "Nvidia":
-        return [], "Error: parallelism requires Nvidia devices"
-    number = platform["number"]
-
-    devices = []
-    for a in range(number):
-        devices.append({"name": "Nvidia","device":"cuda:" + str(a), "size":torch.float16})
-
-    pipelines = []
-    for a in devices:
-        pipe = setup_pipeline(model = model, platform = a)
-        pipelines.append(pipe)
-
-    return pipelines
+# This sets things up as a dummy so we pull the checkpoint files etc.
+def setup_parallel_pipelines(model = model):    
+    pipe = setup_pipeline(model = model)
+    return pipe
  
 def inference(pipe, prompt=prompt, num_gen=DEFAULT_NUM_GEN, fname=DEFAULT_FNAME, image_width=DEFAULT_WIDTH, image_height=DEFAULT_HEIGHT, guidance_scale=DEFAULT_GUIDANCE_SCALE, iterations=DEFAULT_ITERATIONS, save=True, start_item=0):
     r = []
@@ -123,13 +111,17 @@ def inference(pipe, prompt=prompt, num_gen=DEFAULT_NUM_GEN, fname=DEFAULT_FNAME,
     print(f"Timing data for run: {t}")
     return r
 
-def _inference_worker(pipe, prompt=prompt, num_gen=DEFAULT_NUM_GEN, fname=DEFAULT_FNAME, image_width=DEFAULT_WIDTH, image_height=DEFAULT_HEIGHT, guidance_scale=DEFAULT_GUIDANCE_SCALE, iterations=DEFAULT_ITERATIONS, save=True, start_item=0, images=[]):
+def _inference_worker(model, prompt=prompt, num_gen=DEFAULT_NUM_GEN, fname=DEFAULT_FNAME, image_width=DEFAULT_WIDTH, image_height=DEFAULT_HEIGHT, guidance_scale=DEFAULT_GUIDANCE_SCALE, iterations=DEFAULT_ITERATIONS, save=True, start_item=0, images=[]):
+    pipe = setup_pipeline(model = model)
     i = inference(pipe, prompt, num_gen, fname, image_width, image_height, guidance_scale, iterations, save, start_item)
     for a in i:
         images.append(a)
 
-def parallel_inference(pipelines, prompt=prompt, num_gen=DEFAULT_NUM_GEN, fname=DEFAULT_FNAME, image_width=DEFAULT_WIDTH, image_height=DEFAULT_HEIGHT, guidance_scale=DEFAULT_GUIDANCE_SCALE, iterations=DEFAULT_ITERATIONS, save=True):
-    from multiprocessing import Process, Queue
+def parallel_inference(model, prompt=prompt, num_gen=DEFAULT_NUM_GEN, fname=DEFAULT_FNAME, image_width=DEFAULT_WIDTH, image_height=DEFAULT_HEIGHT, guidance_scale=DEFAULT_GUIDANCE_SCALE, iterations=DEFAULT_ITERATIONS, save=True):
+    from torch.multiprocessing import Process, Queue, set_start_method
+    import os
+
+    set_start_method("spawn")
 
     number = len(pipelines)
 
@@ -155,7 +147,8 @@ def parallel_inference(pipelines, prompt=prompt, num_gen=DEFAULT_NUM_GEN, fname=
     images = []
 
     for a in range(number):
-        procs.append(Process(target=_inference_worker, args=(pipelines[a], prompt, chunks[a], fname, image_width, image_height, guidance_scale, iterations, save, starts[a], images)))
+        os.environ["CUDA_VISIBLE_DEVICES"] = str(a)
+        procs.append(Process(target=_inference_worker, args=(model, prompt, chunks[a], fname, image_width, image_height, guidance_scale, iterations, save, starts[a], images)))
         procs[a].start()
 
     for a in range(number):
