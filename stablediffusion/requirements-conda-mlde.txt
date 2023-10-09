@@ -4,3 +4,4 @@ transformers
 scipy 
 ftfy 
 huggingface_accelerate
+ipywidgets
