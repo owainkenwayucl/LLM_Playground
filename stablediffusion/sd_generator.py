@@ -24,6 +24,10 @@ def main(prompt=prompt, model=model, width=DEFAULT_WIDTH, height=DEFAULT_HEIGHT,
     pipeline = setup_pipeline(model)
     _ = inference(pipeline, prompt, number, fname, width, height, guidance_scale, iterations)
 
+def parallel_main(prompt=prompt, model=model, width=DEFAULT_WIDTH, height=DEFAULT_HEIGHT, number=DEFAULT_NUM_GEN, fname=DEFAULT_FNAME, guidance_scale=DEFAULT_GUIDANCE_SCALE, iterations=DEFAULT_ITERATIONS):
+    piplelines = setup_parallel_pipelines()
+    _ = parallel_inference(pipeline, prompt, number, fname, width, height, guidance_scale, iterations)
+
 def detect_platform():
     import torch
     cpu = {"name": "CPU", "device":"cpu", "size":torch.float32}
@@ -41,7 +45,7 @@ def detect_platform():
             print("Running on Nvidia GPU")
             r = nvidia
             r["number"] = torch.cuda.device_count()
-            print(f" - {r["number"]} GPUs detected")
+            print(f" - {r['number']} GPUs detected")
         elif torch.backends.mps.is_available():
             print("Running on Apple GPU")
             r = metal      
@@ -86,18 +90,19 @@ def setup_pipeline(model=model, ipus=n_ipu, platform=platform):
     return pipe
 
 def setup_parallel_pipelines(model = model):
-    if not platform["name"] == "nvidia":
+    import torch
+    if not platform["name"] == "Nvidia":
         return [], "Error: parallelism requires Nvidia devices"
     number = platform["number"]
 
     devices = []
     for a in range(number):
-        devices.append({"name": "Nvidia", "size":torch.float16})
-        devices["device"] = "cuda:" + str(a)
+        devices.append({"name": "Nvidia","device":"cuda:" + str(a), "size":torch.float16})
 
     pipelines = []
     for a in devices:
         pipe = setup_pipeline(model = model, platform = a)
+        pipelines.append(pipe)
 
     return pipelines
  
@@ -119,7 +124,7 @@ def inference(pipe, prompt=prompt, num_gen=DEFAULT_NUM_GEN, fname=DEFAULT_FNAME,
     return r
 
 def _inference_worker(pipe, prompt=prompt, num_gen=DEFAULT_NUM_GEN, fname=DEFAULT_FNAME, image_width=DEFAULT_WIDTH, image_height=DEFAULT_HEIGHT, guidance_scale=DEFAULT_GUIDANCE_SCALE, iterations=DEFAULT_ITERATIONS, save=True, start_item=0, images=[]):
-    i = inference(pipe[a], prompt, chunks[a], fname, image_width, image_height, guidance_scale, iterations, save, starts[a])
+    i = inference(pipe, prompt, num_gen, fname, image_width, image_height, guidance_scale, iterations, save, start_item)
     for a in i:
         images.append(a)
 
@@ -150,7 +155,7 @@ def parallel_inference(pipelines, prompt=prompt, num_gen=DEFAULT_NUM_GEN, fname=
     images = []
 
     for a in range(number):
-        procs.append(Process(target=_inference_worker, args=(pipe[a], prompt, chunks[a], fname, image_width, image_height, guidance_scale, iterations, save, starts[a], images)))
+        procs.append(Process(target=_inference_worker, args=(pipelines[a], prompt, chunks[a], fname, image_width, image_height, guidance_scale, iterations, save, starts[a], images)))
         procs[a].start()
 
     for a in range(number):
@@ -184,4 +189,8 @@ if __name__ == "__main__":
     guidance_scale = float(ask("Guidance scale", str(DEFAULT_GUIDANCE_SCALE)))
     iterations = int(ask("Inference iterations", str(DEFAULT_ITERATIONS)))
 
-    main(prompt, model, image_width, image_height, num_gen, fname, guidance_scale, iterations)
+    if (platform["name"] == "Nvidia"):
+        if (platform["number"] > 1):
+            parallel_main(prompt, model, image_width, image_height, num_gen, fname, guidance_scale, iterations)
+    else:
+        main(prompt, model, image_width, image_height, num_gen, fname, guidance_scale, iterations)
