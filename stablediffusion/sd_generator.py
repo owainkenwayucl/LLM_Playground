@@ -111,11 +111,11 @@ def inference(pipe, prompt=prompt, num_gen=DEFAULT_NUM_GEN, fname=DEFAULT_FNAME,
     print(f"Timing data for run: {t}")
     return r
 
-def _inference_worker(model, prompt=prompt, num_gen=DEFAULT_NUM_GEN, fname=DEFAULT_FNAME, image_width=DEFAULT_WIDTH, image_height=DEFAULT_HEIGHT, guidance_scale=DEFAULT_GUIDANCE_SCALE, iterations=DEFAULT_ITERATIONS, save=True, start_item=0, images=[]):
+def _inference_worker(q, model, prompt=prompt, num_gen=DEFAULT_NUM_GEN, fname=DEFAULT_FNAME, image_width=DEFAULT_WIDTH, image_height=DEFAULT_HEIGHT, guidance_scale=DEFAULT_GUIDANCE_SCALE, iterations=DEFAULT_ITERATIONS, save=True, start_item=0):
     pipe = setup_pipeline(model = model)
     i = inference(pipe, prompt, num_gen, fname, image_width, image_height, guidance_scale, iterations, save, start_item)
     for a in i:
-        images.append(a)
+        q.put(a)
 
 def parallel_inference(model, prompt=prompt, num_gen=DEFAULT_NUM_GEN, fname=DEFAULT_FNAME, image_width=DEFAULT_WIDTH, image_height=DEFAULT_HEIGHT, guidance_scale=DEFAULT_GUIDANCE_SCALE, iterations=DEFAULT_ITERATIONS, save=True):
     from torch.multiprocessing import Process, Queue, set_start_method
@@ -148,11 +148,11 @@ def parallel_inference(model, prompt=prompt, num_gen=DEFAULT_NUM_GEN, fname=DEFA
 
     for a in range(number):
         os.environ["CUDA_VISIBLE_DEVICES"] = str(a)
-        procs.append(Process(target=_inference_worker, args=(model, prompt, chunks[a], fname, image_width, image_height, guidance_scale, iterations, save, starts[a], images)))
+        procs.append(Process(target=_inference_worker, args=(q, model, prompt, chunks[a], fname, image_width, image_height, guidance_scale, iterations, save, starts[a])))
         procs[a].start()
 
-    for a in range(number):
-        procs[a].join()
+    for a in range(num_gen):
+        images.append(q.get())
     
     return images
     
