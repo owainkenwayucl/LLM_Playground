@@ -1,0 +1,6 @@
+pytorch=2.0.1=cpu_py310hdc00b08_0
+diffusers
+transformers 
+scipy 
+ftfy 
+huggingface_accelerate
