@@ -123,7 +123,7 @@ def parallel_inference(model, prompt=prompt, num_gen=DEFAULT_NUM_GEN, fname=DEFA
 
     set_start_method("spawn")
 
-    number = len(pipelines)
+    number = platform["number"]
 
     if num_gen < number:
         print(f"Number of images to generate < number of GPUs, setting number of GPUs to {num_gen}")
