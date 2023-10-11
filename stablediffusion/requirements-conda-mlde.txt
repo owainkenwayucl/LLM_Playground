@@ -1,4 +1,3 @@
-pytorch=2.0.1=gpu_cuda118py310he342708_0
 diffusers
 transformers 
 scipy 
