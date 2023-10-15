@@ -33,7 +33,7 @@ def detect_platform():
     cpu = {"name": "CPU", "device":"cpu", "size":torch.float32, "attention_slicing":False}
     graphcore = {"name": "Graphcore", "device":"ipu", "size":torch.float16, "attention_slicing":False}
     nvidia = {"name": "Nvidia", "device":"cuda", "size":torch.float16, "attention_slicing":False}
-    metal = {"name": "Apple Metal", "device":"mps", "size":torch.float32, "attention_slicing":True}
+    metal = {"name": "Apple Metal", "device":"mps", "size":torch.float32, "attention_slicing":False}
 
     r = cpu
     try: 
