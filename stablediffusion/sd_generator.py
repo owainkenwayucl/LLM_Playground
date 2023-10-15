@@ -30,10 +30,10 @@ def parallel_main(prompt=prompt, model=model, width=DEFAULT_WIDTH, height=DEFAUL
 
 def detect_platform():
     import torch
-    cpu = {"name": "CPU", "device":"cpu", "size":torch.float32}
-    graphcore = {"name": "Graphcore", "device":"ipu", "size":torch.float16}
-    nvidia = {"name": "Nvidia", "device":"cuda", "size":torch.float16}
-    metal = {"name": "Apple Metal", "device":"mps", "size":torch.float32}
+    cpu = {"name": "CPU", "device":"cpu", "size":torch.float32, "attention_slicing":False}
+    graphcore = {"name": "Graphcore", "device":"ipu", "size":torch.float16, "attention_slicing":False}
+    nvidia = {"name": "Nvidia", "device":"cuda", "size":torch.float16, "attention_slicing":False}
+    metal = {"name": "Apple Metal", "device":"mps", "size":torch.float32, "attention_slicing":True}
 
     r = cpu
     try: 
@@ -86,6 +86,8 @@ def setup_pipeline(model=model, ipus=n_ipu, platform=platform):
 
         pipe = StableDiffusionPipeline.from_pretrained(model, torch_dtype=platform["size"], safety_checker=None, requires_safety_checker=False)
         pipe = pipe.to(platform["device"])
+        if platform["attention_slicing"]:
+            pipe.enable_attention_slicing()
 
     return pipe
 
