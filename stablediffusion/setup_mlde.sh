@@ -6,3 +6,6 @@ ln -s /data/autobentham/LLM_Playground/stablediffusion/Example\ Stable\ Diffusio
 ln -s /data/autobentham/LLM_Playground/stablediffusion/Example\ Stable\ Diffusion\ Parallel.ipynb /run/determined/workdir
 ln -s /data/autobentham/LLM_Playground/stablediffusion/Image\ Viewer.ipynb /run/determined/workdir
 pip install --upgrade diffusers # we need a newer diffusers for sdxl
+
+ln -s /data/autobentham/LLM_Playground/stablediffusion-xl/sdxl.py /run/determined/workdir
+ln -s /data/autobentham/LLM_Playground/stablediffusion-xl/Stable\ Diffusion\ XL.ipynb
