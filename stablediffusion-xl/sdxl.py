@@ -19,7 +19,7 @@ def setup_pipeline(model=model, model_r=model_r):
 
     return pipe,refiner
 
-def inference(pipeline, refiner, prompt=default_prompt, pipe_steps=100, refiner_steps=100, fname=default_fname, save=True):
+def inference(pipe, refiner, prompt=default_prompt, pipe_steps=100, refiner_steps=100, fname=default_fname, save=True):
     image = pipe(prompt=prompt, num_inference_steps=pipe_steps).images[0]
     image_r = refiner(prompt=prompt, image=image, num_inference_steps=refiner_steps).images[0]
     if save:
