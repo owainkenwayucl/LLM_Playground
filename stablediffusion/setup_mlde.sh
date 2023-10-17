@@ -5,3 +5,4 @@ ln -s /data/autobentham/LLM_Playground/stablediffusion/sd_generator.py /run/dete
 ln -s /data/autobentham/LLM_Playground/stablediffusion/Example\ Stable\ Diffusion.ipynb /run/determined/workdir
 ln -s /data/autobentham/LLM_Playground/stablediffusion/Example\ Stable\ Diffusion\ Parallel.ipynb /run/determined/workdir
 ln -s /data/autobentham/LLM_Playground/stablediffusion/Image\ Viewer.ipynb /run/determined/workdir
+pip install --upgrade diffusers # we need a newer diffusers for sdxl
