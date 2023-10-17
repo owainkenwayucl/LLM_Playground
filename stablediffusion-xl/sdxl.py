@@ -9,6 +9,7 @@ default_fname = "output"
 
 def setup_pipeline(model=model, model_r=model_r):
     from diffusers import StableDiffusionXLPipeline, StableDiffusionXLImg2ImgPipeline
+    import torch
 
     pipe = StableDiffusionXLPipeline.from_pretrained(model, torch_dtype=torch.float16, use_safe_tensors=True, variant="fp16", add_watermarker=False)
     refiner = StableDiffusionXLImg2ImgPipeline.from_pretrained(model_r, torch_dtype=torch.float16, use_safe_tensors=True, variant="fp16", text_encoder_2=pipe.text_encoder_2, vae=pipe.vae)
