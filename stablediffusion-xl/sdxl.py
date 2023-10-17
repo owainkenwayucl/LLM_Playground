@@ -19,7 +19,7 @@ def setup_pipeline(model=model, model_r=model_r):
 
     return pipe,refiner
 
-def inference_refiner_split(pipe, refiner, prompt=default_prompt, pipe_steps=100, fname=default_fname, denoise=0.8, save=True):
+def inference_denoise(pipe, refiner, prompt=default_prompt, pipe_steps=100, fname=default_fname, denoise=0.8, save=True):
     image = pipe(prompt=prompt, num_inference_steps=pipe_steps, denoising_end=denoise).images[0]
     image_r = refiner(prompt=prompt, image=image, num_inference_steps=pipe_steps, denoising_start=denoise).images[0]
     if save:
@@ -28,7 +28,7 @@ def inference_refiner_split(pipe, refiner, prompt=default_prompt, pipe_steps=100
 
     return image, image_r
 
-def inference(pipe, refiner, prompt=default_prompt, pipe_steps=100, fname=default_fname, denoise=0.8, save=True):
+def inference(pipe, refiner, prompt=default_prompt, pipe_steps=100, fname=default_fname, save=True):
     image = pipe(prompt=prompt, num_inference_steps=pipe_steps).images[0]
     image_r = refiner(prompt=prompt, image=image, num_inference_steps=pipe_steps).images[0]
     if save:
