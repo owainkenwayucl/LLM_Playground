@@ -19,6 +19,7 @@ def detect_platform():
         import poptorch
         print(f"Running on {n_ipu} Graphcore IPU(s)")
         r = graphcore
+        print(f"Warning - at present time diffuses library does not support SDXL on Graphcore")
     except:
         if torch.cuda.device_count() > 0:
             print("Running on Nvidia GPU")
@@ -36,11 +37,11 @@ def setup_pipeline(model=model, model_r=model_r):
     from diffusers import StableDiffusionXLPipeline, StableDiffusionXLImg2ImgPipeline
     import torch
 
-    pipe = StableDiffusionXLPipeline.from_pretrained(model, torch_dtype=torch.float16, variant="fp16", add_watermarker=False)
-    refiner = StableDiffusionXLImg2ImgPipeline.from_pretrained(model_r, torch_dtype=torch.float16, variant="fp16", text_encoder_2=pipe.text_encoder_2, vae=pipe.vae)
+    pipe = StableDiffusionXLPipeline.from_pretrained(model, torch_dtype=platform["size"], variant="fp16", add_watermarker=False)
+    refiner = StableDiffusionXLImg2ImgPipeline.from_pretrained(model_r, torch_dtype=platform["size"], variant="fp16", text_encoder_2=pipe.text_encoder_2, vae=pipe.vae)
 
-    pipe.to("cuda")
-    refiner.to("cuda")
+    pipe.to(platform["device"])
+    refiner.to(platfomr["device"])
 
     return pipe,refiner
 
