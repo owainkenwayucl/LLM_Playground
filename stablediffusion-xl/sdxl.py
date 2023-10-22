@@ -7,6 +7,31 @@ model_r = model_1_0_refiner
 default_prompt = "Space pineapple, oil paint"
 default_fname = "output"
 
+def detect_platform():
+    import torch
+    cpu = {"name": "CPU", "device":"cpu", "size":torch.float32, "attention_slicing":False}
+    graphcore = {"name": "Graphcore", "device":"ipu", "size":torch.float16, "attention_slicing":False}
+    nvidia = {"name": "Nvidia", "device":"cuda", "size":torch.float16, "attention_slicing":False}
+    metal = {"name": "Apple Metal", "device":"mps", "size":torch.float32, "attention_slicing":False}
+
+    r = cpu
+    try: 
+        import poptorch
+        print(f"Running on {n_ipu} Graphcore IPU(s)")
+        r = graphcore
+    except:
+        if torch.cuda.device_count() > 0:
+            print("Running on Nvidia GPU")
+            r = nvidia
+            r["number"] = torch.cuda.device_count()
+            print(f" - {r['number']} GPUs detected")
+        elif torch.backends.mps.is_available():
+            print("Running on Apple GPU")
+            r = metal      
+    return r
+
+platform = detect_platform()
+
 def setup_pipeline(model=model, model_r=model_r):
     from diffusers import StableDiffusionXLPipeline, StableDiffusionXLImg2ImgPipeline
     import torch
