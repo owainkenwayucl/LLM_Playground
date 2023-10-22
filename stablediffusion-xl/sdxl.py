@@ -37,7 +37,7 @@ def inference(pipe, prompt=default_prompt, num_gen=1, pipe_steps=100, fname=defa
     images = []
     for count in range(start, start+num_gen):
         image = pipe(prompt=prompt, num_inference_steps=pipe_steps).images[0]
-        images.append[image]
+        images.append(image)
         if save:
             image.save(f"{fname}_{count}.png")
 
