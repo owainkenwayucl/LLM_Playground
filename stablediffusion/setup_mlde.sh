@@ -9,3 +9,4 @@ pip install --upgrade diffusers # we need a newer diffusers for sdxl
 
 ln -s /data/autobentham/LLM_Playground/stablediffusion-xl/sdxl.py /run/determined/workdir
 ln -s /data/autobentham/LLM_Playground/stablediffusion-xl/Stable\ Diffusion\ XL.ipynb /run/determined/workdir
+ln -s /data/autobentham/LLM_Playground/stablediffusion-xl/Parallel\ SDXL.ipynb /run/determined/workdir
