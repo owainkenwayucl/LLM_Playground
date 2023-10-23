@@ -43,7 +43,8 @@ def setup_pipeline(model=model, model_r=model_r, refiner_enabled=True):
         refiner = StableDiffusionXLImg2ImgPipeline.from_pretrained(model_r, torch_dtype=platform["size"], variant="fp16", text_encoder_2=pipe.text_encoder_2, vae=pipe.vae)
 
     pipe.to(platform["device"])
-    refiner.to(platform["device"])
+    if refiner_enabled:
+        refiner.to(platform["device"])
 
     return pipe,refiner
 
