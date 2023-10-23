@@ -33,12 +33,14 @@ def detect_platform():
 
 platform = detect_platform()
 
-def setup_pipeline(model=model, model_r=model_r):
+def setup_pipeline(model=model, model_r=model_r, refiner_enabled=True):
     from diffusers import StableDiffusionXLPipeline, StableDiffusionXLImg2ImgPipeline
     import torch
 
     pipe = StableDiffusionXLPipeline.from_pretrained(model, torch_dtype=platform["size"], variant="fp16", add_watermarker=False)
-    refiner = StableDiffusionXLImg2ImgPipeline.from_pretrained(model_r, torch_dtype=platform["size"], variant="fp16", text_encoder_2=pipe.text_encoder_2, vae=pipe.vae)
+    refiner = NONE
+    if refiner_enabled:
+        refiner = StableDiffusionXLImg2ImgPipeline.from_pretrained(model_r, torch_dtype=platform["size"], variant="fp16", text_encoder_2=pipe.text_encoder_2, vae=pipe.vae)
 
     pipe.to(platform["device"])
     refiner.to(platform["device"])
@@ -70,7 +72,10 @@ def inference(pipe, prompt=default_prompt, num_gen=1, pipe_steps=100, fname=defa
     return images
 
 def _inference_worker(q, model=model, prompt=default_prompt, denoise=False, num_gen=1, pipe_steps=100, fname=default_fname, save=True, start=0):
-    pipe, pipe_r = setup_pipeline(model, model_r)
+    refiner = True
+    if denoise == False:
+        refiner = False
+    pipe, pipe_r = setup_pipeline(model, model_r. refiner)
     if denoise == False:
         images = inference(pipe=pipe, prompt=prompt, num_gen=num_gen, pipe_steps=pipe_steps, fname=fname, save=save, start=start)
     else:
