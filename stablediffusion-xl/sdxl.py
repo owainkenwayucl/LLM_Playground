@@ -76,7 +76,7 @@ def _inference_worker(q, model=model, prompt=default_prompt, denoise=False, num_
     refiner = True
     if denoise == False:
         refiner = False
-    pipe, pipe_r = setup_pipeline(model, model_r. refiner)
+    pipe, pipe_r = setup_pipeline(model, model_r, refiner)
     if denoise == False:
         images = inference(pipe=pipe, prompt=prompt, num_gen=num_gen, pipe_steps=pipe_steps, fname=fname, save=save, start=start)
     else:
