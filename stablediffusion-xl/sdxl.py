@@ -38,7 +38,7 @@ def setup_pipeline(model=model, model_r=model_r, refiner_enabled=True):
     import torch
 
     pipe = StableDiffusionXLPipeline.from_pretrained(model, torch_dtype=platform["size"], variant="fp16", add_watermarker=False)
-    refiner = NONE
+    refiner = None
     if refiner_enabled:
         refiner = StableDiffusionXLImg2ImgPipeline.from_pretrained(model_r, torch_dtype=platform["size"], variant="fp16", text_encoder_2=pipe.text_encoder_2, vae=pipe.vae)
 
