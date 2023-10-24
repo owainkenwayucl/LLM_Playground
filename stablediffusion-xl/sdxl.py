@@ -10,8 +10,6 @@ default_fname = "output"
 def detect_platform():
     import torch
     cpu = {"name": "CPU", "device":"cpu", "size":torch.float32, "attention_slicing":False}
-    mkl = {"name": "MKL", "device":"mkl", "size":torch.float32, "attention_slicing":False}
-    mkldnn = {"name": "MKL-DNN", "device":"mkldnn", "size":torch.float32, "attention_slicing":False}
     graphcore = {"name": "Graphcore", "device":"ipu", "size":torch.float16, "attention_slicing":False}
     nvidia = {"name": "Nvidia", "device":"cuda", "size":torch.float16, "attention_slicing":False}
     metal = {"name": "Apple Metal", "device":"mps", "size":torch.float32, "attention_slicing":False}
@@ -31,12 +29,7 @@ def detect_platform():
         elif torch.backends.mps.is_available():
             print("Running on Apple GPU")
             r = metal 
-        elif torch.backends.mkldnn.is_available():
-            print("Using MK-DNN")
-            r = mkldnn
-        elif torch.backends.mkl.is_available():
-            print("Using MKL")
-            r = mkl
+
     return r
 
 platform = detect_platform()
