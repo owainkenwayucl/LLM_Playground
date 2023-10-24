@@ -123,7 +123,11 @@ def parallel_inference(model, prompt=prompt, num_gen=DEFAULT_NUM_GEN, fname=DEFA
     from torch.multiprocessing import Process, Queue, set_start_method
     import os
 
-    set_start_method("spawn")
+    # We only want to do this the first time as we get an error if we do it repeatedly.
+    try:
+        set_start_method("spawn")
+    except:
+        pass
 
     number = platform["number"]
 
