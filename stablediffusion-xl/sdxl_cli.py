@@ -2,6 +2,14 @@ DEFAULT_NUM_GEN=1
 DEFAULT_ITERATIONS=50
 DEFAULT_FNAME="output"
 
+def ask(prompt, default):
+    response = input(f"{prompt}[{default}]? ")
+    response = response.strip()
+    if response == "":
+        response = default
+
+    return response
+
 if __name__ == "__main__":
     from sdxl import setup_pipeline, inference
     prompt = "A very happy bulb of garlic, oil paint"
