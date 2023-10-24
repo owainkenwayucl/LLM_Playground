@@ -4,4 +4,4 @@ prompt = "A very happy bulb of garlic, oil paint"
 
 pipeline,_ = setup_pipeline(refiner_enabled = False)
 
-images = inference(pipeline=pipeline, prompt=prompt)
+images = inference(pipe=pipeline, prompt=prompt)
