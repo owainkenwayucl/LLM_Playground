@@ -78,7 +78,10 @@ def setup_pipeline(model=model, ipus=n_ipu, platform=platform):
             num_images_per_prompt=1,
             common_ipu_config_kwargs={"executable_cache_dir": executable_cache_dir}
         )
+        if platform["attention_slicing"]:
+            pipe.enable_attention_slicing()
         pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
+
 
     else:
         import torch
