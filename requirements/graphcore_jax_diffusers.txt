@@ -1,0 +1,5 @@
+flax==0.5.3 
+transformers 
+diffusers[flax] 
+~/Applications/JAX/jax-0.3.16+ipu-py3-none-any.whl 
+~/Applications/JAX/jaxlib-0.3.15+ipu.sdk320-cp39-none-manylinux2014_x86_64.whl
