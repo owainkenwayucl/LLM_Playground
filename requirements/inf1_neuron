@@ -1,0 +1,12 @@
+pip
+torch-neuron
+neuron-cc[tensorflow] 
+protobuf
+torchvision
+diffusers
+transformers
+accelerate
+safetensors
+ipykernel
+scipy
+ipywidgets
