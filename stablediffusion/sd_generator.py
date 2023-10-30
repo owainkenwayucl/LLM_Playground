@@ -198,6 +198,6 @@ if __name__ == "__main__":
         if (platform["number"] > 1):
             parallel_main(prompt, model, image_width, image_height, num_gen, fname, guidance_scale, iterations)
         else:
-        main(prompt, model, image_width, image_height, num_gen, fname, guidance_scale, iterations)
+            main(prompt, model, image_width, image_height, num_gen, fname, guidance_scale, iterations)
     else:
         main(prompt, model, image_width, image_height, num_gen, fname, guidance_scale, iterations)
