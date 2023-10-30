@@ -7,6 +7,9 @@ model_r = model_1_0_refiner
 default_prompt = "Space pineapple, oil paint"
 default_fname = "output"
 
+def prompt_to_filename(prompt):
+    return prompt.replace(" ", "_").replace("/", "_")
+
 def detect_platform():
     import torch
     cpu = {"name": "CPU", "device":"cpu", "size":torch.float32, "attention_slicing":False}

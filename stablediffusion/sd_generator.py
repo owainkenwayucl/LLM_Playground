@@ -20,6 +20,9 @@ DEFAULT_ITERATIONS=50
 DEFAULT_FNAME="output"
 DEFAULT_GUIDANCE_SCALE=5.0
 
+def prompt_to_filename(prompt):
+    return prompt.replace(" ", "_").replace("/", "_")
+
 def main(prompt=prompt, model=model, width=DEFAULT_WIDTH, height=DEFAULT_HEIGHT, number=DEFAULT_NUM_GEN, fname=DEFAULT_FNAME, guidance_scale=DEFAULT_GUIDANCE_SCALE, iterations=DEFAULT_ITERATIONS):
     pipeline = setup_pipeline(model)
     _ = inference(pipeline, prompt, number, fname, width, height, guidance_scale, iterations)
@@ -187,7 +190,7 @@ if __name__ == "__main__":
     num_gen = int(ask("Number to generate", str(DEFAULT_NUM_GEN)))
     
     prompt = ask("Prompt", prompt)
-    fname = ask("File name", DEFAULT_FNAME)
+    fname = ask("File name", prompt_to_filename(prompt))
     guidance_scale = float(ask("Guidance scale", str(DEFAULT_GUIDANCE_SCALE)))
     iterations = int(ask("Inference iterations", str(DEFAULT_ITERATIONS)))
 
