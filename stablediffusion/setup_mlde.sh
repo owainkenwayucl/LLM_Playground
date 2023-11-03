@@ -11,4 +11,4 @@ ln -s /data/autobentham/LLM_Playground/stablediffusion-xl/sdxl.py /run/determine
 ln -s /data/autobentham/LLM_Playground/stablediffusion-xl/Stable\ Diffusion\ XL.ipynb /run/determined/workdir
 ln -s /data/autobentham/LLM_Playground/stablediffusion-xl/Parallel\ SDXL.ipynb /run/determined/workdir
 
-pip install --upgrade -r ../requirements/generative_ai_pip.txt
+#pip install --upgrade -r ../requirements/generative_ai_pip.txt
