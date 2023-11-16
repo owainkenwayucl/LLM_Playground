@@ -67,7 +67,7 @@ def do_rescale(pipe, prompt, images, num_steps=40, fname=default_fname, save=Tru
     r = []
     count = start
     for a in images:
-        ir = pipe(prompt=prompt, image=image, num_inference_steps=num_steps, guidance_scale=0).images[0]
+        ir = pipe(prompt=prompt, image=a, num_inference_steps=num_steps, guidance_scale=0).images[0]
         r.append(ir)
         if save:
             ir.save(f"{fname}_RESIZE_{count}.png")
