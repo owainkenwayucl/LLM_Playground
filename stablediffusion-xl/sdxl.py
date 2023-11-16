@@ -67,7 +67,7 @@ def rescale(pipe, prompt, images, num_steps=40, fname=default_fname, save=True, 
     r = []
     count = start
     for a in images:
-        ir = pipe(prompt=prompt, image=image, num_inference_steps=num_steps, guidance_scale0).images[0]
+        ir = pipe(prompt=prompt, image=image, num_inference_steps=num_steps, guidance_scale=0).images[0]
         r.append(ir)
         if save:
             ir.save(f"{fname}_RESIZE_{count}.png")
@@ -115,7 +115,7 @@ def _inference_worker(q, model=model, prompt=default_prompt, denoise=False, num_
     for a in images:
         q.put(a)
 
-def parallel_inference(model=model, prompt=default_prompt, denoise=False, num_gen=1, pipe_steps=100, fname=default_fname, save=True, rescale=False, rescale_steps=40:
+def parallel_inference(model=model, prompt=default_prompt, denoise=False, num_gen=1, pipe_steps=100, fname=default_fname, save=True, rescale=False, rescale_steps=40):
     from torch.multiprocessing import Process, Queue, set_start_method
     import os
 
