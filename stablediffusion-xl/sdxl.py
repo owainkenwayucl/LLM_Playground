@@ -110,7 +110,7 @@ def _inference_worker(q, model=model, prompt=default_prompt, denoise=False, num_
         _,images = inference_denoise(pipe=pipe, refiner=pipe_r, prompt=prompt, num_gen=num_gen, pipe_steps=pipe_steps, fname=fname, denoise=denoise, save=save, start=start)
     if rescale:
         pipe_re = setup_rescaler_pipeline()
-        images_r = rescale(pipe_re,prompt,a, rescale_steps, fname, save, start)
+        images_r = rescale(pipe_re,prompt,images, rescale_steps, fname, save, start)
         images = images_r
     for a in images:
         q.put(a)
