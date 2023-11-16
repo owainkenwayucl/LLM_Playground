@@ -4,12 +4,12 @@ set -e
 
 eval "$(conda shell.bash hook)"
 
-python -m conda create -n sd
+python3 -m conda create -n sd
 
-python -m conda activate sd
+conda activate sd
 
-python -m conda install python=3.11.5
+conda install python=3.11.5
 
-pip install --upgradep pip torch torchvision diffusers transformers accelerate safetensors ipykernel
+pip3 install --upgrade pip torch torchvision diffusers transformers accelerate safetensors ipykernel nvitop
 
-python -m ipykernel install --user --name=stablediffusion
+python3 -m ipykernel install --user --name=stablediffusion
