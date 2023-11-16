@@ -58,7 +58,7 @@ def setup_rescaler_pipeline(model=model_x2_latent_rescaler):
     from diffusers import StableDiffusionLatentUpscalePipeline
     import torch
 
-    pipe = StableDiffusionLatentUpscalePipeline.from_pretrained(upscaler_model, torch_dtype=platform["size"])
+    pipe = StableDiffusionLatentUpscalePipeline.from_pretrained(model, torch_dtype=platform["size"])
     pipe.to(platform["device"])
 
     return pipe
