@@ -4,6 +4,8 @@ model_1_0_refiner="stabilityai/stable-diffusion-xl-refiner-1.0"
 model = model_1_0_base
 model_r = model_1_0_refiner
 
+model_x2_latent_rescaler = "stabilityai/sd-x2-latent-upscaler"
+
 default_prompt = "Space pineapple, oil paint"
 default_fname = "output"
 
@@ -52,6 +54,27 @@ def setup_pipeline(model=model, model_r=model_r, refiner_enabled=True):
 
     return pipe,refiner
 
+def setup_rescaler_pipeline(model=model_x2_latent_rescaler):
+    from diffusers import StableDiffusionLatentUpscalePipeline
+    import torch
+
+    pipe = StableDiffusionLatentUpscalePipeline.from_pretrained(upscaler_model, torch_dtype=platform["size"])
+    pipe.to(platform["device"])
+
+    return pipe
+
+def rescale(pipe, prompt, images, num_steps=40, fname=default_fname, save=True, start=0):
+    r = []
+    count = start
+    for a in images:
+        ir = pipe(prompt=prompt, image=image, num_inference_steps=num_steps, guidance_scale0).images[0]
+        r.append(ir)
+        if save:
+            ir.save(f"{fname}_RESIZE_{count}.png")
+        count = count + 1
+
+    return r
+
 def inference_denoise(pipe, refiner, prompt=default_prompt, num_gen=1, pipe_steps=100, fname=default_fname, denoise=0.8, save=True, start=0):
     images = []
     images_r = []
@@ -66,7 +89,7 @@ def inference_denoise(pipe, refiner, prompt=default_prompt, num_gen=1, pipe_step
 
     return images, images_r
 
-def inference(pipe, prompt=default_prompt, num_gen=1, pipe_steps=100, fname=default_fname, save=True, start=0):
+def inference(pipe, prompt=default_prompt, num_gen=1, pipe_steps=100, fname=default_fname, save=True, start=0:
     images = []
     for count in range(start, start+num_gen):
         image = pipe(prompt=prompt, num_inference_steps=pipe_steps).images[0]
@@ -76,7 +99,7 @@ def inference(pipe, prompt=default_prompt, num_gen=1, pipe_steps=100, fname=defa
 
     return images
 
-def _inference_worker(q, model=model, prompt=default_prompt, denoise=False, num_gen=1, pipe_steps=100, fname=default_fname, save=True, start=0):
+def _inference_worker(q, model=model, prompt=default_prompt, denoise=False, num_gen=1, pipe_steps=100, fname=default_fname, save=True, start=0, rescale=False, rescale_steps=40):
     refiner = True
     if denoise == False:
         refiner = False
@@ -85,10 +108,14 @@ def _inference_worker(q, model=model, prompt=default_prompt, denoise=False, num_
         images = inference(pipe=pipe, prompt=prompt, num_gen=num_gen, pipe_steps=pipe_steps, fname=fname, save=save, start=start)
     else:
         _,images = inference_denoise(pipe=pipe, refiner=pipe_r, prompt=prompt, num_gen=num_gen, pipe_steps=pipe_steps, fname=fname, denoise=denoise, save=save, start=start)
+    if rescale:
+        pipe_re = setup_rescaler_pipeline()
+        images_r = rescale(pipe_re,prompt,a, rescale_steps, fname, save, start)
+        images = images_r
     for a in images:
         q.put(a)
 
-def parallel_inference(model=model, prompt=default_prompt, denoise=False, num_gen=1, pipe_steps=100, fname=default_fname, save=True):
+def parallel_inference(model=model, prompt=default_prompt, denoise=False, num_gen=1, pipe_steps=100, fname=default_fname, save=True, rescale=False, rescale_steps=40:
     from torch.multiprocessing import Process, Queue, set_start_method
     import os
 
@@ -123,7 +150,7 @@ def parallel_inference(model=model, prompt=default_prompt, denoise=False, num_ge
 
     for a in range(number):
         os.environ["CUDA_VISIBLE_DEVICES"] = str(a)
-        procs.append(Process(target=_inference_worker, args=(q, model, prompt, denoise, chunks[a], pipe_steps, fname, save, starts[a])))
+        procs.append(Process(target=_inference_worker, args=(q, model, prompt, denoise, chunks[a], pipe_steps, fname, save, starts[a], rescale, rescale_steps)))
         procs[a].start()
 
     for a in range(num_gen):
