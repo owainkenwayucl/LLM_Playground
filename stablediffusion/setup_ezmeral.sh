@@ -1,5 +1,5 @@
 #!/bin/bash -l
-
+# git clone https://github.com/owainkenwayucl/LLM_Playground.git
 set -e
 
 eval "$(conda shell.bash hook)"
