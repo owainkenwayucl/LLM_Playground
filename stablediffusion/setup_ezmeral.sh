@@ -3,12 +3,10 @@
 
 eval "$(conda shell.bash hook)"
 
-set -e
-
-
 python3 -m conda create -n sd
 
 conda activate sd
+set -e 
 
 conda install python=3.11.5
 
