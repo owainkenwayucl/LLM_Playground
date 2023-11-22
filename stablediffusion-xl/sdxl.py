@@ -163,7 +163,6 @@ def parallel_inference(model=model, prompt=default_prompt, denoise=False, num_ge
     return images
 
 def interactive_generate(prompt, num_gen=1, denoise=False, pipe_steps=100, save=True, rescale=False, rescale_steps=45):
-    from IPython.display import Image
     fname = prompt_to_filename(prompt)
     images = parallel_inference(prompt=prompt, denoise=denoise, num_gen=num_gen, pipe_steps=pipe_steps, fname=fname, save=save, rescale=rescale, rescale_steps=rescale_steps)
     for a in images:
