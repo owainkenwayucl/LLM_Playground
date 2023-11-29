@@ -119,7 +119,7 @@ def _generate(pipeline, prompt, tokenizer, oprint=True):
 
 def generate(checkpoint="7b", device_map="auto", oprint=True):
     pipeline, tokenizer = setup_llm(checkpoint, device_map)
-    _generate(pipeline, _prompt, tokenizer, oprint)
+    return _generate(pipeline, _prompt, tokenizer, oprint)
 
 if __name__ == "__main__":
     generate()
