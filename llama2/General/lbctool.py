@@ -104,21 +104,22 @@ Protect [Yes/No, if yes, describe how does this epic contribute to this theme?]
 
 '''
 
-def _generate(pipeline, prompt, tokenizer):
+def _generate(pipeline, prompt, tokenizer, oprint=True):
     line = input("? ")
     start = time.time()
 
     prompt = prompt + " " + line + " [/INST] " 
     output = pipeline(prompt, do_sample=True, top_k=10, num_return_sequences=1, eos_token_id=tokenizer.eos_token_id, max_length=len(prompt) + 200)[0]["generated_text"].split("[/INST]")[-1]
     elapsed = time.time() - start
-    print(output)
+    if oprint:
+        print(output)
     print(" => Elapsed time: " + str(elapsed) + " seconds")
 
     return output
 
-def generate(checkpoint="7b", device_map="auto"):
+def generate(checkpoint="7b", device_map="auto", oprint=True):
     pipeline, tokenizer = setup_llm(checkpoint, device_map)
-    _generate(pipeline, _prompt, tokenizer)
+    _generate(pipeline, _prompt, tokenizer, oprint)
 
 if __name__ == "__main__":
     generate()
