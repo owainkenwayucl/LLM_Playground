@@ -114,6 +114,8 @@ def _generate(pipeline, prompt, tokenizer):
     print(output)
     print(" => Elapsed time: " + str(elapsed) + " seconds")
 
+    return output
+
 def generate(checkpoint="7b", device_map="auto"):
     pipeline, tokenizer = setup_llm(checkpoint, device_map)
     _generate(pipeline, _prompt, tokenizer)
