@@ -9,7 +9,7 @@ import time
 def setup_llm(checkpoint = "7b", device_map="auto"):
 
 
-    model_size = "7b"
+    model_size = checkpoint
 
     checkpoint_name = f"meta-llama/Llama-2-{model_size}-chat-hf"    
 
