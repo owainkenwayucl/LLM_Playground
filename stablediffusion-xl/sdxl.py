@@ -39,14 +39,18 @@ def detect_platform():
 
 platform = detect_platform()
 
-def setup_pipeline(model=model, model_r=model_r, refiner_enabled=True):
+def setup_pipeline(model=model, model_r=model_r, refiner_enabled=True, m_compile=False):
     from diffusers import StableDiffusionXLPipeline, StableDiffusionXLImg2ImgPipeline
     import torch
 
     pipe = StableDiffusionXLPipeline.from_pretrained(model, torch_dtype=platform["size"], variant="fp16", add_watermarker=False)
+    if m_compile:
+        pipe.unet = torch.compile(pipe.unet, mode="reduce-overhead", fullgraph=True)
     refiner = None
     if refiner_enabled:
         refiner = StableDiffusionXLImg2ImgPipeline.from_pretrained(model_r, torch_dtype=platform["size"], variant="fp16", text_encoder_2=pipe.text_encoder_2, vae=pipe.vae)
+        if m_compile:
+            refiner.unet = torch.compile(refiner.unet, mode="reduce-overhead", fullgraph=True)   
 
     pipe.to(platform["device"])
     if refiner_enabled:
@@ -54,11 +58,13 @@ def setup_pipeline(model=model, model_r=model_r, refiner_enabled=True):
 
     return pipe,refiner
 
-def setup_rescaler_pipeline(model=model_x2_latent_rescaler):
+def setup_rescaler_pipeline(model=model_x2_latent_rescaler, m_compile=False):
     from diffusers import StableDiffusionLatentUpscalePipeline
     import torch
 
     pipe = StableDiffusionLatentUpscalePipeline.from_pretrained(model, torch_dtype=platform["size"])
+    if m_compile:
+        pipe.unet = torch.compile(pipe.unet, mode="reduce-overhead", fullgraph=True)
     pipe.to(platform["device"])
 
     return pipe
@@ -103,23 +109,23 @@ def inference(pipe, prompt=default_prompt, num_gen=1, pipe_steps=100, fname=defa
 
     return images
 
-def _inference_worker(q, model=model, prompt=default_prompt, denoise=False, num_gen=1, pipe_steps=100, fname=default_fname, save=True, start=0, rescale=False, rescale_steps=40):
+def _inference_worker(q, model=model, prompt=default_prompt, denoise=False, num_gen=1, pipe_steps=100, fname=default_fname, save=True, start=0, rescale=False, rescale_steps=40, m_compile=False):
     refiner = True
     if denoise == False:
         refiner = False
-    pipe, pipe_r = setup_pipeline(model, model_r, refiner)
+    pipe, pipe_r = setup_pipeline(model, model_r, refiner, m_compile=m_compile)
     if denoise == False:
         images = inference(pipe=pipe, prompt=prompt, num_gen=num_gen, pipe_steps=pipe_steps, fname=fname, save=save, start=start)
     else:
         _,images = inference_denoise(pipe=pipe, refiner=pipe_r, prompt=prompt, num_gen=num_gen, pipe_steps=pipe_steps, fname=fname, denoise=denoise, save=save, start=start)
     if rescale:
-        pipe_re = setup_rescaler_pipeline()
+        pipe_re = setup_rescaler_pipeline(m_compile=m_compile)
         images_r = do_rescale(pipe_re,prompt,images, rescale_steps, fname, save, start)
         images = images_r
     for a in images:
         q.put(a)
 
-def parallel_inference(model=model, prompt=default_prompt, denoise=False, num_gen=1, pipe_steps=100, fname=default_fname, save=True, rescale=False, rescale_steps=40):
+def parallel_inference(model=model, prompt=default_prompt, denoise=False, num_gen=1, pipe_steps=100, fname=default_fname, save=True, rescale=False, rescale_steps=40, m_compile=False):
     from torch.multiprocessing import Process, Queue, set_start_method
     import os
 
@@ -154,7 +160,7 @@ def parallel_inference(model=model, prompt=default_prompt, denoise=False, num_ge
 
     for a in range(number):
         os.environ["CUDA_VISIBLE_DEVICES"] = str(a)
-        procs.append(Process(target=_inference_worker, args=(q, model, prompt, denoise, chunks[a], pipe_steps, fname, save, starts[a], rescale, rescale_steps)))
+        procs.append(Process(target=_inference_worker, args=(q, model, prompt, denoise, chunks[a], pipe_steps, fname, save, starts[a], rescale, rescale_steps, m_compile)))
         procs[a].start()
 
     for a in range(num_gen):
