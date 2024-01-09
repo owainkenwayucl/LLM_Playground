@@ -46,7 +46,7 @@ def generate(filename, checkpoint="7b", device_map="auto", oprint=True):
     pipeline, tokenizer = setup_llm(checkpoint, device_map)
     prompt = _prompt
     file_data = ""
-    with open(filename, encodin="utf-8") as f:
+    with open(filename, encoding="utf-8") as f:
         file_data = f.read()
 
     prompt = prompt +"\n" + file_data + "[/INST]"
