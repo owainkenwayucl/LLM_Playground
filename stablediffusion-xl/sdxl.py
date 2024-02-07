@@ -87,10 +87,10 @@ def inference_denoise(pipe, refiner, prompt=default_prompt, num_gen=1, pipe_step
     images_r = []
     for count in range(start, start+num_gen):
         # This is the correct way but... it makes very weird images.
-        #image = pipe(prompt=prompt, num_inference_steps=pipe_steps, denoising_end=denoise).images[0]
-        #image_r = refiner(prompt=prompt, image=image, num_inference_steps=pipe_steps, denoising_start=denoise).images[0]
-        image = pipe(prompt=prompt, num_inference_steps=pipe_steps).images[0]
-        image_r = refiner(prompt=prompt, num_inference_steps=pipe_steps, image=image).images[0]
+        image = pipe(prompt=prompt, num_inference_steps=pipe_steps, denoising_end=denoise, output_type="latent").images[0]
+        image_r = refiner(prompt=prompt, image=image, num_inference_steps=pipe_steps, denoising_start=denoise).images[0]
+        #image = pipe(prompt=prompt, num_inference_steps=pipe_steps).images[0]
+        #image_r = refiner(prompt=prompt, num_inference_steps=pipe_steps, image=image).images[0]
         if save:
             image.save(f"{fname}_{count}.png")
             image_r.save(f"{fname}_r_{count}.png")
