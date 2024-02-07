@@ -40,7 +40,7 @@ def detect_platform():
 
 platform = detect_platform()
 
-def setup_pipeline(model=model, model_r=model_r, refiner_enabled=True, m_compile=False, freeu={"enabled":False, "s1":0.9, "s2":0.2, "b1":1.3, "b2":1.6}:
+def setup_pipeline(model=model, model_r=model_r, refiner_enabled=True, m_compile=False, freeu={"enabled":False, "s1":0.9, "s2":0.2, "b1":1.3, "b2":1.6}):
     from diffusers import StableDiffusionXLPipeline, StableDiffusionXLImg2ImgPipeline
     import torch
 
