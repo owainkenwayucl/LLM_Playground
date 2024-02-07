@@ -92,7 +92,7 @@ def inference_denoise(pipe, refiner, prompt=default_prompt, num_gen=1, pipe_step
     images_r = []
 
     generator = torch.Generator(platform["device"])
-    if not seed:
+    if seed != False:
         generator.manual_seed(seed)
 
     for count in range(start, start+num_gen):
@@ -108,12 +108,12 @@ def inference_denoise(pipe, refiner, prompt=default_prompt, num_gen=1, pipe_step
 
     return images, images_r
 
-def inference(pipe, prompt=default_prompt, num_gen=1, pipe_steps=100, fname=default_fname, save=True, start=0):
+def inference(pipe, prompt=default_prompt, num_gen=1, pipe_steps=100, fname=default_fname, save=True, start=0, seed=False):
     import torch
     images = []
 
     generator = torch.Generator(platform["device"])
-    if not seed:
+    if seed != False:
         generator.manual_seed(seed)
 
     for count in range(start, start+num_gen):
