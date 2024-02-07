@@ -40,15 +40,14 @@ def detect_platform():
 
 platform = detect_platform()
 
-def setup_pipeline(model=model, model_r=model_r, refiner_enabled=True, m_compile=False, freeu={"enabled":False, "s1":0.9, "s2":0.2, "b1":1.3, "b2":1.6}, seed=False):
+def setup_pipeline(model=model, model_r=model_r, refiner_enabled=True, m_compile=False, freeu={"enabled":False, "s1":0.9, "s2":0.2, "b1":1.3, "b2":1.6}:
     from diffusers import StableDiffusionXLPipeline, StableDiffusionXLImg2ImgPipeline
     import torch
 
     pipe = StableDiffusionXLPipeline.from_pretrained(model, torch_dtype=platform["size"], variant="fp16", add_watermarker=False)
     if freeu["enabled"]:
         pipe.enable_freeu(freeu["s1"], freeu["s2"], freeu["b1"], freeu["b2"])
-    if not seed:
-        pipe.manual_seed(seed)
+
     if m_compile:
         pipe.unet = torch.compile(pipe.unet, mode="reduce-overhead", fullgraph=True)
     refiner = None
@@ -87,13 +86,19 @@ def do_rescale(pipe, prompt, images, num_steps=40, fname=default_fname, save=Tru
     return r
 
 # denoise as an argument presently does nothing...
-def inference_denoise(pipe, refiner, prompt=default_prompt, num_gen=1, pipe_steps=100, fname=default_fname, denoise=0.8, save=True, start=0):
+def inference_denoise(pipe, refiner, prompt=default_prompt, num_gen=1, pipe_steps=100, fname=default_fname, denoise=0.8, save=True, start=0, seed=False):
+    import torch
     images = []
     images_r = []
+
+    generator = torch.Generator(platform["device"])
+    if not seed:
+        generator.manual_seed(seed)
+
     for count in range(start, start+num_gen):
         # This is the correct way but... it makes very weird images.
-        image = pipe(prompt=prompt, num_inference_steps=pipe_steps, denoising_end=denoise, output_type="latent").images[0]
-        image_r = refiner(prompt=prompt, image=image, num_inference_steps=pipe_steps, denoising_start=denoise).images[0]
+        image = pipe(prompt=prompt, generator=generator, num_inference_steps=pipe_steps, denoising_end=denoise, output_type="latent").images[0]
+        image_r = refiner(prompt=prompt, image=image, generator=generator, num_inference_steps=pipe_steps, denoising_start=denoise).images[0]
 
         if save:
             image.save(f"{fname}_{count}.png")
@@ -104,9 +109,15 @@ def inference_denoise(pipe, refiner, prompt=default_prompt, num_gen=1, pipe_step
     return images, images_r
 
 def inference(pipe, prompt=default_prompt, num_gen=1, pipe_steps=100, fname=default_fname, save=True, start=0):
+    import torch
     images = []
+
+    generator = torch.Generator(platform["device"])
+    if not seed:
+        generator.manual_seed(seed)
+
     for count in range(start, start+num_gen):
-        image = pipe(prompt=prompt, num_inference_steps=pipe_steps).images[0]
+        image = pipe(prompt=prompt, generator=generator, num_inference_steps=pipe_steps).images[0]
         images.append(image)
         if save:
             image.save(f"{fname}_{count}.png")
@@ -117,11 +128,11 @@ def _inference_worker(q, model=model, prompt=default_prompt, denoise=False, num_
     refiner = True
     if denoise == False:
         refiner = False
-    pipe, pipe_r = setup_pipeline(model, model_r, refiner, m_compile=m_compile, freeu=freeu, seed=seed)
+    pipe, pipe_r = setup_pipeline(model, model_r, refiner, m_compile=m_compile, freeu=freeu)
     if denoise == False:
-        images = inference(pipe=pipe, prompt=prompt, num_gen=num_gen, pipe_steps=pipe_steps, fname=fname, save=save, start=start)
+        images = inference(pipe=pipe, prompt=prompt, num_gen=num_gen, pipe_steps=pipe_steps, fname=fname, save=save, start=start, seed=seed)
     else:
-        _,images = inference_denoise(pipe=pipe, refiner=pipe_r, prompt=prompt, num_gen=num_gen, pipe_steps=pipe_steps, fname=fname, denoise=denoise, save=save, start=start)
+        _,images = inference_denoise(pipe=pipe, refiner=pipe_r, prompt=prompt, num_gen=num_gen, pipe_steps=pipe_steps, fname=fname, denoise=denoise, save=save, start=start, seed=seed)
     if rescale:
         pipe_re = setup_rescaler_pipeline(m_compile=m_compile)
         images_r = do_rescale(pipe_re,prompt,images, rescale_steps, fname, save, start)
