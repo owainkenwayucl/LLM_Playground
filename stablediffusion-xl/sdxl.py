@@ -9,12 +9,6 @@ model_x2_latent_rescaler = "stabilityai/sd-x2-latent-upscaler"
 default_prompt = "Space pineapple, oil paint"
 default_fname = "output"
 
-fu_b1 = 1.3
-fu_b2 = 1.6
-fu_s1 = 0.9
-fu_s2 = 0.2
-
-fu = True
 
 def prompt_to_filename(prompt):
     return prompt.replace(" ", "_").replace("/", "_")
@@ -46,13 +40,13 @@ def detect_platform():
 
 platform = detect_platform()
 
-def setup_pipeline(model=model, model_r=model_r, refiner_enabled=True, m_compile=False):
+def setup_pipeline(model=model, model_r=model_r, refiner_enabled=True, m_compile=False, freeu={"enabled":False, "s1":0.9, "s2":0.2, "b1":1.3, "b2":1.6}):
     from diffusers import StableDiffusionXLPipeline, StableDiffusionXLImg2ImgPipeline
     import torch
 
     pipe = StableDiffusionXLPipeline.from_pretrained(model, torch_dtype=platform["size"], variant="fp16", add_watermarker=False)
-    if fu:
-        pipe.enable_freeu(fu_s1, fu_s2, fu_b1, fu_b2)
+    if freeu["enabled"]:
+        pipe.enable_freeu(freeu["s1"], freeu["s2"], freeu["b1"], freeu["b2"])
     if m_compile:
         pipe.unet = torch.compile(pipe.unet, mode="reduce-overhead", fullgraph=True)
     refiner = None
@@ -98,8 +92,7 @@ def inference_denoise(pipe, refiner, prompt=default_prompt, num_gen=1, pipe_step
         # This is the correct way but... it makes very weird images.
         image = pipe(prompt=prompt, num_inference_steps=pipe_steps, denoising_end=denoise, output_type="latent").images[0]
         image_r = refiner(prompt=prompt, image=image, num_inference_steps=pipe_steps, denoising_start=denoise).images[0]
-        #image = pipe(prompt=prompt, num_inference_steps=pipe_steps).images[0]
-        #image_r = refiner(prompt=prompt, num_inference_steps=pipe_steps, image=image).images[0]
+
         if save:
             image.save(f"{fname}_{count}.png")
             image_r.save(f"{fname}_r_{count}.png")
@@ -118,11 +111,11 @@ def inference(pipe, prompt=default_prompt, num_gen=1, pipe_steps=100, fname=defa
 
     return images
 
-def _inference_worker(q, model=model, prompt=default_prompt, denoise=False, num_gen=1, pipe_steps=100, fname=default_fname, save=True, start=0, rescale=False, rescale_steps=40, m_compile=False):
+def _inference_worker(q, model=model, prompt=default_prompt, denoise=False, num_gen=1, pipe_steps=100, fname=default_fname, save=True, start=0, rescale=False, rescale_steps=40, m_compile=False, freeu={"enabled":False, "s1":0.9, "s2":0.2, "b1":1.3, "b2":1.6}):
     refiner = True
     if denoise == False:
         refiner = False
-    pipe, pipe_r = setup_pipeline(model, model_r, refiner, m_compile=m_compile)
+    pipe, pipe_r = setup_pipeline(model, model_r, refiner, m_compile=m_compile, freeu=freeu )
     if denoise == False:
         images = inference(pipe=pipe, prompt=prompt, num_gen=num_gen, pipe_steps=pipe_steps, fname=fname, save=save, start=start)
     else:
@@ -134,7 +127,7 @@ def _inference_worker(q, model=model, prompt=default_prompt, denoise=False, num_
     for a in images:
         q.put(a)
 
-def parallel_inference(model=model, prompt=default_prompt, denoise=False, num_gen=1, pipe_steps=100, fname=default_fname, save=True, rescale=False, rescale_steps=40, m_compile=False):
+def parallel_inference(model=model, prompt=default_prompt, denoise=False, num_gen=1, pipe_steps=100, fname=default_fname, save=True, rescale=False, rescale_steps=40, m_compile=False, freeu={"enabled":False, "s1":0.9, "s2":0.2, "b1":1.3, "b2":1.6}):
     from torch.multiprocessing import Process, Queue, set_start_method
     import os
 
@@ -169,7 +162,7 @@ def parallel_inference(model=model, prompt=default_prompt, denoise=False, num_ge
 
     for a in range(number):
         os.environ["CUDA_VISIBLE_DEVICES"] = str(a)
-        procs.append(Process(target=_inference_worker, args=(q, model, prompt, denoise, chunks[a], pipe_steps, fname, save, starts[a], rescale, rescale_steps, m_compile)))
+        procs.append(Process(target=_inference_worker, args=(q, model, prompt, denoise, chunks[a], pipe_steps, fname, save, starts[a], rescale, rescale_steps, m_compile, freeu)))
         procs[a].start()
 
     for a in range(num_gen):
@@ -177,8 +170,8 @@ def parallel_inference(model=model, prompt=default_prompt, denoise=False, num_ge
     
     return images
 
-def interactive_generate(prompt, num_gen=1, denoise=False, pipe_steps=100, save=True, rescale=False, rescale_steps=45, m_compile=False):
+def interactive_generate(prompt, num_gen=1, denoise=False, pipe_steps=100, save=True, rescale=False, rescale_steps=45, m_compile=False, freeu={"enabled":False, "s1":0.9, "s2":0.2, "b1":1.3, "b2":1.6}):
     fname = prompt_to_filename(prompt)
-    images = parallel_inference(prompt=prompt, denoise=denoise, num_gen=num_gen, pipe_steps=pipe_steps, fname=fname, save=save, rescale=rescale, rescale_steps=rescale_steps, m_compile=m_compile)
+    images = parallel_inference(prompt=prompt, denoise=denoise, num_gen=num_gen, pipe_steps=pipe_steps, fname=fname, save=save, rescale=rescale, rescale_steps=rescale_steps, m_compile=m_compile, freeu=freeu)
     for a in images:
         display(a)
