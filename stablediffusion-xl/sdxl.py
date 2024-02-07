@@ -93,8 +93,10 @@ def inference_denoise(pipe, refiner, prompt=default_prompt, num_gen=1, pipe_step
 
     generator = torch.Generator(platform["device"])
     if seed != False:
+        print(f"Setting seed to {seed}")
         generator.manual_seed(seed)
     else:
+        print("No seed.")
         generator.seed()
 
     for count in range(start, start+num_gen):
@@ -116,8 +118,10 @@ def inference(pipe, prompt=default_prompt, num_gen=1, pipe_steps=100, fname=defa
 
     generator = torch.Generator(platform["device"])
     if seed != False:
+        print(f"Setting seed to {seed}")
         generator.manual_seed(seed)
     else:
+        print("No seed.")
         generator.seed()
 
     for count in range(start, start+num_gen):
