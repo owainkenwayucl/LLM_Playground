@@ -94,6 +94,8 @@ def inference_denoise(pipe, refiner, prompt=default_prompt, num_gen=1, pipe_step
     generator = torch.Generator(platform["device"])
     if seed != False:
         generator.manual_seed(seed)
+    else:
+        generator.seed()
 
     for count in range(start, start+num_gen):
         # This is the correct way but... it makes very weird images.
@@ -115,6 +117,8 @@ def inference(pipe, prompt=default_prompt, num_gen=1, pipe_steps=100, fname=defa
     generator = torch.Generator(platform["device"])
     if seed != False:
         generator.manual_seed(seed)
+    else:
+        generator.seed()
 
     for count in range(start, start+num_gen):
         image = pipe(prompt=prompt, generator=generator, num_inference_steps=pipe_steps).images[0]
