@@ -9,6 +9,13 @@ model_x2_latent_rescaler = "stabilityai/sd-x2-latent-upscaler"
 default_prompt = "Space pineapple, oil paint"
 default_fname = "output"
 
+fu_b1 = 1.3
+fu_b2 = 1.6
+fu_s1 = 0.9
+fu_s2 = 0.2
+
+fu = True
+
 def prompt_to_filename(prompt):
     return prompt.replace(" ", "_").replace("/", "_")
 
@@ -44,6 +51,8 @@ def setup_pipeline(model=model, model_r=model_r, refiner_enabled=True, m_compile
     import torch
 
     pipe = StableDiffusionXLPipeline.from_pretrained(model, torch_dtype=platform["size"], variant="fp16", add_watermarker=False)
+    if fu:
+        pipe.enable_freeu(fu_s1, fu_s2, fu_b1, fu_b2)
     if m_compile:
         pipe.unet = torch.compile(pipe.unet, mode="reduce-overhead", fullgraph=True)
     refiner = None
