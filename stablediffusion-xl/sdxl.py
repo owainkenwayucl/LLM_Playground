@@ -86,7 +86,7 @@ def do_rescale(pipe, prompt, images, num_steps=40, fname=default_fname, save=Tru
     return r
 
 # denoise as an argument presently does nothing...
-def inference_denoise(pipe, refiner, prompt=default_prompt, num_gen=1, pipe_steps=100, fname=default_fname, denoise=0.8, save=True, start=0, seed=None):
+def inference_denoise(pipe, refiner, prompt=default_prompt, num_gen=1, pipe_steps=100, fname=default_fname, denoise=0.8, save=True, start=0, seed=None, rescale=False):
     import torch
     images = []
     images_r = []
@@ -102,7 +102,10 @@ def inference_denoise(pipe, refiner, prompt=default_prompt, num_gen=1, pipe_step
     for count in range(start, start+num_gen):
         # This is the correct way but... it makes very weird images.
         image = pipe(prompt=prompt, generator=generator, num_inference_steps=pipe_steps, denoising_end=denoise, output_type="latent").images[0]
-        image_r = refiner(prompt=prompt, image=image, generator=generator, num_inference_steps=pipe_steps, denoising_start=denoise).images[0]
+        if rescale:
+            image_r = refiner(prompt=prompt, image=image, generator=generator, num_inference_steps=pipe_steps, denoising_start=denoise, output_type="latent").images[0]
+        else: 
+            image_r = refiner(prompt=prompt, image=image, generator=generator, num_inference_steps=pipe_steps, denoising_start=denoise).images[0]
 
         if save:
             image.save(f"{fname}_{count}.png")
@@ -112,7 +115,7 @@ def inference_denoise(pipe, refiner, prompt=default_prompt, num_gen=1, pipe_step
 
     return images, images_r
 
-def inference(pipe, prompt=default_prompt, num_gen=1, pipe_steps=100, fname=default_fname, save=True, start=0, seed=None):
+def inference(pipe, prompt=default_prompt, num_gen=1, pipe_steps=100, fname=default_fname, save=True, start=0, seed=None, rescale=False):
     import torch
     images = []
 
@@ -125,7 +128,10 @@ def inference(pipe, prompt=default_prompt, num_gen=1, pipe_steps=100, fname=defa
         generator.seed()
 
     for count in range(start, start+num_gen):
-        image = pipe(prompt=prompt, generator=generator, num_inference_steps=pipe_steps).images[0]
+        if rescale:
+            image = pipe(prompt=prompt, generator=generator, num_inference_steps=pipe_steps, output_type="latent").images[0]
+        else:
+            image = pipe(prompt=prompt, generator=generator, num_inference_steps=pipe_steps).images[0]
         images.append(image)
         if save:
             image.save(f"{fname}_{count}.png")
@@ -138,9 +144,9 @@ def _inference_worker(q, model=model, prompt=default_prompt, denoise=False, num_
         refiner = False
     pipe, pipe_r = setup_pipeline(model, model_r, refiner, m_compile=m_compile, freeu=freeu)
     if denoise == False:
-        images = inference(pipe=pipe, prompt=prompt, num_gen=num_gen, pipe_steps=pipe_steps, fname=fname, save=save, start=start, seed=seed)
+        images = inference(pipe=pipe, prompt=prompt, num_gen=num_gen, pipe_steps=pipe_steps, fname=fname, save=save, start=start, seed=seed, rescale=rescale)
     else:
-        _,images = inference_denoise(pipe=pipe, refiner=pipe_r, prompt=prompt, num_gen=num_gen, pipe_steps=pipe_steps, fname=fname, denoise=denoise, save=save, start=start, seed=seed)
+        _,images = inference_denoise(pipe=pipe, refiner=pipe_r, prompt=prompt, num_gen=num_gen, pipe_steps=pipe_steps, fname=fname, denoise=denoise, save=save, start=start, seed=seed, rescale=rescale)
     if rescale:
         pipe_re = setup_rescaler_pipeline(m_compile=m_compile)
         images_r = do_rescale(pipe_re,prompt,images, rescale_steps, fname, save, start)
