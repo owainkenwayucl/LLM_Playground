@@ -103,7 +103,8 @@ def inference_denoise(pipe, refiner, prompt=default_prompt, num_gen=1, pipe_step
         # This is the correct way but... it makes very weird images.
         image = pipe(prompt=prompt, generator=generator, num_inference_steps=pipe_steps, denoising_end=denoise, output_type="latent").images[0]
         if rescale:
-            image_r = refiner(prompt=prompt, image=image, generator=generator, num_inference_steps=pipe_steps, denoising_start=denoise, output_type="latent").images[0]
+            image_r = refiner(prompt=prompt, image=image, generator=generator, num_inference_steps=pipe_steps, denoising_start=denoise).images[0]
+            #image_r = refiner(prompt=prompt, image=image, generator=generator, num_inference_steps=pipe_steps, denoising_start=denoise, output_type="latent").images[0]
         else: 
             image_r = refiner(prompt=prompt, image=image, generator=generator, num_inference_steps=pipe_steps, denoising_start=denoise).images[0]
 
@@ -129,7 +130,8 @@ def inference(pipe, prompt=default_prompt, num_gen=1, pipe_steps=100, fname=defa
 
     for count in range(start, start+num_gen):
         if rescale:
-            image = pipe(prompt=prompt, generator=generator, num_inference_steps=pipe_steps, output_type="latent").images[0]
+            image = pipe(prompt=prompt, generator=generator, num_inference_steps=pipe_steps).images[0]
+            #image = pipe(prompt=prompt, generator=generator, num_inference_steps=pipe_steps, output_type="latent").images[0]
         else:
             image = pipe(prompt=prompt, generator=generator, num_inference_steps=pipe_steps).images[0]
         images.append(image)
