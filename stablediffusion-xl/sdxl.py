@@ -85,7 +85,6 @@ def do_rescale(pipe, prompt, images, num_steps=40, fname=default_fname, save=Tru
 
     return r
 
-# denoise as an argument presently does nothing...
 def inference_denoise(pipe, refiner, prompt=default_prompt, num_gen=1, pipe_steps=100, fname=default_fname, denoise=0.8, save=True, start=0, seed=None, rescale=False):
     import torch
     images = []
@@ -100,7 +99,7 @@ def inference_denoise(pipe, refiner, prompt=default_prompt, num_gen=1, pipe_step
         generator.seed()
 
     for count in range(start, start+num_gen):
-        # This is the correct way but... it makes very weird images.
+
         image = pipe(prompt=prompt, generator=generator, num_inference_steps=pipe_steps, denoising_end=denoise, output_type="latent").images[0]
         if rescale:
             image_r = refiner(prompt=prompt, image=image, generator=generator, num_inference_steps=pipe_steps, denoising_start=denoise).images[0]
