@@ -109,8 +109,7 @@ def inference_denoise(pipe, refiner, prompt=default_prompt, num_gen=1, pipe_step
             image_r = refiner(prompt=prompt, image=image, generator=generator, num_inference_steps=pipe_steps, denoising_start=denoise).images[0]
 
         if save:
-            image.save(f"{fname}_{count}.png")
-            image_r.save(f"{fname}_r_{count}.png")
+            image_r.save(f"{fname}_{count}.png")
         images.append(image)
         images_r.append(image_r)
 
