@@ -92,14 +92,18 @@ def inference_denoise(pipe, refiner, prompt=default_prompt, num_gen=1, pipe_step
 
     generator = torch.Generator(platform["device"])
     if seed != None:
-        print(f"Setting seed to {seed}")
-        generator.manual_seed(seed)
+        if type(seed) is torch.tensor:
+            print(f"Recovering generator state to: {seed}")
+            generator.set_state(seed)
+        else: 
+            print(f"Setting seed to {seed}")
+            generator.manual_seed(seed)
     else:
         print("No seed.")
         generator.seed()
 
     for count in range(start, start+num_gen):
-
+        print(f"Generator State: {temp_s}")
         image = pipe(prompt=prompt, generator=generator, num_inference_steps=pipe_steps, denoising_end=denoise, output_type="latent").images[0]
         if rescale:
             image_r = refiner(prompt=prompt, image=image, generator=generator, num_inference_steps=pipe_steps, denoising_start=denoise).images[0]
@@ -120,13 +124,19 @@ def inference(pipe, prompt=default_prompt, num_gen=1, pipe_steps=100, fname=defa
 
     generator = torch.Generator(platform["device"])
     if seed != None:
-        print(f"Setting seed to {seed}")
-        generator.manual_seed(seed)
+        if type(seed) is torch.tensor:
+            print(f"Recovering generator state to: {seed}")
+            generator.set_state(seed)
+        else: 
+            print(f"Setting seed to {seed}")
+            generator.manual_seed(seed)
     else:
         print("No seed.")
         generator.seed()
 
     for count in range(start, start+num_gen):
+        temp_s = generator.get_state()
+        print(f"Generator State: {temp_s}")
         if rescale:
             image = pipe(prompt=prompt, generator=generator, num_inference_steps=pipe_steps).images[0]
             #image = pipe(prompt=prompt, generator=generator, num_inference_steps=pipe_steps, output_type="latent").images[0]
