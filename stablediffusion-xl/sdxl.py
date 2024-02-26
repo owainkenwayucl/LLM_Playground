@@ -103,6 +103,7 @@ def inference_denoise(pipe, refiner, prompt=default_prompt, num_gen=1, pipe_step
         generator.seed()
 
     for count in range(start, start+num_gen):
+        temp_s = generator.get_state()
         print(f"Generator State: {temp_s}")
         image = pipe(prompt=prompt, generator=generator, num_inference_steps=pipe_steps, denoising_end=denoise, output_type="latent").images[0]
         if rescale:
