@@ -9,6 +9,26 @@ model_x2_latent_rescaler = "stabilityai/sd-x2-latent-upscaler"
 default_prompt = "Space pineapple, oil paint"
 default_fname = "output"
 
+def checkseed(seed):
+    mi = -pow(2, 63) 
+    ma = pow(2, 63) -1 
+    return mi <= seed <= ma
+
+def restate(seed):
+    import torch
+    import textwrap
+    he = '%X' seed
+    he = he.rjust(32, "0")
+
+    re = reversed(textwrap.wrap(he, 2))
+    lt = []
+
+    for a in re:
+        lt.append(int(a,16))
+    
+    rt = torch.tensor(lt, dtype=torch.uint8)
+    return rt
+
 def state_to_seed_hex(state):
     c = "0x"
     for a in reversed(state):
@@ -115,7 +135,13 @@ def inference_denoise(pipe, refiner, prompt=default_prompt, num_gen=1, pipe_step
             generator.set_state(seed)
         else: 
             print(f"Setting seed to {seed}")
-            generator.manual_seed(seed)
+            if checkseed(seed):
+                generator.manual_seed(seed)
+            else:
+                print(f"Seed too long to use .seed - converting to tensor.")
+                tseed = restate(seed)
+                print(f"Converted tensor: {tseed}")
+                generator.set_state(tseed)
     else:
         print("No seed.")
         generator.seed()
@@ -148,7 +174,13 @@ def inference(pipe, prompt=default_prompt, num_gen=1, pipe_steps=100, fname=defa
             generator.set_state(seed)
         else: 
             print(f"Setting seed to {seed}")
-            generator.manual_seed(seed)
+            if checkseed(seed):
+                generator.manual_seed(seed)
+            else:
+                print(f"Seed too long to use .seed - converting to tensor.")
+                tseed = restate(seed)
+                print(f"Converted tensor: {tseed}")
+                generator.set_state(tseed)
     else:
         print("No seed.")
         generator.seed()
