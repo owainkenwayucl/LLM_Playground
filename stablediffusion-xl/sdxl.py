@@ -9,6 +9,24 @@ model_x2_latent_rescaler = "stabilityai/sd-x2-latent-upscaler"
 default_prompt = "Space pineapple, oil paint"
 default_fname = "output"
 
+def state_to_seed_hex(state):
+    c = "0x"
+    for a in reversed(state):
+        b = '%X' % a
+        if (len(b) < 2):
+            b = f"0{b}"
+        c = c + b
+
+    return c 
+
+def state_to_seed(state):
+    c = state_to_seed_hex(state)
+    return int(c,16)
+
+def report_state(state):
+    h = state_to_seed_hex(state)
+    i = state_to_seed(state)
+    print(f"State: torch.{state} || {h} || {i}")
 
 def prompt_to_filename(prompt):
     return prompt.replace(" ", "_").replace("/", "_")
@@ -104,7 +122,7 @@ def inference_denoise(pipe, refiner, prompt=default_prompt, num_gen=1, pipe_step
 
     for count in range(start, start+num_gen):
         temp_s = generator.get_state()
-        print(f"Generator State: {temp_s}")
+        report_state(temp_s)
         image = pipe(prompt=prompt, generator=generator, num_inference_steps=pipe_steps, denoising_end=denoise, output_type="latent").images[0]
         if rescale:
             image_r = refiner(prompt=prompt, image=image, generator=generator, num_inference_steps=pipe_steps, denoising_start=denoise).images[0]
@@ -137,7 +155,7 @@ def inference(pipe, prompt=default_prompt, num_gen=1, pipe_steps=100, fname=defa
 
     for count in range(start, start+num_gen):
         temp_s = generator.get_state()
-        print(f"Generator State: {temp_s}")
+        report_state(temp_s)
         if rescale:
             image = pipe(prompt=prompt, generator=generator, num_inference_steps=pipe_steps).images[0]
             #image = pipe(prompt=prompt, generator=generator, num_inference_steps=pipe_steps, output_type="latent").images[0]
