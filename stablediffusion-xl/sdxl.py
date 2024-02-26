@@ -17,7 +17,7 @@ def checkseed(seed):
 def restate(seed):
     import torch
     import textwrap
-    he = '%X' seed
+    he = '%X' % seed
     he = he.rjust(32, "0")
 
     re = reversed(textwrap.wrap(he, 2))
