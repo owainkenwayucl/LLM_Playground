@@ -92,13 +92,12 @@ def inference_denoise(pipe, refiner, prompt=default_prompt, num_gen=1, pipe_step
 
     generator = torch.Generator(platform["device"])
     if seed != None:
-        if type(seed) is long:
-            print(f"Setting seed to {seed}")
-            generator.manual_seed(seed)
-        else: 
-
+        if type(seed) is torch.Tensor:
             print(f"Recovering generator state to: {seed}")
             generator.set_state(seed)
+        else: 
+            print(f"Setting seed to {seed}")
+            generator.manual_seed(seed)
     else:
         print("No seed.")
         generator.seed()
@@ -125,13 +124,12 @@ def inference(pipe, prompt=default_prompt, num_gen=1, pipe_steps=100, fname=defa
 
     generator = torch.Generator(platform["device"])
     if seed != None:
-        if type(seed) is long:
-            print(f"Setting seed to {seed}")
-            generator.manual_seed(seed)
-        else: 
-
+        if type(seed) is torch.Tensor:
             print(f"Recovering generator state to: {seed}")
             generator.set_state(seed)
+        else: 
+            print(f"Setting seed to {seed}")
+            generator.manual_seed(seed)
     else:
         print("No seed.")
         generator.seed()
