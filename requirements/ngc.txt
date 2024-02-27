@@ -1,0 +1,7 @@
+diffusers
+transformers
+accelerate
+safetensors
+ipykernel
+scipy
+ipywidgets
