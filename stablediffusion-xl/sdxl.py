@@ -123,7 +123,7 @@ def do_rescale(pipe, prompt, images, num_steps=40, fname=default_fname, save=Tru
 
     return r
 
-def inference_denoise(pipe, refiner, prompt=default_prompt, num_gen=1, pipe_steps=100, fname=default_fname, denoise=0.8, save=True, start=0, seed=None, rescale=False):
+def inference_denoise(pipe, refiner, prompt=default_prompt, num_gen=1, pipe_steps=100, fname=default_fname, denoise=0.8, save=True, start=0, seed=None, rescale=False, width=1024, height=1024):
     import torch
     images = []
     images_r = []
@@ -149,12 +149,12 @@ def inference_denoise(pipe, refiner, prompt=default_prompt, num_gen=1, pipe_step
     for count in range(start, start+num_gen):
         temp_s = generator.get_state()
         report_state(temp_s)
-        image = pipe(prompt=prompt, generator=generator, num_inference_steps=pipe_steps, denoising_end=denoise, output_type="latent").images[0]
+        image = pipe(prompt=prompt, generator=generator, num_inference_steps=pipe_steps, denoising_end=denoise, output_type="latent", width=width, height=height).images[0]
         if rescale:
-            image_r = refiner(prompt=prompt, image=image, generator=generator, num_inference_steps=pipe_steps, denoising_start=denoise).images[0]
+            image_r = refiner(prompt=prompt, image=image, generator=generator, num_inference_steps=pipe_steps, denoising_start=denoise, width=width, height=height).images[0]
             #image_r = refiner(prompt=prompt, image=image, generator=generator, num_inference_steps=pipe_steps, denoising_start=denoise, output_type="latent").images[0]
         else: 
-            image_r = refiner(prompt=prompt, image=image, generator=generator, num_inference_steps=pipe_steps, denoising_start=denoise).images[0]
+            image_r = refiner(prompt=prompt, image=image, generator=generator, num_inference_steps=pipe_steps, denoising_start=denoise, width=width, height=height).images[0]
 
         if save:
             image_r.save(f"{fname}_{count}.png")
@@ -163,7 +163,7 @@ def inference_denoise(pipe, refiner, prompt=default_prompt, num_gen=1, pipe_step
 
     return images, images_r
 
-def inference(pipe, prompt=default_prompt, num_gen=1, pipe_steps=100, fname=default_fname, save=True, start=0, seed=None, rescale=False):
+def inference(pipe, prompt=default_prompt, num_gen=1, pipe_steps=100, fname=default_fname, save=True, start=0, seed=None, rescale=False, width=1024, height=1024):
     import torch
     images = []
 
@@ -189,25 +189,25 @@ def inference(pipe, prompt=default_prompt, num_gen=1, pipe_steps=100, fname=defa
         temp_s = generator.get_state()
         report_state(temp_s)
         if rescale:
-            image = pipe(prompt=prompt, generator=generator, num_inference_steps=pipe_steps).images[0]
+            image = pipe(prompt=prompt, generator=generator, num_inference_steps=pipe_steps, width=width, height=height).images[0]
             #image = pipe(prompt=prompt, generator=generator, num_inference_steps=pipe_steps, output_type="latent").images[0]
         else:
-            image = pipe(prompt=prompt, generator=generator, num_inference_steps=pipe_steps).images[0]
+            image = pipe(prompt=prompt, generator=generator, num_inference_steps=pipe_steps, width=width, height=height).images[0]
         images.append(image)
         if save:
             image.save(f"{fname}_{count}.png")
 
     return images
 
-def _inference_worker(q, model=model, prompt=default_prompt, denoise=False, num_gen=1, pipe_steps=100, fname=default_fname, save=True, start=0, rescale=False, rescale_steps=40, m_compile=False, freeu={"enabled":False, "s1":0.9, "s2":0.2, "b1":1.3, "b2":1.6}, seed=None):
+def _inference_worker(q, model=model, prompt=default_prompt, denoise=False, num_gen=1, pipe_steps=100, fname=default_fname, save=True, start=0, rescale=False, rescale_steps=40, m_compile=False, freeu={"enabled":False, "s1":0.9, "s2":0.2, "b1":1.3, "b2":1.6}, seed=None, width=1024, height=1024):
     refiner = True
     if denoise == False:
         refiner = False
     pipe, pipe_r = setup_pipeline(model, model_r, refiner, m_compile=m_compile, freeu=freeu)
     if denoise == False:
-        images = inference(pipe=pipe, prompt=prompt, num_gen=num_gen, pipe_steps=pipe_steps, fname=fname, save=save, start=start, seed=seed, rescale=rescale)
+        images = inference(pipe=pipe, prompt=prompt, num_gen=num_gen, pipe_steps=pipe_steps, fname=fname, save=save, start=start, seed=seed, rescale=rescale, width=width, height=height)
     else:
-        _,images = inference_denoise(pipe=pipe, refiner=pipe_r, prompt=prompt, num_gen=num_gen, pipe_steps=pipe_steps, fname=fname, denoise=denoise, save=save, start=start, seed=seed, rescale=rescale)
+        _,images = inference_denoise(pipe=pipe, refiner=pipe_r, prompt=prompt, num_gen=num_gen, pipe_steps=pipe_steps, fname=fname, denoise=denoise, save=save, start=start, seed=seed, rescale=rescale, width=width, height=height)
     if rescale:
         pipe_re = setup_rescaler_pipeline(m_compile=m_compile)
         images_r = do_rescale(pipe_re,prompt,images, rescale_steps, fname, save, start)
@@ -215,7 +215,7 @@ def _inference_worker(q, model=model, prompt=default_prompt, denoise=False, num_
     for a in images:
         q.put(a)
 
-def parallel_inference(model=model, prompt=default_prompt, denoise=False, num_gen=1, pipe_steps=100, fname=default_fname, save=True, rescale=False, rescale_steps=40, m_compile=False, freeu={"enabled":False, "s1":0.9, "s2":0.2, "b1":1.3, "b2":1.6}, seed=None):
+def parallel_inference(model=model, prompt=default_prompt, denoise=False, num_gen=1, pipe_steps=100, fname=default_fname, save=True, rescale=False, rescale_steps=40, m_compile=False, freeu={"enabled":False, "s1":0.9, "s2":0.2, "b1":1.3, "b2":1.6}, seed=None, width=1024, height=1024):
     from torch.multiprocessing import Process, Queue, set_start_method
     import os
 
@@ -250,7 +250,7 @@ def parallel_inference(model=model, prompt=default_prompt, denoise=False, num_ge
 
     for a in range(number):
         os.environ["CUDA_VISIBLE_DEVICES"] = str(a)
-        procs.append(Process(target=_inference_worker, args=(q, model, prompt, denoise, chunks[a], pipe_steps, fname, save, starts[a], rescale, rescale_steps, m_compile, freeu, seed)))
+        procs.append(Process(target=_inference_worker, args=(q, model, prompt, denoise, chunks[a], pipe_steps, fname, save, starts[a], rescale, rescale_steps, m_compile, freeu, seed, width, height)))
         procs[a].start()
 
     for a in range(num_gen):
@@ -258,8 +258,8 @@ def parallel_inference(model=model, prompt=default_prompt, denoise=False, num_ge
     
     return images
 
-def interactive_generate(prompt, num_gen=1, denoise=False, pipe_steps=100, save=True, rescale=False, rescale_steps=45, m_compile=False, freeu={"enabled":False, "s1":0.9, "s2":0.2, "b1":1.3, "b2":1.6}, seed=None):
+def interactive_generate(prompt, num_gen=1, denoise=False, pipe_steps=100, save=True, rescale=False, rescale_steps=45, m_compile=False, freeu={"enabled":False, "s1":0.9, "s2":0.2, "b1":1.3, "b2":1.6}, seed=None, width=1024, height=1024):
     fname = prompt_to_filename(prompt)
-    images = parallel_inference(prompt=prompt, denoise=denoise, num_gen=num_gen, pipe_steps=pipe_steps, fname=fname, save=save, rescale=rescale, rescale_steps=rescale_steps, m_compile=m_compile, freeu=freeu, seed=seed)
+    images = parallel_inference(prompt=prompt, denoise=denoise, num_gen=num_gen, pipe_steps=pipe_steps, fname=fname, save=save, rescale=rescale, rescale_steps=rescale_steps, m_compile=m_compile, freeu=freeu, seed=seed, width=width, height=height)
     for a in images:
         display(a)
