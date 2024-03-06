@@ -200,6 +200,12 @@ def inference(pipe, prompt=default_prompt, num_gen=1, pipe_steps=100, fname=defa
     return images
 
 def _inference_worker(q, model=model, prompt=default_prompt, denoise=False, num_gen=1, pipe_steps=100, fname=default_fname, save=True, start=0, rescale=False, rescale_steps=40, m_compile=False, freeu={"enabled":False, "s1":0.9, "s2":0.2, "b1":1.3, "b2":1.6}, seed=None, width=1024, height=1024):
+    images = serial_inference(model=model, prompt=prompt, denoise=denoise, num_gen=num_gen, pipe_steps=pipe_steps, fname=fname, save=save, start=start, rescale=rescale, rescale_steps=rescale_steps, m_compile=m_compile, free_u=free_u, seed=seed, width=width, height=height)
+    for a in images:
+        q.put(a)
+
+def serial_inference(model=model, prompt=default_prompt, denoise=False, num_gen=1, pipe_steps=100, fname=default_fname, save=True, start=0, rescale=False, rescale_steps=40, m_compile=False, freeu={"enabled":False, "s1":0.9, "s2":0.2, "b1":1.3, "b2":1.6}, seed=None, width=1024, height=1024):
+    refiner = True
     refiner = True
     if denoise == False:
         refiner = False
@@ -212,8 +218,7 @@ def _inference_worker(q, model=model, prompt=default_prompt, denoise=False, num_
         pipe_re = setup_rescaler_pipeline(m_compile=m_compile)
         images_r = do_rescale(pipe_re,prompt,images, rescale_steps, fname, save, start)
         images = images_r
-    for a in images:
-        q.put(a)
+    return images
 
 def parallel_inference(model=model, prompt=default_prompt, denoise=False, num_gen=1, pipe_steps=100, fname=default_fname, save=True, rescale=False, rescale_steps=40, m_compile=False, freeu={"enabled":False, "s1":0.9, "s2":0.2, "b1":1.3, "b2":1.6}, seed=None, width=1024, height=1024):
     from torch.multiprocessing import Process, Queue, set_start_method
@@ -247,19 +252,21 @@ def parallel_inference(model=model, prompt=default_prompt, denoise=False, num_ge
     procs = []
 
     images = []
+    if number > 0:
+        for a in range(number):
+            os.environ["CUDA_VISIBLE_DEVICES"] = str(a)
+            procs.append(Process(target=_inference_worker, args=(q, model, prompt, denoise, chunks[a], pipe_steps, fname, save, starts[a], rescale, rescale_steps, m_compile, freeu, seed, width, height)))
+            procs[a].start()
 
-    for a in range(number):
-        os.environ["CUDA_VISIBLE_DEVICES"] = str(a)
-        procs.append(Process(target=_inference_worker, args=(q, model, prompt, denoise, chunks[a], pipe_steps, fname, save, starts[a], rescale, rescale_steps, m_compile, freeu, seed, width, height)))
-        procs[a].start()
-
-    for a in range(num_gen):
-        images.append(q.get())
-    
+        for a in range(num_gen):
+            images.append(q.get())
+    else:
+        images = serial_inference(model=model, prompt=prompt, denoise=denoise, num_gen=chunks[a], pipe_steps=pipe_steps, fname=fname, save=save, starts=starts[a], rescale=rescale, rescale_steps=rescale_steps, m_compile=m_compile, freeu=freeu, seed=seed, width=width, height=height)
     return images
 
 def interactive_generate(prompt, num_gen=1, denoise=False, pipe_steps=100, save=True, rescale=False, rescale_steps=45, m_compile=False, freeu={"enabled":False, "s1":0.9, "s2":0.2, "b1":1.3, "b2":1.6}, seed=None, width=1024, height=1024):
     fname = prompt_to_filename(prompt)
     images = parallel_inference(prompt=prompt, denoise=denoise, num_gen=num_gen, pipe_steps=pipe_steps, fname=fname, save=save, rescale=rescale, rescale_steps=rescale_steps, m_compile=m_compile, freeu=freeu, seed=seed, width=width, height=height)
+
     for a in images:
         display(a)
