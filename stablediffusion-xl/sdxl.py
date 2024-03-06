@@ -206,7 +206,6 @@ def _inference_worker(q, model=model, prompt=default_prompt, denoise=False, num_
 
 def serial_inference(model=model, prompt=default_prompt, denoise=False, num_gen=1, pipe_steps=100, fname=default_fname, save=True, start=0, rescale=False, rescale_steps=40, m_compile=False, freeu={"enabled":False, "s1":0.9, "s2":0.2, "b1":1.3, "b2":1.6}, seed=None, width=1024, height=1024):
     refiner = True
-    refiner = True
     if denoise == False:
         refiner = False
     pipe, pipe_r = setup_pipeline(model, model_r, refiner, m_compile=m_compile, freeu=freeu)
