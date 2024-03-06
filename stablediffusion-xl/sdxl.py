@@ -252,7 +252,7 @@ def parallel_inference(model=model, prompt=default_prompt, denoise=False, num_ge
     procs = []
 
     images = []
-    if number > 0:
+    if number > 1:
         for a in range(number):
             os.environ["CUDA_VISIBLE_DEVICES"] = str(a)
             procs.append(Process(target=_inference_worker, args=(q, model, prompt, denoise, chunks[a], pipe_steps, fname, save, starts[a], rescale, rescale_steps, m_compile, freeu, seed, width, height)))
