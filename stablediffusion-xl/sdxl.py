@@ -205,19 +205,23 @@ def _inference_worker(q, model=model, prompt=default_prompt, denoise=False, num_
         q.put(a)
 
 def serial_inference(model=model, prompt=default_prompt, denoise=False, num_gen=1, pipe_steps=100, fname=default_fname, save=True, start=0, rescale=False, rescale_steps=40, m_compile=False, freeu={"enabled":False, "s1":0.9, "s2":0.2, "b1":1.3, "b2":1.6}, seed=None, width=1024, height=1024):
-    refiner = True
-    if denoise == False:
-        refiner = False
-    pipe, pipe_r = setup_pipeline(model, model_r, refiner, m_compile=m_compile, freeu=freeu)
-    if denoise == False:
-        images = inference(pipe=pipe, prompt=prompt, num_gen=num_gen, pipe_steps=pipe_steps, fname=fname, save=save, start=start, seed=seed, rescale=rescale, width=width, height=height)
-    else:
-        _,images = inference_denoise(pipe=pipe, refiner=pipe_r, prompt=prompt, num_gen=num_gen, pipe_steps=pipe_steps, fname=fname, denoise=denoise, save=save, start=start, seed=seed, rescale=rescale, width=width, height=height)
-    if rescale:
-        pipe_re = setup_rescaler_pipeline(m_compile=m_compile)
-        images_r = do_rescale(pipe_re,prompt,images, rescale_steps, fname, save, start)
-        images = images_r
-    return images
+    import warnings
+    with warnings.catch_warnings():
+        # There are a bunch of diffusers vs PyTorch dep warnings which are annoying.
+        warnings.simplefilter("ignore", category=DeprecationWarning)
+        refiner = True
+        if denoise == False:
+            refiner = False
+        pipe, pipe_r = setup_pipeline(model, model_r, refiner, m_compile=m_compile, freeu=freeu)
+        if denoise == False:
+            images = inference(pipe=pipe, prompt=prompt, num_gen=num_gen, pipe_steps=pipe_steps, fname=fname, save=save, start=start, seed=seed, rescale=rescale, width=width, height=height)
+        else:
+            _,images = inference_denoise(pipe=pipe, refiner=pipe_r, prompt=prompt, num_gen=num_gen, pipe_steps=pipe_steps, fname=fname, denoise=denoise, save=save, start=start, seed=seed, rescale=rescale, width=width, height=height)
+        if rescale:
+            pipe_re = setup_rescaler_pipeline(m_compile=m_compile)
+            images_r = do_rescale(pipe_re,prompt,images, rescale_steps, fname, save, start)
+            images = images_r
+        return images
 
 def parallel_inference(model=model, prompt=default_prompt, denoise=False, num_gen=1, pipe_steps=100, fname=default_fname, save=True, rescale=False, rescale_steps=40, m_compile=False, freeu={"enabled":False, "s1":0.9, "s2":0.2, "b1":1.3, "b2":1.6}, seed=None, width=1024, height=1024):
     from torch.multiprocessing import Process, Queue, set_start_method
@@ -262,12 +266,9 @@ def parallel_inference(model=model, prompt=default_prompt, denoise=False, num_ge
     return images
 
 def interactive_generate(prompt, num_gen=1, denoise=False, pipe_steps=100, save=True, rescale=False, rescale_steps=45, m_compile=False, freeu={"enabled":False, "s1":0.9, "s2":0.2, "b1":1.3, "b2":1.6}, seed=None, width=1024, height=1024):
-    import warnings
-
     fname = prompt_to_filename(prompt)
-    with warnings.catch_warnings():
-        warnings.simplefilter("ignore")
-        images = parallel_inference(prompt=prompt, denoise=denoise, num_gen=num_gen, pipe_steps=pipe_steps, fname=fname, save=save, rescale=rescale, rescale_steps=rescale_steps, m_compile=m_compile, freeu=freeu, seed=seed, width=width, height=height)
 
-        for a in images:
-            display(a)
+    images = parallel_inference(prompt=prompt, denoise=denoise, num_gen=num_gen, pipe_steps=pipe_steps, fname=fname, save=save, rescale=rescale, rescale_steps=rescale_steps, m_compile=m_compile, freeu=freeu, seed=seed, width=width, height=height)
+
+    for a in images:
+        display(a)
