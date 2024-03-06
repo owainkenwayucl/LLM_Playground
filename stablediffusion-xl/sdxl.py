@@ -266,7 +266,7 @@ def interactive_generate(prompt, num_gen=1, denoise=False, pipe_steps=100, save=
 
     fname = prompt_to_filename(prompt)
     with warnings.catch_warnings():
-        warnings.simplefilter=("ignore")
+        warnings.simplefilter("ignore")
         images = parallel_inference(prompt=prompt, denoise=denoise, num_gen=num_gen, pipe_steps=pipe_steps, fname=fname, save=save, rescale=rescale, rescale_steps=rescale_steps, m_compile=m_compile, freeu=freeu, seed=seed, width=width, height=height)
 
         for a in images:
