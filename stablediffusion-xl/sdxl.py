@@ -208,7 +208,7 @@ def serial_inference(model=model, prompt=default_prompt, denoise=False, num_gen=
     import warnings
     with warnings.catch_warnings():
         # There are a bunch of diffusers vs PyTorch dep warnings which are annoying.
-        warnings.simplefilter("ignore", category=DeprecationWarning)
+        warnings.simplefilter("ignore")
         refiner = True
         if denoise == False:
             refiner = False
