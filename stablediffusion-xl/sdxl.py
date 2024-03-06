@@ -261,7 +261,7 @@ def parallel_inference(model=model, prompt=default_prompt, denoise=False, num_ge
         for a in range(num_gen):
             images.append(q.get())
     else:
-        images = serial_inference(model=model, prompt=prompt, denoise=denoise, num_gen=chunks[a], pipe_steps=pipe_steps, fname=fname, save=save, starts=starts[a], rescale=rescale, rescale_steps=rescale_steps, m_compile=m_compile, freeu=freeu, seed=seed, width=width, height=height)
+        images = serial_inference(model=model, prompt=prompt, denoise=denoise, num_gen=chunks[a], pipe_steps=pipe_steps, fname=fname, save=save, start=starts[a], rescale=rescale, rescale_steps=rescale_steps, m_compile=m_compile, freeu=freeu, seed=seed, width=width, height=height)
     return images
 
 def interactive_generate(prompt, num_gen=1, denoise=False, pipe_steps=100, save=True, rescale=False, rescale_steps=45, m_compile=False, freeu={"enabled":False, "s1":0.9, "s2":0.2, "b1":1.3, "b2":1.6}, seed=None, width=1024, height=1024):
