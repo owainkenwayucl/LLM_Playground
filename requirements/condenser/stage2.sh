@@ -13,3 +13,5 @@ cd ..
 pip3 install --upgrade pip
 pip3 install -r ngc.txt
 pip3 install -r user_experience.txt
+
+python -m ipykernel install --user --name condenser --display-name "Python (condenser)"
