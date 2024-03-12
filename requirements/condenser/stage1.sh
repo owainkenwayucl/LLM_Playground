@@ -14,7 +14,15 @@ apt-get install --yes --no-install-recommends procps locales net-tools iputils-p
 
 driver_version=$(cat /proc/driver/nvidia/version | grep NVRM | awk '{print $8}')
 
-if [ "${driver_version}" = "545.23.08" ]
+if [ "${driver_version}" = "550.54.14" ]
+then
+    echo "Detected Cuda 12.4 - installing into container"
+    wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin
+    wget https://developer.download.nvidia.com/compute/cuda/12.4.0/local_installers/cuda-repo-ubuntu2004-12-4-local_12.4.0-550.54.14-1_amd64.deb
+    mv cuda-ubuntu2004.pin /etc/apt/preferences.d/cuda-repository-pin-600
+    dpkg -i cuda-repo-ubuntu2004-12-4-local_12.4.0-550.54.14-1_amd64.deb
+    cp /var/cuda-repo-ubuntu2004-12-4-local/cuda-*-keyring.gpg /usr/share/keyrings/
+elif [ "${driver_version}" = "545.23.08" ]
 then
     echo "Detected Cuda 12.3 - installing into container"
     wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin
