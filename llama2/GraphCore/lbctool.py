@@ -3,7 +3,7 @@ from transformers import AutoTokenizer
 import transformers
 import os
 import sys
-import api
+from api import LlamaPipeline
 import time
 from utils.setup import llama_config_setup
 
@@ -29,7 +29,7 @@ def setup_llm(checkpoint = "7b", device_map="auto"):
 
     start = time.time()
 
-    llama_pipeline = api.LlamaPipeline(
+    llama_pipeline = LlamaPipeline(
         config, 
         sequence_length=sequence_length, 
         micro_batch_size=micro_batch_size,
