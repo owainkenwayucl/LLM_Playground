@@ -7,7 +7,7 @@ from api import LlamaPipeline
 import time
 from utils.setup import llama_config_setup
 
-def setup_llm(checkpoint = "7b", device_map="auto"):
+def setup_llm(checkpoint = "7b"):
     number_of_ipus = int(os.getenv("NUM_AVAILABLE_IPU", 16))
     executable_cache_dir = os.path.join(os.getenv("POPLAR_EXECUTABLE_CACHE_DIR", "./exe_cache"), "llama2")
     os.environ["POPXL_CACHE_DIR"] = executable_cache_dir
@@ -131,13 +131,13 @@ def _generate(line, pipeline, prompt, tokenizer, oprint=True):
 
     return output
 
-def generate(checkpoint="7b", device_map="auto", oprint=True):
-    pipeline, tokenizer = setup_llm(checkpoint, device_map)
+def generate(checkpoint="7b", oprint=True):
+    pipeline, tokenizer = setup_llm(checkpoint)
     line = input("? ")
     return _generate(line, pipeline, _prompt, tokenizer, oprint)
 
-def cli_generate(line, checkpoint="7b", device_map="auto", oprint=True):
-    pipeline, tokenizer = setup_llm(checkpoint, device_map)
+def cli_generate(line, checkpoint="7b", oprint=True):
+    pipeline, tokenizer = setup_llm(checkpoint)
     return _generate(line, pipeline, _prompt, tokenizer, oprint)
 
 if __name__ == "__main__":
