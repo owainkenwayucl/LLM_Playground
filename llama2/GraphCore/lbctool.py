@@ -145,7 +145,7 @@ if __name__ == "__main__":
 
     promptfile="lbcprompt.txt"
 
-    if os.isfile(promptfile):
+    if os.path.isfile(promptfile):
         with open(promptfile, "r") as file:
             line = file.read()
             cli_generate(line)
