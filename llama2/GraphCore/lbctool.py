@@ -1,4 +1,6 @@
 import huggingface_hub
+from transformers import AutoTokenizer
+import transformers
 import os
 import sys
 import api
