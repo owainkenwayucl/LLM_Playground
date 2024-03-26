@@ -131,7 +131,9 @@ if __name__ == "__main__":
     import sys
 
     if len(sys.argv > 1):
-        cli_generate(sys.argv[1])
+        with open(sys.argv[1], "r") as file:
+            line = file.read()
+            cli_generate(line)
     else: 
         generate()
     
