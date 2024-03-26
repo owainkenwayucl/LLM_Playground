@@ -130,7 +130,7 @@ def cli_generate(line, checkpoint="7b", device_map="auto", oprint=True):
 if __name__ == "__main__":
     import sys
 
-    if len(sys.argv > 1):
+    if len(sys.argv) > 1:
         with open(sys.argv[1], "r") as file:
             line = file.read()
             cli_generate(line)
