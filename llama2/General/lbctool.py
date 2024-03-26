@@ -106,8 +106,7 @@ Protect [Yes/No, if yes, describe how does this epic contribute to this theme?]
 
 '''
 
-def _generate(pipeline, prompt, tokenizer, oprint=True):
-    line = input("? ")
+def _generate(line, pipeline, prompt, tokenizer, oprint=True):
     start = time.time()
 
     prompt = prompt + " " + line + " [/INST] " 
@@ -121,8 +120,18 @@ def _generate(pipeline, prompt, tokenizer, oprint=True):
 
 def generate(checkpoint="7b", device_map="auto", oprint=True):
     pipeline, tokenizer = setup_llm(checkpoint, device_map)
-    return _generate(pipeline, _prompt, tokenizer, oprint)
+    line = input("? ")
+    return _generate(line, pipeline, _prompt, tokenizer, oprint)
+
+def cli_generate(line, checkpoint="7b", device_map="auto", oprint=True):
+    pipeline, tokenizer = setup_llm(checkpoint, device_map)
+    return _generate(line, pipeline, _prompt, tokenizer, oprint)
 
 if __name__ == "__main__":
-    generate()
+    import sys
+
+    if len(sys.argv > 1):
+        cli_generate(sys.argv[1])
+    else: 
+        generate()
     
