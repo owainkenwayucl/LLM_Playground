@@ -111,7 +111,7 @@ def _generate(pipeline, prompt, tokenizer, oprint=True):
     start = time.time()
 
     prompt = prompt + " " + line + " [/INST] " 
-    output = pipeline(prompt, do_sample=True, top_k=10, num_return_sequences=1, eos_token_id=tokenizer.eos_token_id, max_length=len(prompt) + 200)[0]["generated_text"].split("[/INST]")[-1]
+    output = pipeline(prompt, truncation=True, do_sample=True, top_k=10, num_return_sequences=1, eos_token_id=tokenizer.eos_token_id, max_length=len(prompt) + 200)[0]["generated_text"].split("[/INST]")[-1]
     elapsed = time.time() - start
     if oprint:
         print(output)
