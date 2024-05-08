@@ -51,7 +51,17 @@ def main():
 
     for a in range(n):
         code = do_inference(userprompt)
-        print(code)
+        
+        #print(code)
+        code = code + "\nestimate_pi(10000)"
+
+        try:
+            output = eval(code)
+            print(output)
+        except Exception:
+            print(" >>> FAILED <<< ")
+            print(code)
+            print(" >>>        <<< ")
 
 if __name__ == "__main__":
     main()
