@@ -22,7 +22,7 @@ llama_pipeline = transformers.pipeline(
 print(f"Model preparation time: {time.time() - start}s")
 
 _prompt = '''<s>[INST] <<SYS>>
-Provide answers only in Python. DO NOT EXPLAIN THE CODE UNDER ANY CIRCUMSTANCES. The program should be contained in a function called "execute" which takes a single argument."
+Provide answers only in Python. DO NOT EXPLAIN THE CODE UNDER ANY CIRCUMSTANCES.
 <</SYS>>
 
 '''
@@ -42,7 +42,12 @@ def do_inference(userprompt):
 
 def main():
     n = 10
-    userprompt = "Write a program to estimate pi"
+    userprompt = '''
+    Fill out the following function to estimate pi:
+
+    def estimate_pi(n):
+        # insert code here
+    '''
 
     for a in range(n):
         code = do_inference(userprompt)
