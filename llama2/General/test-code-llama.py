@@ -22,7 +22,7 @@ llama_pipeline = transformers.pipeline(
 print(f"Model preparation time: {time.time() - start}s")
 
 _prompt = '''<s>[INST] <<SYS>>
-Provide answers in Python. DO NOT EXPLAIN THE CODE UNDER ANY CIRCUMSTANCES.
+Provide answers only in Python. DO NOT EXPLAIN THE CODE UNDER ANY CIRCUMSTANCES.
 <</SYS>>
 
 '''
