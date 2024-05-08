@@ -58,7 +58,7 @@ def main():
         try:
             output = eval(code)
             print(output)
-        except Exception:
+        except:
             print(" >>> FAILED <<< ")
             print(code)
             print(" >>>        <<< ")
