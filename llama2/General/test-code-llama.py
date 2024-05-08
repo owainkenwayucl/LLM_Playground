@@ -34,6 +34,10 @@ DEBUG = False
 def do_inference(userprompt):
     local_prompt = prompt + " " + userprompt + " [/INST] "
     code = llama_pipeline(local_prompt, do_sample=True, top_k=10, num_return_sequences=1, eos_token_id=tokenizer.eos_token_id, max_length=len(prompt) + 1000)[0]["generated_text"].split("[/INST]")[-1]
+    codelist = code.split("```")
+    for a in codelist:
+        if "def " in a:
+            code = a
     return code
 
 def main():
