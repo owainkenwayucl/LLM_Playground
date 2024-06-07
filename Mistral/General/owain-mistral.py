@@ -46,7 +46,10 @@ while True:
 
     start = time.time()
 
-    prompt.append({"role":"user","content": line})
+    if len(prompt) == 1:
+        prompt = [{"role":"user","content": _prompt + line}]
+    else:
+        prompt.append({"role":"user","content": line})
 
     encodes = tokenizer.apply_chat_template(prompt, return_tensors="pt")
 
