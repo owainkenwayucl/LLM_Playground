@@ -60,7 +60,7 @@ while True:
 
     output = tokenizer.batch_decode(_output)[0]
 
-    prompt.append[prompt.append({"role":"assistant","content": output})]
+    prompt.append({"role":"assistant","content": output})
 
     print(output)
 
