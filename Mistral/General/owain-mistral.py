@@ -50,7 +50,7 @@ while True:
     print(prompt)
     print("---")
 
-    output = pipeline(prompt, top_k=10, num_return_sequences=1, eos_token_id=tokenizer.eos_token_id, max_length=len(prompt) + 200)[0]["generated_text"].split("[/INST]")[-1]
+    output = pipeline(prompt)
     print(output)
 
     prompt = prompt + " " + output + " </s><s> [INST] "
