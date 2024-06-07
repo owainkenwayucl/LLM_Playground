@@ -16,21 +16,23 @@ tokenizer = AutoTokenizer.from_pretrained(checkpoint_name)
 pipeline = AutoModelForCausalLM.from_pretrained(
     pretrained_model_name_or_path=checkpoint_name,
     torch_dtype=torch.float16,
-    device_map="auto",
 )
+
+device="cuda"
 
 print(f"Model preparation time: {time.time() - start}s")
 
-_prompt = '''<s>[INST] <<SYS>>
+_prompt = '''
 You are a helpful, respectful and honest assistant. Always answer as helpfully as possible.
 
 If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information.
-<</SYS>>
+
 
 '''
 
-prompt = _prompt
+__prompt = [{"role":"user","content": _prompt}]
 
+prompt = __prompt
 DEBUG = True
 
 while True:
@@ -39,21 +41,25 @@ while True:
         sys.exit()
 
     if 'forget' == line.strip().lower():
-        prompt = _prompt
+        prompt = __prompt
         continue
 
     start = time.time()
 
-    prompt = prompt + " " + line + " [/INST] " 
+    prompt.append({"role":"user","content": line})
 
-    print("---")
-    print(prompt)
-    print("---")
+    encodes = tokenizer.apply_chat_template(prompt, return_tensors="pt")
 
-    output = pipeline(prompt)
+    pipeline_inputs = encodeds.to(device)
+    pipeline.to(device)
+
+    _output = pipeline.generate(model_inputs, max_new_tokens=1000, do_sample=True)
+
+    output = tokenizer.batch_decode(_output_)[0]
+
+    prompt.append[prompt.append({"role":"assistant","content": output})]
+
     print(output)
-
-    prompt = prompt + " " + output + " </s><s> [INST] "
 
     elapsed = time.time() - start
     print(" => Elapsed time: " + str(elapsed) + " seconds")
