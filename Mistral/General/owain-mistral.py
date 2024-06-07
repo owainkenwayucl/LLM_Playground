@@ -53,10 +53,10 @@ while True:
 
     encodes = tokenizer.apply_chat_template(prompt, return_tensors="pt")
 
-    pipeline_inputs = encodeds.to(device)
+    pipeline_inputs = encodes.to(device)
     pipeline.to(device)
 
-    _output = pipeline.generate(model_inputs, max_new_tokens=1000, do_sample=True)
+    _output = pipeline.generate(pipeline_inputs, max_new_tokens=1000, do_sample=True)
 
     output = tokenizer.batch_decode(_output_)[0]
 
