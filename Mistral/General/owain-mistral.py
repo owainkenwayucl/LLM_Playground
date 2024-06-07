@@ -14,7 +14,7 @@ start = time.time()
 tokenizer = AutoTokenizer.from_pretrained(checkpoint_name)
 
 pipeline = AutoModelForCausalLM.from_pretrained(
-    model=checkpoint_name,
+    pretrained_model_name_or_path=checkpoint_name,
     torch_dtype=torch.float16,
     device_map="auto",
 )
