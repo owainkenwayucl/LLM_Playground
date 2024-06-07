@@ -58,7 +58,7 @@ while True:
 
     _output = pipeline.generate(pipeline_inputs, max_new_tokens=1000, do_sample=True)
 
-    output = tokenizer.batch_decode(_output_)[0]
+    output = tokenizer.batch_decode(_output)[0]
 
     prompt.append[prompt.append({"role":"assistant","content": output})]
 
