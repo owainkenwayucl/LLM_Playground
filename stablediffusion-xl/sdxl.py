@@ -75,13 +75,6 @@ def detect_platform():
         elif torch.backends.mps.is_available():
             print("Running on Apple GPU")
             r = metal 
-        else:
-            try: 
-                import intel_extension_for_pytorch as ipex
-                print("Set CPU 16 bit float mode!")
-                r = cpu16
-            except:
-                pass
 
     return r
 
@@ -102,17 +95,6 @@ def setup_pipeline(model=model, model_r=model_r, refiner_enabled=True, m_compile
         refiner = StableDiffusionXLImg2ImgPipeline.from_pretrained(model_r, torch_dtype=platform["size"], variant="fp16", text_encoder_2=pipe.text_encoder_2, vae=pipe.vae)
         if m_compile:
             refiner.unet = torch.compile(refiner.unet, mode="reduce-overhead", fullgraph=True)   
-
-    if platform["device"] == "cpu":
-        try:
-            print(">>> Running on CPU, trying to enable Intel optimisations.")
-            import intel_extension_for_pytorch as ipex
-            pipe = ipex.optimize(pipe, dtype=device["size"])
-            if refiner_enabled:
-                pipe_r = ipex.optimize(pipe_r, dtype=device["size"])
-        except:
-            print(">>> Intel optimisations not available.")
-            pass
 
     pipe.to(platform["device"])
     if refiner_enabled:
