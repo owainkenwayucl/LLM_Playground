@@ -6,7 +6,6 @@ from diffusers import StableDiffusion3Pipeline
 model = "stabilityai/stable-diffusion-3-medium-diffusers"
 
 def detect_platform():
-    import torch
     cpu = {"name": "CPU", "device":"cpu", "size":torch.float32, "attention_slicing":False}
     nvidia = {"name": "Nvidia", "device":"cuda", "size":torch.float16, "attention_slicing":False}
     metal = {"name": "Apple Metal", "device":"mps", "size":torch.float32, "attention_slicing":False}
@@ -38,9 +37,11 @@ def setup_pipeline(model=model, exclude_t5=False, cpu_offload=False):
 
     return pipe
 
-def inference(pipeline=setup_pipeline(), prompt="", negative_prompt="", num_gen=1, num_iters=28, guidance_scale=0.7):
+def inference(pipeline=None, prompt="", negative_prompt="", num_gen=1, num_iters=28, guidance_scale=0.7):
+    if pipeline == None:
+        pipeline = setup_pipeline()
     images = []
-    for a in num_gen:
+    for a in range(num_gen):
         images.append(pipeline(prompt, negative_prompt=negative_prompt, num_inference_steps=num_iters, guidance_scale=guidance_scale).images[0])
 
     return images
