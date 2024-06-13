@@ -2,7 +2,7 @@
 
 import torch
 from diffusers import StableDiffusion3Pipeline
-from util import report_state, init_rng
+from utils import report_state, init_rng
 
 model = "stabilityai/stable-diffusion-3-medium-diffusers"
 
