@@ -40,7 +40,7 @@ def report_state(state):
     #print(f"State: torch.{state} || {h} || {i}")
     print(f"State: torch.{state} || {h}")
 
-def init_rng(seed=None):
+def init_rng(platform, seed=None):
     generator = torch.Generator(platform["device"])
     if seed != None:
         if type(seed) is torch.Tensor:

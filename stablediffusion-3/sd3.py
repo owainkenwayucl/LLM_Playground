@@ -42,7 +42,7 @@ def inference(pipeline=None, prompt="", negative_prompt="", num_gen=1, num_iters
     if pipeline == None:
         pipeline = setup_pipeline()
 
-    generator = init_rng(seed)
+    generator = init_rng(platform, seed)
     
     images = []
     for a in range(num_gen):
