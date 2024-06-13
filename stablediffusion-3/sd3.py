@@ -2,6 +2,7 @@
 
 import torch
 from diffusers import StableDiffusion3Pipeline
+from util import report_state, init_rng
 
 model = "stabilityai/stable-diffusion-3-medium-diffusers"
 
@@ -37,18 +38,23 @@ def setup_pipeline(model=model, exclude_t5=False, cpu_offload=False):
 
     return pipe
 
-def inference(pipeline=None, prompt="", negative_prompt="", num_gen=1, num_iters=28, guidance_scale=0.7):
+def inference(pipeline=None, prompt="", negative_prompt="", num_gen=1, num_iters=28, guidance_scale=0.7, seed=None):
     if pipeline == None:
         pipeline = setup_pipeline()
+
+    generator = init_rng(seed)
+    
     images = []
     for a in range(num_gen):
-        images.append(pipeline(prompt, negative_prompt=negative_prompt, num_inference_steps=num_iters, guidance_scale=guidance_scale).images[0])
+        temp_s = generator.get_state()
+        report_state(temp_s)
+        images.append(pipeline(prompt, negative_prompt=negative_prompt, generator=generator, num_inference_steps=num_iters, guidance_scale=guidance_scale).images[0])
 
     return images
 
-def interactive_inference(prompt="", negative_prompt="",num_gen=1, num_iters=28, guidance_scale=0.7, exclude_t5=False, cpu_offload=False):
+def interactive_inference(prompt="", negative_prompt="",num_gen=1, num_iters=28, guidance_scale=0.7, exclude_t5=False, cpu_offload=False, seed=None):
     pipeline = setup_pipeline(exclude_t5=exclude_t5, cpu_offload=cpu_offload)
-    images = inference(prompt=prompt, negative_prompt=negative_prompt, num_gen=num_gen, num_iters=num_iters, guidance_scale=guidance_scale)
+    images = inference(prompt=prompt, negative_prompt=negative_prompt, num_gen=num_gen, num_iters=num_iters, guidance_scale=guidance_scale, seed=seed)
 
     for a in images:
         display(a)
