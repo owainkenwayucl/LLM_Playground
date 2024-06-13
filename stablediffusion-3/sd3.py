@@ -45,7 +45,8 @@ def inference(pipeline=setup_pipeline(), prompt="", negative_prompt="", num_gen=
 
     return images
 
-def interactive_inference(prompt="", negative_prompt="",num_gen=1, num_iters=28, guidance_scale=0.7):
+def interactive_inference(prompt="", negative_prompt="",num_gen=1, num_iters=28, guidance_scale=0.7, exclude_t5=False, cpu_offload=False):
+    pipeline = setup_pipeline(exclude_t5=exclude_t5, cpu_offload=cpu_offload)
     images = inference(primpt=prompt, negative_prompt=negative_prompt, num_gen=num_gen, num_iters=num_iters, guidance_scale=guidance_scale)
 
     for a in images:
