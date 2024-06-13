@@ -1,7 +1,7 @@
 # I'm going to do my best to make this super simple as the sdxl code is a mess!
 
 import torch
-from diffusers import StableDiffusion3Pipeline, 
+from diffusers import StableDiffusion3Pipeline
 from diffusers.utils import logging
 from utils import report_state, init_rng
 
