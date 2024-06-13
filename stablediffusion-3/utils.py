@@ -1,11 +1,13 @@
+import torch
+import textwrap
+
 def checkseed(seed):
     mi = -pow(2, 63) 
     ma = pow(2, 63) -1 
     return mi <= seed <= ma
 
 def restate(seed):
-    import torch
-    import textwrap
+
     he = '%X' % seed
     he = he.rjust(32, "0")
 
