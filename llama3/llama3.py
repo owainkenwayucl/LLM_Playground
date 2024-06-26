@@ -4,7 +4,7 @@ import torch
 size="8B"
 checkpoint_name = f"meta-llama/Meta-Llama-3-{size}-Instruct"  
 
-tokeniser - transformers.AutoTokenizer.form_pretrained(checkpoint_id)
+tokeniser = transformers.AutoTokenizer.form_pretrained(checkpoint_id)
 model = transformers.AutoModelForCausalLM.from_pretrained(
     checkpoint_name,
     torch_dtype=torch.bfloat16,
