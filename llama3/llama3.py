@@ -41,7 +41,11 @@ while True:
         messages = messages_
         continue
         
-
+    if 'inspect' == line.strip().lower():
+        print(f"Model: {checkpoint_name")
+        print(f"Chat state: {messages}")
+        print(f"Avatar: {avatar}")
+        continue
 
     if 'forget' == line.strip().lower():
         messages = messages_
