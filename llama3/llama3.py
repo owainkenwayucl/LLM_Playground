@@ -21,11 +21,25 @@ messages_ = [
 ]
 
 messages = messages_
+avatar = "🧸"
 
 while True:
     line = input("? ")
     if 'bye' == line.strip().lower():
         sys.exit()
+
+    if 'reprogram' == line.strip().lower():
+        print(f"Current prompt: {messages_}")
+        print(f"Current avatar: {avatar}")
+
+        new_prompt = input("New prompt: ")
+        avatar = input("New avatar: ")
+
+        messages_ = [
+            {"role": "system", "content": new_prompt},
+        ]
+        
+
 
     if 'forget' == line.strip().lower():
         messages = messages_
@@ -55,7 +69,7 @@ while True:
     )
     response = tokeniser.decode(outputs[0][input_ids.shape[-1]:], skip_special_tokens=True)
 
-    print(f"🧸 : {response}")
+    print(f"{avatar} : {response}")
 
     messages.append({"role":"assistant","content":response})
 
