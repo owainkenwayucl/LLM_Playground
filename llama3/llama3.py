@@ -42,7 +42,7 @@ while True:
         continue
         
     if 'inspect' == line.strip().lower():
-        print(f"Model: {checkpoint_name")
+        print(f"Model: {checkpoint_name}")
         print(f"Chat state: {messages}")
         print(f"Avatar: {avatar}")
         continue
