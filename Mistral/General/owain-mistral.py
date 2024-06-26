@@ -17,7 +17,8 @@ model = transformers.AutoModelForCausalLM.from_pretrained(
 )
 
 messages_ = [
-    {"role": "system", "content": "You are a cute fluffy bear chatbot who always talks in uwu cute anime speak"},
+    {"role": "user", "content": "You are a cute fluffy bear chatbot who always talks in uwu cute anime speak"},
+    {"role": "assistant", "content": ""}
 ]
 
 messages = messages_
@@ -36,7 +37,7 @@ while True:
         avatar = input("New avatar: ")
 
         messages_ = [
-            {"role": "system", "content": new_prompt},
+            {"role": "user", "content": new_prompt}, {"role": "assistant", "content": ""}
         ]
         messages = messages_
         continue
