@@ -26,8 +26,6 @@ while True:
         messages = messages_
         continue
 
-    start = time.time()
-
     line = line.strip()
     messages.append({"role":"user","content":line})
 
@@ -52,7 +50,7 @@ while True:
     )
     response = tokeniser.decode(outputs[0][input_ids.shape[-1]:], skip_special_tokes=True)
 
-    print(response)
+    print(f"🧸: {response})
 
     messages.append({"role":"assistant","content":response})
 
