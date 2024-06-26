@@ -1,5 +1,10 @@
 import transformers
 import torch
+import sys
+
+import logging
+
+logging.disable(logging.WARNING)
 
 size="8B"
 checkpoint_name = f"meta-llama/Meta-Llama-3-{size}-Instruct"  
@@ -48,7 +53,7 @@ while True:
         temperature=0.6,
         top_p=0.9,
     )
-    response = tokeniser.decode(outputs[0][input_ids.shape[-1]:], skip_special_tokes=True)
+    response = tokeniser.decode(outputs[0][input_ids.shape[-1]:], skip_special_tokens=True)
 
     print(f"🧸: {response}")
 
