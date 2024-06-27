@@ -54,11 +54,11 @@ def prompt_to_filename(prompt):
 
 def detect_platform():
     import torch
-    cpu = {"name": "CPU", "device":"cpu", "size":torch.float32, "attention_slicing":False}
-    cpu16 = {"name": "CPU", "device":"cpu", "size":torch.float16, "attention_slicing":False}
-    graphcore = {"name": "Graphcore", "device":"ipu", "size":torch.float16, "attention_slicing":False}
+    cpu = {"name": "CPU", "device":"cpu", "size":torch.float32, "attention_slicing":False, "number":1}
+    cpu16 = {"name": "CPU", "device":"cpu", "size":torch.float16, "attention_slicing":False, "number":1}
+    graphcore = {"name": "Graphcore", "device":"ipu", "size":torch.float16, "attention_slicing":False, "number":1}
     nvidia = {"name": "Nvidia", "device":"cuda", "size":torch.float16, "attention_slicing":False}
-    metal = {"name": "Apple Metal", "device":"mps", "size":torch.float32, "attention_slicing":False}
+    metal = {"name": "Apple Metal", "device":"mps", "size":torch.float16, "attention_slicing":False, "number":1}
 
     r = cpu
     try: 
