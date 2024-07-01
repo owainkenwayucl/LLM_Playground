@@ -97,7 +97,8 @@ def inference(pipe, prompt=default_prompt, num_gen=1, pipe_steps=100, fname=defa
         print("No seed.")
         generator.seed()
     for count in range(start, start+num_gen):
-
+        temp_s = generator.get_state()
+        report_state(temp_s)
         image = pipe(prompt=prompt, generator=generator, num_inference_steps=pipe_steps, width=width, height=height).images[0]
         images.append(image)
         if save:
