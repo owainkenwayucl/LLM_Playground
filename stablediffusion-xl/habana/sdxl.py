@@ -6,6 +6,9 @@ from optimum.habana.diffusers import GaudiEulerDiscreteScheduler, GaudiStableDif
 import torch
 import habana_frameworks.torch.hpu.random as htrandom
 
+from optimum.utils import logging
+logging.set_verbosity_error()
+
 model_1_0_base="stabilityai/stable-diffusion-xl-base-1.0"
 model_1_0_refiner="stabilityai/stable-diffusion-xl-refiner-1.0"
 
