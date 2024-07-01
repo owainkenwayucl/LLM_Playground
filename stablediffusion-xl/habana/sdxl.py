@@ -57,10 +57,12 @@ def state_to_seed(state):
     return int(c,16)
 
 def report_state(state):
-    h = state_to_seed_hex(state)
+    #h = state_to_seed_hex(state)
     #i = state_to_seed(state) # this breaks due to the size of the state on CPU
     #print(f"State: torch.{state} || {h} || {i}")
-    print(f"State: torch.{state} || {h}")
+    torch.set_printoptions(profile="full")
+    print(f"State: torch.{state}")
+    torch.set_printoptions(profile="default")
 
 def prompt_to_filename(prompt):
     return prompt.replace(" ", "_").replace("/", "_")
