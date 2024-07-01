@@ -7,4 +7,5 @@ safetensors
 ipykernel
 scipy
 ipywidgets
+jupyterlab
 optimum[habana]
