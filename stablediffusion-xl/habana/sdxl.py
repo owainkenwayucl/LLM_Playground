@@ -69,7 +69,7 @@ def setup_pipeline(model=model):
         scheduler=scheduler,
         use_habana=True,
         use_hpu_graphs=True,
-        gaudi=config="Habana/stable-diffusion"
+        gaudi_config="Habana/stable-diffusion"
     )
 
     return pipeline
