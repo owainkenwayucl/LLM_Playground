@@ -75,7 +75,7 @@ def setup_pipeline(model=model):
     return pipeline
 
 def inference(pipe, prompt=default_prompt, num_gen=1, pipe_steps=100, fname=default_fname, save=True, start=0, seed=None, rescale=False, width=1024, height=1024):
-   import torch
+    import torch
     images = []
 
     generator = torch.Generator(platform["device"])
