@@ -4,6 +4,7 @@
 
 from optimum.habana.diffusers import GaudiEulerDiscreteScheduler, GaudiStableDiffusionXLPipeline
 import torch
+import habana_frameworks.torch.hpu.random as htrandom
 
 model_1_0_base="stabilityai/stable-diffusion-xl-base-1.0"
 model_1_0_refiner="stabilityai/stable-diffusion-xl-refiner-1.0"
@@ -78,9 +79,26 @@ def inference(pipe, prompt=default_prompt, num_gen=1, pipe_steps=100, fname=defa
     import torch
     images = []
 
+    generator = htrandom.manual_seed(1234)
+    if seed != None:
+        if type(seed) is torch.Tensor:
+            print(f"Recovering generator state to: {seed}")
+            generator.set_state(seed)
+        else: 
+            print(f"Setting seed to {seed}")
+            if checkseed(seed):
+                generator.manual_seed(seed)
+            else:
+                print(f"Seed too long to use .seed - converting to tensor.")
+                tseed = restate(seed)
+                print(f"Converted tensor: {tseed}")
+                generator.set_state(tseed)
+    else:
+        print("No seed.")
+        generator.seed()
     for count in range(start, start+num_gen):
-        
-        image = pipe(prompt=prompt,  num_inference_steps=pipe_steps, width=width, height=height).images[0]
+
+        image = pipe(prompt=prompt, generator=generator, num_inference_steps=pipe_steps, width=width, height=height).images[0]
         images.append(image)
         if save:
             image.save(f"{fname}_{count}.png")
