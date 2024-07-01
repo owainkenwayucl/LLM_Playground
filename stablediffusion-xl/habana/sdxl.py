@@ -77,30 +77,9 @@ def setup_pipeline(model=model):
 def inference(pipe, prompt=default_prompt, num_gen=1, pipe_steps=100, fname=default_fname, save=True, start=0, seed=None, rescale=False, width=1024, height=1024):
     import torch
     images = []
-'''
-    generator = torch.Generator(platform["device"])
-    if seed != None:
-        if type(seed) is torch.Tensor:
-            print(f"Recovering generator state to: {seed}")
-            generator.set_state(seed)
-        else: 
-            print(f"Setting seed to {seed}")
-            if checkseed(seed):
-                generator.manual_seed(seed)
-            else:
-                print(f"Seed too long to use .seed - converting to tensor.")
-                tseed = restate(seed)
-                print(f"Converted tensor: {tseed}")
-                generator.set_state(tseed)
-    else:
-        print("No seed.")
-        generator.seed()
-'''
-    for count in range(start, start+num_gen):
-        #temp_s = generator.get_state()
-        #report_state(temp_s)
 
-        #image = pipe(prompt=prompt, generator=generator, num_inference_steps=pipe_steps, width=width, height=height).images[0]
+    for count in range(start, start+num_gen):
+        
         image = pipe(prompt=prompt,  num_inference_steps=pipe_steps, width=width, height=height).images[0]
         images.append(image)
         if save:
