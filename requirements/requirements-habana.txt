@@ -1,0 +1,10 @@
+pip
+torch
+torchvision
+transformers
+accelerate
+safetensors
+ipykernel
+scipy
+ipywidgets
+optimum[habana]
