@@ -1,8 +1,5 @@
 pip
-torch
-torchvision
 transformers
-accelerate
 safetensors
 ipykernel
 scipy
