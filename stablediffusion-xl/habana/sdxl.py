@@ -23,7 +23,11 @@ default_fname = "output"
 
 platform = {"name": "Gaudi", "device":"hpu", "size":torch.float16, "attention_slicing":False}
 
-config = GaudiConfig.from_pretrained("Habana/stable-diffusion")
+config = GaudiConfig(
+    use_fused_adam = True,
+    use_fused_clip_norm = True,
+    use_torch_autocast = True
+)
 
 def checkseed(seed):
     mi = -pow(2, 63) 
