@@ -3,6 +3,7 @@
 #
 
 from optimum.habana.diffusers import GaudiEulerDiscreteScheduler, GaudiStableDiffusionXLPipeline
+from optimum.habana import GaudiConfig
 import torch
 import habana_frameworks.torch.hpu.random as htrandom
 
@@ -21,6 +22,8 @@ default_prompt = "Space pineapple, oil paint"
 default_fname = "output"
 
 platform = {"name": "Gaudi", "device":"hpu", "size":torch.float16, "attention_slicing":False}
+
+config = GaudiConfig.from_pretrained("Habana/stable-diffusion")
 
 def checkseed(seed):
     mi = -pow(2, 63) 
@@ -75,7 +78,7 @@ def setup_pipeline(model=model):
         scheduler=scheduler,
         use_habana=True,
         use_hpu_graphs=True,
-        gaudi_config="Habana/stable-diffusion"
+        gaudi_config=config
     )
 
     return pipeline
