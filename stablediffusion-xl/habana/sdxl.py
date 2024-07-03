@@ -1,5 +1,5 @@
 #
-# NOTE - AS OF 27/June/2024 THIS HAS NOT BEEN TESTED YET AND IS SPECULATIVE!
+# NOTE - Thanks to BIOS-IT and SuperMicro this has now been tested!
 #
 
 from optimum.habana.diffusers import GaudiEulerDiscreteScheduler, GaudiStableDiffusionXLPipeline
@@ -23,6 +23,7 @@ default_fname = "output"
 
 platform = {"name": "Gaudi", "device":"hpu", "size":torch.float16, "attention_slicing":False}
 
+# You can download these but it causes weird Jupyter errors.
 config = GaudiConfig(
     use_fused_adam = True,
     use_fused_clip_norm = True,
