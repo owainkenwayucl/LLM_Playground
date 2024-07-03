@@ -169,6 +169,7 @@ def inference_denoise(pipe, refiner, prompt=default_prompt, num_gen=1, pipe_step
 
 def inference(pipe, prompt=default_prompt, num_gen=1, pipe_steps=100, fname=default_fname, save=True, start=0, seed=None, rescale=False, width=1024, height=1024):
     import torch
+    import time
     images = []
 
     generator = torch.Generator(platform["device"])
@@ -189,7 +190,9 @@ def inference(pipe, prompt=default_prompt, num_gen=1, pipe_steps=100, fname=defa
         print("No seed.")
         generator.seed()
 
+    times = []
     for count in range(start, start+num_gen):
+        t_s = time.time()
         temp_s = generator.get_state()
         report_state(temp_s)
         if rescale:
@@ -198,8 +201,11 @@ def inference(pipe, prompt=default_prompt, num_gen=1, pipe_steps=100, fname=defa
         else:
             image = pipe(prompt=prompt, generator=generator, num_inference_steps=pipe_steps, width=width, height=height).images[0]
         images.append(image)
+        t_f = time.time()
+        times.append(t_f - t_s)
         if save:
             image.save(f"{fname}_{count}.png")
+    print(f"Timing Data: {times}")
 
     return images
 
