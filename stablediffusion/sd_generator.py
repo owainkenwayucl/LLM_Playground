@@ -37,6 +37,7 @@ def detect_platform():
     graphcore = {"name": "Graphcore", "device":"ipu", "size":torch.float16, "attention_slicing":True}
     nvidia = {"name": "Nvidia", "device":"cuda", "size":torch.float16, "attention_slicing":False}
     metal = {"name": "Apple Metal", "device":"mps", "size":torch.float32, "attention_slicing":False} 
+    habana = {"name": "Habana", "device":"hpu", "size":torch.float16, "attention_slicing":False}
     # metal = {"name": "Apple Metal", "device":"mps", "size":torch.float16, "attention_slicing":False} # presently produces black images...
 
     r = cpu
@@ -45,14 +46,19 @@ def detect_platform():
         print(f"Running on {n_ipu} Graphcore IPU(s)")
         r = graphcore
     except:
-        if torch.cuda.device_count() > 0:
-            print("Running on Nvidia GPU")
-            r = nvidia
-            r["number"] = torch.cuda.device_count()
-            print(f" - {r['number']} GPUs detected")
-        elif torch.backends.mps.is_available():
-            print("Running on Apple GPU")
-            r = metal      
+        try:
+            import habana_frameworks.torch.core as htcore
+            print(f"Running on Habana Gaudi 2")
+            r = habana
+        except:
+            if torch.cuda.device_count() > 0:
+                print("Running on Nvidia GPU")
+                r = nvidia
+                r["number"] = torch.cuda.device_count()
+                print(f" - {r['number']} GPUs detected")
+            elif torch.backends.mps.is_available():
+                print("Running on Apple GPU")
+                r = metal      
     return r
 
 platform = detect_platform()
@@ -85,6 +91,26 @@ def setup_pipeline(model=model, ipus=n_ipu, platform=platform):
         if platform["attention_slicing"]:
             pipe.enable_attention_slicing()
         pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
+
+    elif platform["name"] == "Habana":
+        import torch
+        from optimum.habana import GaudiConfig
+        from optimum.habana.diffusers import GaudiDDIMScheduler, GaudiStableDiffusionPipeline
+
+        gaudi_config = GaudiConfig(
+            use_fused_adam = True,
+            use_fused_clip_norm = True,
+            use_torch_autocast = True
+        )
+
+        scheduler = GaudiDDIMScheduler.from_pretrained(model, subfolder="scheduler")
+        pipe = GaudiStableDiffusionPipeline.from_pretrained(
+            model,
+            scheduler=scheduler,
+            use_habana=True,
+            use_hpu_graphs=True,
+            gaudi_config=gaudi_config,
+        )
 
 
     else:
