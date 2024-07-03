@@ -21,6 +21,6 @@ if __name__ == "__main__":
 
     iterations = int(ask("Inference iterations", str(DEFAULT_ITERATIONS)))
 
-    pipeline,_ = setup_pipeline()
+    pipeline = setup_pipeline()
 
     images = inference(pipe=pipeline, prompt=prompt, fname=fname, num_gen=num_gen, pipe_steps=iterations)
