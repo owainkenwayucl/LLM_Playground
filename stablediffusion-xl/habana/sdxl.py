@@ -90,6 +90,7 @@ def setup_pipeline(model=model):
 
 def inference(pipe, prompt=default_prompt, num_gen=1, pipe_steps=100, fname=default_fname, save=True, start=0, seed=None, rescale=False, width=1024, height=1024):
     import torch
+    import time
     images = []
 
     generator = htrandom.manual_seed(1234)
@@ -109,14 +110,20 @@ def inference(pipe, prompt=default_prompt, num_gen=1, pipe_steps=100, fname=defa
     else:
         print("No seed.")
         generator.seed()
+
+    times = []
     for count in range(start, start+num_gen):
+        t_s = time.time()
         temp_s = generator.get_state()
         report_state(temp_s)
         image = pipe(prompt=prompt, generator=generator, num_inference_steps=pipe_steps, width=width, height=height).images[0]
         images.append(image)
+        t_f = time.time()
+        times.append(t_f - t_s)
         if save:
             image.save(f"{fname}_{count}.png")
 
+    print(f"Timing Data: {times}")
     return images
 
 def interactive_generate(prompt, num_gen=1, denoise=False, pipe_steps=100, save=True, rescale=False, rescale_steps=45, m_compile=False, freeu={"enabled":False, "s1":0.9, "s2":0.2, "b1":1.3, "b2":1.6}, seed=None, width=1024, height=1024):
