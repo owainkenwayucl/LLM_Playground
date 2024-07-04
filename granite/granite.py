@@ -17,11 +17,11 @@ model = transformers.AutoModelForCausalLM.from_pretrained(
 )
 
 messages_ = [
-    {"role": "system", "content": "You are a cute fluffy bear chatbot who always talks in uwu cute anime speak"},
+    {"role": "system", "content": "You are a helpful and efficient AI chatbot."},
 ]
 
 messages = messages_
-avatar = "🧸"
+avatar = "🤖"
 
 while True:
     line = input("? ")
