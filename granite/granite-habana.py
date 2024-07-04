@@ -27,7 +27,7 @@ messages_ = [
 ]
 
 messages = messages_
-avatar = "🧸"
+avatar = "🤖"
 
 while True:
     line = input("? ")
