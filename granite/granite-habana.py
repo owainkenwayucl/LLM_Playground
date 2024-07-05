@@ -20,7 +20,8 @@ model = transformers.AutoModelForCausalLM.from_pretrained(
     torch_dtype=torch.bfloat16,
 ).to(torch.device("hpu"))
 
-model = torch.compile(model,backend="hpu_backend")
+model.eval()
+htcore.mark_step()
 
 messages_ = [
     {"role": "system", "content": "You are a helpful and efficient AI chatbot."},
@@ -79,6 +80,7 @@ while True:
         temperature=0.6,
         top_p=0.9,
     )
+    htcore.mark_step()
     response = tokeniser.decode(outputs[0][input_ids.shape[-1]:], skip_special_tokens=True)
 
     print(f"{avatar} : {response}")
