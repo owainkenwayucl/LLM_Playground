@@ -50,7 +50,7 @@ def setup_pipeline(model=model, exclude_t5=False, cpu_offload=False):
     if cpu_offload:
         pipe.enable_module_cpu_offload()
 
-    if platform["name"] == "habana":
+    if platform["name"] == "Habana":
         import habana_frameworks.torch.core as htcore
         pipe.transformer.to("hpu")
         pipe.vae.to("hpu")
