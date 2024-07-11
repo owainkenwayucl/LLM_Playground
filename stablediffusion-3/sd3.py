@@ -7,6 +7,7 @@ import torch
 from diffusers import StableDiffusion3Pipeline
 from utils import report_state, init_rng
 
+import time
 
 model = "stabilityai/stable-diffusion-3-medium-diffusers"
 
@@ -49,11 +50,16 @@ def inference(pipeline=None, prompt="", negative_prompt="", num_gen=1, num_iters
     generator = init_rng(platform, seed)
     
     images = []
+    times = []
     for a in range(num_gen):
+        t_s = time.time()
         temp_s = generator.get_state()
         report_state(temp_s)
         images.append(pipeline(prompt, negative_prompt=negative_prompt, generator=generator, num_inference_steps=num_iters, guidance_scale=guidance_scale).images[0])
+        t_f = time.time()
+        times.append(t_f - t_s)
 
+    print(f"Timing Data: {times}")
     return images
 
 def interactive_inference(prompt="", negative_prompt="",num_gen=1, num_iters=28, guidance_scale=0.7, exclude_t5=False, cpu_offload=False, seed=None):
