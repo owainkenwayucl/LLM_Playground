@@ -15,6 +15,7 @@ def detect_platform():
     cpu = {"name": "CPU", "device":"cpu", "size":torch.float32, "attention_slicing":False}
     nvidia = {"name": "Nvidia", "device":"cuda", "size":torch.float16, "attention_slicing":False}
     metal = {"name": "Apple Metal", "device":"mps", "size":torch.float32, "attention_slicing":False}
+    habana = {"name": "Habana", "device":"hpu", "size":torch.float16, "attention_slicing":False}
 
     r = cpu
 
@@ -26,7 +27,14 @@ def detect_platform():
     elif torch.backends.mps.is_available():
         print("Running on Apple GPU")
         r = metal 
+    else:
+        try:
+            import habana_frameworks.torch.core as htcore
+            print(f"Running on Habana Gaudi 2")
+            r = habana
 
+        except:
+            pass
     return r
 
 platform = detect_platform()
@@ -36,6 +44,12 @@ def setup_pipeline(model=model, exclude_t5=False, cpu_offload=False):
         pipe = StableDiffusion3Pipeline.from_pretrained(model, text_encoder_3=None, tokenizer_3=None, torch_dtype=platform["size"])
     else:
         pipe = StableDiffusion3Pipeline.from_pretrained(model,torch_dtype=platform["size"])
+
+    if platform["name"] == "Habana":
+        import habana_frameworks.torch.core as htcore
+        pipe.transformer.to("hpu")
+        pipe.vae.to("hpu")
+        
     pipe = pipe.to(platform["device"])
 
     if cpu_offload:

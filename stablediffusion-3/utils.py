@@ -41,7 +41,13 @@ def report_state(state):
     print(f"State: torch.{state} || {h}")
 
 def init_rng(platform, seed=None):
-    generator = torch.Generator(platform["device"])
+    if platform["name"] == "Habana":
+        print("Initialising Habana RNG")
+        import habana_frameworks.torch.hpu.random as htrandom
+        import habana_frameworks.torch.core as htcore
+        generator = htrandom.manual_seed(1234)
+    else:
+        generator = torch.Generator(platform["device"])
     if seed != None:
         if type(seed) is torch.Tensor:
             print(f"Recovering generator state to: {seed}")
