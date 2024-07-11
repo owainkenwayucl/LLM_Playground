@@ -38,7 +38,7 @@ def setup_pipeline(model=model, exclude_t5=False, cpu_offload=False):
     pipe = pipe.to(platform["device"])
 
     if cpu_offload:
-        pip.enable_module_cpu_offload()
+        pipe.enable_module_cpu_offload()
 
     return pipe
 
