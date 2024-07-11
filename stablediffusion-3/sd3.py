@@ -76,7 +76,7 @@ def inference(pipeline=None, prompt="", negative_prompt="", num_gen=1, num_iters
     print(f"Timing Data: {times}")
     return images
 
-def interactive_inference(prompt="", negative_prompt="",num_gen=1, num_iters=28, guidance_scale=0.7, exclude_t5=False, cpu_offload=False, seed=None):
+def interactive_inference(prompt="", negative_prompt="",num_gen=1, num_iters=28, guidance_scale=7.0, exclude_t5=False, cpu_offload=False, seed=None):
     pipeline = setup_pipeline(exclude_t5=exclude_t5, cpu_offload=cpu_offload)
     images = inference(prompt=prompt, negative_prompt=negative_prompt, num_gen=num_gen, num_iters=num_iters, guidance_scale=guidance_scale, seed=seed)
 
