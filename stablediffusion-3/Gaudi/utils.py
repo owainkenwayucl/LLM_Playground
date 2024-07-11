@@ -41,7 +41,7 @@ def report_state(state):
     print(f"State: torch.{state} || {h}")
 
 def init_rng(platform, seed=None):
-    if platform["device"] == "habana":
+    if platform["name"] == "habana":
         print("Initialising Habana RNG")
         import habana_frameworks.torch.hpu.random as htrandom
         import habana_frameworks.torch.core as htcore
