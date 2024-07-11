@@ -57,7 +57,7 @@ def setup_pipeline(model=model, exclude_t5=False, cpu_offload=False):
 
     return pipe
 
-def inference(pipeline=None, prompt="", negative_prompt="", num_gen=1, num_iters=28, guidance_scale=0.7, seed=None):
+def inference(pipeline=None, prompt="", negative_prompt="", num_gen=1, num_iters=28, guidance_scale=7.0, seed=None):
     if pipeline == None:
         pipeline = setup_pipeline()
 
