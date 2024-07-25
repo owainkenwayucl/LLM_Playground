@@ -8,8 +8,11 @@ from optimum.habana.transformers.modeling_utils import adapt_transformers_to_gau
 adapt_transformers_to_gaudi()
 
 import logging
+import warnings
 
+# Transformers puts out a lot of spam
 logging.disable(logging.WARNING)
+warnings.filterwarnings("ignore")
 
 size="8B"
 checkpoint_name = f"meta-llama/Meta-Llama-3-{size}-Instruct"  
