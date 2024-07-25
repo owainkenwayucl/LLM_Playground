@@ -15,7 +15,7 @@ style_off = "\033[0m"
 size="8B"
 checkpoint_name = f"meta-llama/Meta-Llama-3.1-{size}-Instruct"  
 
-print{f"{bold_on}Starting up - Checkpoint = {style_off}{checkpoint_name}"}
+print(f"{bold_on}Starting up - Checkpoint = {style_off}{checkpoint_name}")
 
 tokeniser = transformers.AutoTokenizer.from_pretrained(checkpoint_name)
 model = transformers.AutoModelForCausalLM.from_pretrained(
