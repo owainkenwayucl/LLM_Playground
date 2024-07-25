@@ -25,7 +25,7 @@ messages_ = [
 
 messages = messages_
 avatar = "🤖🇫🇷"
-response_on = "\033[3m"
+response_on = "\033[4m"
 bold_on = "\033[1m"
 style_off = "\033[0m"
 
