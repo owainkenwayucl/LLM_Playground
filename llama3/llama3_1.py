@@ -3,8 +3,11 @@ import torch
 import sys
 
 import logging
+import warnings
 
+# Transformers puts out a lot of spam
 logging.disable(logging.WARNING)
+warnings.filterwarnings("ignore")
 
 size="8B"
 checkpoint_name = f"meta-llama/Meta-Llama-3.1-{size}-Instruct"  
