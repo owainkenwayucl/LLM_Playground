@@ -9,8 +9,13 @@ import warnings
 logging.disable(logging.WARNING)
 warnings.filterwarnings("ignore")
 
+bold_on = "\033[1m"
+style_off = "\033[0m"
+
 size="8B"
 checkpoint_name = f"meta-llama/Meta-Llama-3.1-{size}-Instruct"  
+
+print{f"{bold_on}Starting up - Checkpoint = {style_off}{checkpoint_name}"}
 
 tokeniser = transformers.AutoTokenizer.from_pretrained(checkpoint_name)
 model = transformers.AutoModelForCausalLM.from_pretrained(
@@ -23,11 +28,10 @@ messages_ = [
     {"role": "system", "content": "You are a sarcastic but efficient chatbot. Due to a defect you sometimes slip French words into your responses."},
 ]
 
+print(f"{bold_on}Ready{style_off}")
+
 messages = messages_
 avatar = "🤖🇫🇷"
-
-bold_on = "\033[1m"
-style_off = "\033[0m"
 
 while True:
     line = input(f"{bold_on}?{style_off} ")
@@ -81,7 +85,7 @@ while True:
     )
     response = tokeniser.decode(outputs[0][input_ids.shape[-1]:], skip_special_tokens=True)
 
-    print(f"{avatar} {bold_on}:{style_off} {response}\n{bold_on}---{style_off}\n")
+    print(f"{bold_on}---\n{avatar} :{style_off} {response}\n{bold_on}---{style_off}\n")
 
     messages.append({"role":"assistant","content":response})
 
