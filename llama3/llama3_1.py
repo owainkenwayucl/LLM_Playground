@@ -25,6 +25,8 @@ messages_ = [
 
 messages = messages_
 avatar = "🇫🇷🤖"
+bold_on = "\033[1m"
+bold_off = "\033[0m"
 
 while True:
     line = input("? ")
@@ -78,7 +80,7 @@ while True:
     )
     response = tokeniser.decode(outputs[0][input_ids.shape[-1]:], skip_special_tokens=True)
 
-    print(f"{avatar} : {response}")
+    print(f"{avatar} {bold_on}: {response}{bold_off}")
 
     messages.append({"role":"assistant","content":response})
 
