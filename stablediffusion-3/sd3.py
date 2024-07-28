@@ -28,7 +28,7 @@ def detect_platform():
         applied = False
         for a in range(torch.cuda.device_count()):
             device_name = torch.cuda.get_device_name(a)
-            if device_name.starts_with("AMD"):
+            if device_name.startswith("AMD"):
                 applied = True
                 torch.backends.cuda.enable_mem_efficient_sdp(False)
             print(f"Detected Cuda Device {a}: {device_name}")
