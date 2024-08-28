@@ -13,7 +13,7 @@ model = "black-forest-labs/FLUX.1-dev"
 
 def detect_platform():
     cpu = {"name": "CPU", "device":"cpu", "size":torch.float32, "attention_slicing":False}
-    nvidia = {"name": "Nvidia", "device":"cuda", "size":torch.float16, "attention_slicing":False}
+    nvidia = {"name": "Nvidia", "device":"cuda", "size":torch.bfloat16, "attention_slicing":False}
     metal = {"name": "Apple Metal", "device":"mps", "size":torch.float32, "attention_slicing":False}
     habana = {"name": "Habana", "device":"hpu", "size":torch.float16, "attention_slicing":False}
 
@@ -77,7 +77,7 @@ def inference(pipeline=None, prompt="", negative_prompt="", num_gen=1, num_iters
         t_s = time.time()
         temp_s = generator.get_state()
         report_state(temp_s)
-        images.append(pipeline(prompt, negative_prompt=negative_prompt, generator=generator, num_inference_steps=num_iters, guidance_scale=guidance_scale).images[0])
+        images.append(pipeline(prompt, generator=generator, num_inference_steps=num_iters, guidance_scale=guidance_scale).images[0])
         t_f = time.time()
         times.append(t_f - t_s)
 
