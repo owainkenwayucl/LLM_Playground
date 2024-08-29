@@ -63,6 +63,9 @@ def setup_pipeline(model=model, cpu_offload=False):
  
     pipe = pipe.to(platform["device"])
 
+    pipe.enable_vae_tiling()
+    # pipe.enable_vae_slicing()
+
     if cpu_offload:
         pipe.enable_model_cpu_offload()
 
