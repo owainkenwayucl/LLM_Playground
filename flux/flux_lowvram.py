@@ -63,7 +63,10 @@ def setup_pipeline(model=model, cpu_offload=False):
  
     pipe = pipe.to(platform["device"])
 
-    pipe.enable_vae_tiling()
+    try:
+        pipe.enable_vae_tiling()
+    except:
+        print(f"This version of diffusers doesn't support VAE tiling yet.")
     # pipe.enable_vae_slicing()
 
     if cpu_offload:
