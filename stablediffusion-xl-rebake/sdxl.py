@@ -23,6 +23,9 @@ def detect_platform():
         r = nvidia
         r["number"] = torch.cuda.device_count()
         print(f" - {r['number']} GPUs detected")
+        for a in range(torch.cuda.device_count()):
+            device_name = torch.cuda.get_device_name(a)
+            print(f"Detected Cuda Device {a}: {device_name}")
 
     elif torch.backends.mps.is_available():
         print("Running on Apple GPU")
