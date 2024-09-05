@@ -24,16 +24,16 @@ def detect_platform():
         r["number"] = torch.cuda.device_count()
         print(f" - {r['number']} GPUs detected")
         # Fix for https://github.com/ROCm/pytorch/issues/1500
-        applied = False
+        #applied = False
         for a in range(torch.cuda.device_count()):
             device_name = torch.cuda.get_device_name(a)
-            if device_name.startswith("AMD"):
-                applied = True
-                torch.backends.cuda.enable_mem_efficient_sdp(False)
+            #if device_name.startswith("AMD"):
+            #    applied = True
+            #    torch.backends.cuda.enable_mem_efficient_sdp(False)
             print(f"Detected Cuda Device {a}: {device_name}")
 
-        if applied:
-            print(f"Disabled memory efficient flash attention as fix for https://github.com/ROCm/pytorch/issues/1500")
+        #if applied:
+        #    print(f"Disabled memory efficient flash attention as fix for https://github.com/ROCm/pytorch/issues/1500")
 
     elif torch.backends.mps.is_available():
         print("Running on Apple GPU")
