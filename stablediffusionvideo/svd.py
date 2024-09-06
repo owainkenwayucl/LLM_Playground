@@ -4,9 +4,9 @@ model = model_xt
 
 def run(command):
     import subprocess
-    return subprocess.run(command, capture_output=True, encoding='UTF-8', webm=False)
+    return subprocess.run(command, capture_output=True, encoding='UTF-8')
     
-def encode(frames, filename, framerate=7):
+def encode(frames, filename, framerate=7, webm=False):
     for a in range(len(frames)):
         frames[a].save(f".output{a}.png")
 
