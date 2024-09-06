@@ -4,12 +4,16 @@ model = model_xt
 
 def run(command):
     import subprocess
-    return subprocess.run(command, capture_output=True, encoding='UTF-8')
+    return subprocess.run(command, capture_output=True, encoding='UTF-8', webm=False)
     
 def encode(frames, filename, framerate=7):
     for a in range(len(frames)):
         frames[a].save(f".output{a}.png")
-    x = run(["ffmpeg", "-framerate", str(framerate), "-i", ".output%d.png","-pix_fmt","yuv420p",filename])
+
+    library = "libopenh264"
+    if webm:
+        library = "vp8"
+    x = run(["ffmpeg", "-framerate", str(framerate), "-i", ".output%d.png". "-c:v", library, "-pix_fmt","yuv420p",filename])
     print(x.stdout)
     print(x.stderr)
 
