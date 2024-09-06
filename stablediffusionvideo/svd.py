@@ -13,7 +13,7 @@ def encode(frames, filename, framerate=7):
     library = "libopenh264"
     if webm:
         library = "vp8"
-    x = run(["ffmpeg", "-framerate", str(framerate), "-i", ".output%d.png". "-c:v", library, "-pix_fmt","yuv420p",filename])
+    x = run(["ffmpeg", "-framerate", str(framerate), "-i", ".output%d.png", "-c:v", library, "-pix_fmt","yuv420p",filename])
     print(x.stdout)
     print(x.stderr)
 
