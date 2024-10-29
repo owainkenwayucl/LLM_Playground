@@ -1,0 +1,12 @@
+pip
+torch
+torchvision
+diffusers
+transformers
+accelerate
+safetensors
+ipykernel
+scipy
+ipywidgetsnvitop
+jupyterlabprotobuf
+sentencepiece
