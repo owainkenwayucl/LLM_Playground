@@ -80,7 +80,7 @@ def setup_pipeline(model=model, exclude_t5=False, cpu_offload=False):
 
     return pipe
 
-def inference(pipeline=None, prompt="", negative_prompt="", num_gen=1, num_iters=28, guidance_scale=7.0, seed=None):
+def inference(pipeline=None, prompt="", negative_prompt="", num_gen=1, num_iters=28, guidance_scale=7.0, seed=None, width=1024, height=1024):
     if pipeline == None:
         pipeline = setup_pipeline()
 
@@ -92,16 +92,16 @@ def inference(pipeline=None, prompt="", negative_prompt="", num_gen=1, num_iters
         t_s = time.time()
         temp_s = generator.get_state()
         report_state(temp_s)
-        images.append(pipeline(prompt, negative_prompt=negative_prompt, generator=generator, num_inference_steps=num_iters, guidance_scale=guidance_scale).images[0])
+        images.append(pipeline(prompt, negative_prompt=negative_prompt, generator=generator, num_inference_steps=num_iters, guidance_scale=guidance_scale, width=width, height=height).images[0])
         t_f = time.time()
         times.append(t_f - t_s)
 
     print(f"Timing Data: {times}")
     return images
 
-def interactive_inference(prompt="", negative_prompt="",num_gen=1, num_iters=28, guidance_scale=7.0, exclude_t5=False, cpu_offload=False, seed=None):
+def interactive_inference(prompt="", negative_prompt="",num_gen=1, num_iters=28, guidance_scale=7.0, exclude_t5=False, cpu_offload=False, seed=None, height=1024, width=1024):
     pipeline = setup_pipeline(exclude_t5=exclude_t5, cpu_offload=cpu_offload)
-    images = inference(pipeline=pipeline,prompt=prompt, negative_prompt=negative_prompt, num_gen=num_gen, num_iters=num_iters, guidance_scale=guidance_scale, seed=seed)
+    images = inference(pipeline=pipeline,prompt=prompt, negative_prompt=negative_prompt, num_gen=num_gen, num_iters=num_iters, guidance_scale=guidance_scale, seed=seed, width=width, height=height)
 
     for a in images:
         display(a)
