@@ -12,3 +12,4 @@ nvitop
 jupyterlab
 protobuf
 sentencepiece
+xformers
