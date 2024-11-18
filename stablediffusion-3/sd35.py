@@ -66,10 +66,6 @@ def setup_pipeline(model=model, exclude_t5=False, cpu_offload=False):
         print(f"Enabling sequential cpu offload. This will massively decrease memory usage but may break device selection.")
         pipe.enable_sequential_cpu_offload()
     else:
-        try: 
-            pipe.enable_xformers_memory_efficient_attention()
-        except:
-            print(f"Xformers is not installed - Xformers memory efficirnt attention disabled.")
         try:
             pipe.enable_vae_tiling()
         except:
