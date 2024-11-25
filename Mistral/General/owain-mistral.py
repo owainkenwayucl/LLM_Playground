@@ -5,6 +5,8 @@ import sys
 import logging
 
 logging.disable(logging.WARNING)
+bold_on = "\033[1m"
+style_off = "\033[0m"
 
 size="7B"
 checkpoint_name = f"mistralai/Mistral-{size}-Instruct-v0.2"
