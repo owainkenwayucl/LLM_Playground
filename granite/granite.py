@@ -6,7 +6,7 @@ import logging
 
 logging.disable(logging.WARNING)
 
-size="7b"
+size="3.0-8b"
 checkpoint_name = f"ibm-granite/granite-{size}-instruct"  
 
 tokeniser = transformers.AutoTokenizer.from_pretrained(checkpoint_name)
