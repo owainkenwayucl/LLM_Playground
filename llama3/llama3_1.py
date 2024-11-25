@@ -1,6 +1,7 @@
 import transformers
 import torch
 import sys
+import copy
 
 import logging
 import warnings
@@ -37,7 +38,7 @@ messages_ = [
 
 print(f"{bold_on}Ready{style_off}")
 
-messages = messages_
+messages = copy.deepcopy(messages_)
 avatar = "🤖🇫🇷"
 
 while True:
@@ -55,7 +56,7 @@ while True:
         messages_ = [
             {"role": "system", "content": new_prompt},
         ]
-        messages = messages_
+        messages = copy.deepcopy(messages_)
         continue
         
     if 'inspect' == line.strip().lower():
@@ -65,7 +66,7 @@ while True:
         continue
 
     if 'forget' == line.strip().lower():
-        messages = messages_
+        messages = copy.deepcopy(messages_)
         continue
 
     line = line.strip()

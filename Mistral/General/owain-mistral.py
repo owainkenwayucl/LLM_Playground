@@ -21,7 +21,7 @@ messages_ = [
     {"role": "assistant", "content": ""}
 ]
 
-messages = messages_
+messages = copy.deepcopy(messages_)
 avatar = "🧸"
 
 while True:
@@ -39,13 +39,13 @@ while True:
         messages_ = [
             {"role": "user", "content": new_prompt}, {"role": "assistant", "content": ""}
         ]
-        messages = messages_
+        messages = copy.deepcopy(messages_)
         continue
         
 
 
     if 'forget' == line.strip().lower():
-        messages = messages_
+        messages = copy.deepcopy(messages_)
         continue
 
     line = line.strip()
