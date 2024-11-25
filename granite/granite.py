@@ -10,6 +10,15 @@ logging.disable(logging.WARNING)
 size="3.0-8b"
 checkpoint_name = f"ibm-granite/granite-{size}-instruct"  
 
+print(f"{bold_on}Starting up - Checkpoint = {style_off}{checkpoint_name}")
+
+if torch.cuda.device_count() > 0:
+    print(f"{bold_on}Detected {torch.cuda.device_count()} Cuda devices.{style_off}")
+    for a in range(torch.cuda.device_count()):
+        print(f"{bold_on}Detected Cuda Device {a}:{style_off} {torch.cuda.get_device_name(a)}")
+else: 
+    print(f"{bold_on}Running on CPU.{style_off}")
+    
 tokeniser = transformers.AutoTokenizer.from_pretrained(checkpoint_name)
 model = transformers.AutoModelForCausalLM.from_pretrained(
     checkpoint_name,
