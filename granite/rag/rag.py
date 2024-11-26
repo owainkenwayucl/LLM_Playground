@@ -9,6 +9,10 @@ from llama_index.llms.huggingface import HuggingFaceLLM
 import torch
 import sys
 
+# Some aliases to make output nicer.
+bold_on = "\033[1m"
+style_off = "\033[0m"
+
 # This exposes a couple of functions for constructing prompts which are not *necessary* but seem to decrease surprising extra output.
 from hfhelper import messages_to_prompt, completion_to_prompt
 
@@ -48,4 +52,4 @@ while True:
         sys.exit()
 
     response = query_engine.query(line)
-    print(response)
+    print(f"{bold_on}---\n{avatar} :{style_off} {response}\n{bold_on}---{style_off}\n")
