@@ -14,6 +14,15 @@ bold_on = "\033[1m"
 style_off = "\033[0m"
 avatar = "🤖"
 
+# Choose which embedding model to use.
+embedding_model = f"sentence-transformers/all-MiniLM-L12-v2"
+print(f"{bold_on}Starting up - embedding model = {style_off}{embedding_model}")
+
+# Choose which LLM to use - here we are using IBM's Granite 3.0 as it is very low on hallucinations.
+size="3.0-8b"
+checkpoint_name = f"ibm-granite/granite-{size}-instruct"  
+print(f"{bold_on}Starting up - LLM checkpoint = {style_off}{checkpoint_name}")
+
 # This exposes a couple of functions for constructing prompts which are not *necessary* but seem to decrease surprising extra output.
 from hfhelper import messages_to_prompt, completion_to_prompt
 
@@ -23,13 +32,10 @@ print(f"Loading {len(directory.list_resources())} documents from ./data...", end
 documents = directory.load_data()
 print(f"done.")
 
-# Embedding model - here we use one from the sentence-transformers library.,
-Settings.embed_model = HuggingFaceEmbedding(model_name="sentence-transformers/all-MiniLM-L12-v2")
+# Add embedding model to the llama_index settings.
+Settings.embed_model = HuggingFaceEmbedding(model_name=embedding_model)
 
-# Choose which LLM to use - here we are using IBM's Granite 3.0 as it is very low on hallucinations.
-size="3.0-8b"
-checkpoint_name = f"ibm-granite/granite-{size}-instruct"  
-
+# Add the LLM to the llama_index settings.
 Settings.llm = HuggingFaceLLM(
     model_name=checkpoint_name,
     tokenizer_name=checkpoint_name,
