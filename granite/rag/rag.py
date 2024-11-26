@@ -23,6 +23,14 @@ size="3.0-8b"
 checkpoint_name = f"ibm-granite/granite-{size}-instruct"  
 print(f"{bold_on}Starting up - LLM checkpoint = {style_off}{checkpoint_name}")
 
+# Work out if we have a GPU.
+if torch.cuda.device_count() > 0:
+    print(f"{bold_on}Detected {torch.cuda.device_count()} Cuda devices.{style_off}")
+    for a in range(torch.cuda.device_count()):
+        print(f"{bold_on}Detected Cuda Device {a}:{style_off} {torch.cuda.get_device_name(a)}")
+else: 
+    print(f"{bold_on}Running on CPU.{style_off}")
+
 # This exposes a couple of functions for constructing prompts which are not *necessary* but seem to decrease surprising extra output.
 from hfhelper import messages_to_prompt, completion_to_prompt
 
