@@ -1,3 +1,4 @@
+# Pydantic causes lots of warnings on import. There's nothing we can do about this.
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -8,15 +9,16 @@ from llama_index.llms.huggingface import HuggingFaceLLM
 import torch
 import sys
 
+# This exposes a couple of functions for constructing prompts which are not *necessary* but seem to decrease surprising extra output.
 from hfhelper import messages_to_prompt, completion_to_prompt
 
 # Read data out of data directory
 documents = SimpleDirectoryReader("data").load_data()
 
-# embedding model
+# Embedding model - here we use one from the sentence-transformers library.,
 Settings.embed_model = HuggingFaceEmbedding(model_name="sentence-transformers/all-MiniLM-L12-v2")
 
-## STUFF TO SET UP LLM HERE
+# Choose which LLM to use - here we are using IBM's Granite 3.0 as it is very low on hallucinations.
 size="3.0-8b"
 checkpoint_name = f"ibm-granite/granite-{size}-instruct"  
 
@@ -31,12 +33,15 @@ Settings.llm = HuggingFaceLLM(
     device_map="auto",
 )
 
+# Set up the vector store index.
 index = VectorStoreIndex.from_documents(
     documents,
 )
 
+# Initialise a query engine from the index.
 query_engine = index.as_query_engine()
 
+# Loop until user inputs "bye", sending their input to the query engine and returning the response.
 while True:
     line = input("? ")
     if 'bye' == line.strip().lower():
