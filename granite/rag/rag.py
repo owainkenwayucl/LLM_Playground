@@ -6,6 +6,7 @@ from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.core.prompts import PromptTemplate
 from llama_index.llms.huggingface import HuggingFaceLLM
 import torch
+import sys
 
 # Read data out of data directory
 documents = SimpleDirectoryReader("data").load_data()
