@@ -8,6 +8,8 @@ from llama_index.llms.huggingface import HuggingFaceLLM
 import torch
 import sys
 
+from hfhelper import messages_to_prompt, completion_to_prompt
+
 # Read data out of data directory
 documents = SimpleDirectoryReader("data").load_data()
 
@@ -24,6 +26,8 @@ Settings.llm = HuggingFaceLLM(
     context_window=3900,
     max_new_tokens=256,
     generate_kwargs={"do_sample": True, "temperature": 0.7, "top_k": 50, "top_p": 0.95},
+    messages_to_prompt=messages_to_prompt,
+    completion_to_prompt=completion_to_prompt,
     device_map="auto",
 )
 
