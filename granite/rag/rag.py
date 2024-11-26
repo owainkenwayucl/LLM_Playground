@@ -12,6 +12,7 @@ import sys
 # Some aliases to make output nicer.
 bold_on = "\033[1m"
 style_off = "\033[0m"
+avatar = "🤖"
 
 # This exposes a couple of functions for constructing prompts which are not *necessary* but seem to decrease surprising extra output.
 from hfhelper import messages_to_prompt, completion_to_prompt
