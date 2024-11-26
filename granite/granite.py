@@ -87,7 +87,7 @@ while True:
     )
     response = tokeniser.decode(outputs[0][input_ids.shape[-1]:], skip_special_tokens=True)
 
-    print(f"{avatar} : {response}")
+    print(f"{bold_on}---\n{avatar} :{style_off} {response}\n{bold_on}---{style_off}\n")
 
     messages.append({"role":"assistant","content":response})
 
