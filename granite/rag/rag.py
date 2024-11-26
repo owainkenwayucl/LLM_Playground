@@ -18,7 +18,10 @@ avatar = "🤖"
 from hfhelper import messages_to_prompt, completion_to_prompt
 
 # Read data out of data directory
-documents = SimpleDirectoryReader("data").load_data()
+directory = SimpleDirectoryReader(input_dir="data", recursive=True)
+print(f"Loading {len(directory.list_resources())} documents from ./data...", end="", flush=True)
+documents = directory.load_data()
+print(f"done.")
 
 # Embedding model - here we use one from the sentence-transformers library.,
 Settings.embed_model = HuggingFaceEmbedding(model_name="sentence-transformers/all-MiniLM-L12-v2")
