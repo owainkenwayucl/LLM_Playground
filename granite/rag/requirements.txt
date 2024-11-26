@@ -1,0 +1,11 @@
+pip
+torch
+torchvision
+transformers
+accelerate
+safetensors
+scipy
+numpy<2
+llama-index
+llama-index-embeddings-huggingface
+llama-index-llms-huggingface
