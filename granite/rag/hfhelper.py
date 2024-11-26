@@ -1,5 +1,6 @@
 # Bits we need for the huggingface llm interface (why is this just not defined!?)
 # This is from the llamaindex documentation.
+# https://docs.llamaindex.ai/en/stable/api_reference/llms/huggingface/#llama_index.llms.huggingface.HuggingFaceLLM
 
 def messages_to_prompt(messages):
     prompt = ""
