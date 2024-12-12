@@ -17,6 +17,7 @@ from llama_index.llms.llama_cpp import LlamaCPP
 import torch
 import sys
 import os
+import time
 
 # Some aliases to make output nicer.
 bold_on = "\033[1m"
@@ -75,8 +76,10 @@ query_engine = index.as_query_engine()
 # Loop until user inputs "bye", sending their input to the query engine and returning the response.
 while True:
     line = input("? ")
+    st = time.time()
     if 'bye' == line.strip().lower():
         sys.exit()
 
     response = query_engine.query(line)
-    print(f"{bold_on}---\n{avatar} :{style_off} {response}\n{bold_on}---{style_off}\n")
+    fin = time.time()
+    print(f"{bold_on}---\n{avatar} :{style_off} {response}\n{bold_on}---\nTime:{style_off} {fin - st}\n")
