@@ -52,7 +52,7 @@ print(f"done.")
 Settings.embed_model = HuggingFaceEmbedding(model_name=embedding_model)
 
 # Add the LLM to the llama_index settings.
-Settings.llm = LLamaCPP(
+Settings.llm = LlamaCPP(
     model_path=checkpoint_name,
     context_window=3900,
     max_new_tokens=512,
