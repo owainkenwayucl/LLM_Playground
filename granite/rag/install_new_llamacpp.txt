@@ -1,0 +1,1 @@
+CMAKE_ARGS="-DGGML_CUDA=ON -G Ninja -DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc" pip install llama-cpp-python==0.3.5
