@@ -72,7 +72,7 @@ index = VectorStoreIndex.from_documents(
 )
 
 # Initialise a query engine from the index.
-query_engine = index.as_query_engine()
+query_engine = index.as_query_engine(similarity_top_k=1)
 
 # Loop until user inputs "bye", sending their input to the query engine and returning the response.
 while True:
