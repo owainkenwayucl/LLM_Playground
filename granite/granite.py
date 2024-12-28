@@ -9,7 +9,7 @@ logging.disable(logging.WARNING)
 bold_on = "\033[1m"
 style_off = "\033[0m"
 
-size="3.0-8b"
+size="3.1-8b"
 checkpoint_name = f"ibm-granite/granite-{size}-instruct"  
 
 print(f"{bold_on}Starting up - Checkpoint = {style_off}{checkpoint_name}")

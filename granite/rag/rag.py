@@ -18,7 +18,7 @@ embedding_model = f"sentence-transformers/all-MiniLM-L12-v2"
 print(f"{bold_on}Starting up - embedding model = {style_off}{embedding_model}")
 
 # Choose which LLM to use - here we are using IBM's Granite 3.0 as it is very low on hallucinations.
-size="3.0-8b"
+size="3.1-8b"
 checkpoint_name = f"ibm-granite/granite-{size}-instruct"  
 print(f"{bold_on}Starting up - LLM checkpoint = {style_off}{checkpoint_name}")
 
