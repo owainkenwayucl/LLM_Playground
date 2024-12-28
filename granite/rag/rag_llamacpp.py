@@ -25,7 +25,8 @@ style_off = "\033[0m"
 avatar = "🤖"
 
 # Choose which embedding model to use.
-embedding_model = f"sentence-transformers/all-MiniLM-L12-v2"
+# embedding_model = f"sentence-transformers/all-MiniLM-L12-v2"
+embedding_model = f"ibm-granite/granite-embedding-125m-english"
 print(f"{bold_on}Starting up - embedding model = {style_off}{embedding_model}")
 
 # Choose which LLM to use - here we are using IBM's Granite 3.0 as it is very low on hallucinations.
