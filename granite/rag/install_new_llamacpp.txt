@@ -1,1 +1,12 @@
 CMAKE_ARGS="-DGGML_CUDA=ON -G Ninja -DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc" pip install llama-cpp-python==0.3.5
+
+Repo has moved from
+ https://github.com/ggerganov/llama.cpp.git
+to 
+ https://github.com/ggml-org/llama.cpp.git
+
+on AMD
+
+HIPCXX="$(hipconfig -l)/clang" HIP_PATH="$(hipconfig -R)" \
+    cmake -S . -B build -DGGML_HIP=ON -DAMDGPU_TARGETS=gfx942 -DCMAKE_BUILD_TYPE=Release \
+    && cmake --build build --config Release -- -j 16
