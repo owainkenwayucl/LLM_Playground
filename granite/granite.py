@@ -99,7 +99,7 @@ while True:
     )
     response = tokeniser.decode(outputs[0, input_ids["input_ids"].shape[1]:], skip_special_tokens=True)
 
-    t_elapsed = timing.time() - t_start
+    t_elapsed = time.time() - t_start
     print(f"{bold_on}---\n{avatar} :{style_off} {response}\n{bold_on}--- [{t_elapsed} seconds] {style_off}\n")
 
     messages.append({"role":"assistant","content":response})
