@@ -34,6 +34,8 @@ messages_ = [
 messages = copy.deepcopy(messages_)
 avatar = "🤖"
 
+reasoning = False
+
 while True:
     line = input("? ")
     if 'bye' == line.strip().lower():
@@ -56,6 +58,17 @@ while True:
         print(f"Model: {checkpoint_name}")
         print(f"Chat state: {messages}")
         print(f"Avatar: {avatar}")
+        print(f"Reasoning: {reasoning}")
+        continue
+
+    if 'reasoning on' == line.strip().lower():
+        print(f"Enabling reasoning.")
+        reasoning=True
+        continue
+
+    if 'reasoning off' == line.strip().lower():
+        print(f"Disabling reasoning.")
+        reasoning=False
         continue
 
     if 'forget' == line.strip().lower():
@@ -68,7 +81,7 @@ while True:
     input_ids = tokeniser.apply_chat_template(
         messages,
         return_tensors="pt",
-        thinking=True,
+        thinking=reasoning,
         add_generation_prompt=True,
         return_dict=True 
     ).to(model.device)
