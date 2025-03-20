@@ -9,7 +9,7 @@ logging.disable(logging.WARNING)
 bold_on = "\033[1m"
 style_off = "\033[0m"
 
-size="3.1-8b"
+size="3.2-8b"
 checkpoint_name = f"ibm-granite/granite-{size}-instruct"  
 
 print(f"{bold_on}Starting up - Checkpoint = {style_off}{checkpoint_name}")
@@ -29,7 +29,6 @@ model = transformers.AutoModelForCausalLM.from_pretrained(
 )
 
 messages_ = [
-    {"role": "system", "content": "You are a helpful and efficient AI chatbot."},
 ]
 
 messages = copy.deepcopy(messages_)
@@ -65,11 +64,13 @@ while True:
 
     line = line.strip()
     messages.append({"role":"user","content":line})
-
+    transformers.set_seed(42) 
     input_ids = tokeniser.apply_chat_template(
         messages,
+        return_tensors="pt",
+        thinking=True,
         add_generation_prompt=True,
-        return_tensors="pt"
+        return_dict=True 
     ).to(model.device)
 
     terminators = [
@@ -78,14 +79,10 @@ while True:
     ]
 
     outputs = model.generate(
-        input_ids,
-        max_new_tokens=512,
-        eos_token_id=terminators,
-        do_sample=True,
-        temperature=0.6,
-        top_p=0.9,
+        **input_ids,
+        max_new_tokens=8192,
     )
-    response = tokeniser.decode(outputs[0][input_ids.shape[-1]:], skip_special_tokens=True)
+    response = tokeniser.decode(outputs[0, input_ids["input_ids"].shape[1]:], skip_special_tokens=True)
 
     print(f"{bold_on}---\n{avatar} :{style_off} {response}\n{bold_on}---{style_off}\n")
 
