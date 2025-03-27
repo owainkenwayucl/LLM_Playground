@@ -55,11 +55,9 @@ def identify_job(date,id):
             script = contents.replace('\\\n','')
     except IOError as err:
         print(err, file=sys.stderr)
-        continue
     except UnicodeDecodeError as err:
         print("File: ", script_fn, file=sys.stderr)
         print(err, file=sys.stderr)
-        continue
 
     t_start = time.time()
      
