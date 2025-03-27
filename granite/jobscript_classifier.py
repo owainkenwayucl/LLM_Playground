@@ -39,8 +39,8 @@ model = transformers.AutoModelForCausalLM.from_pretrained(
 finish_startup = time.time()
 timing["model_setup"] = finish_startup - finish_imports
 
-print(f"Loading imports took {timing["imports"]} seconds.")
-print(f"Setting up the model took {timing["model_setup"]} seconds.")
+print(f"Loading imports took {timing['imports']} seconds.")
+print(f"Setting up the model took {timing['model_setup']} seconds.")
 
 prompt = "Please identify what application this job script is running. Please only name the application and do not provide any further detail:\n\n"
 
