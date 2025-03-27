@@ -65,7 +65,6 @@ def identify_job(date,id):
     input_ids = tokeniser.apply_chat_template(
         messages,
         return_tensors="pt",
-        thinking=reasoning,
         add_generation_prompt=True,
         return_dict=True 
     ).to(model.device)
