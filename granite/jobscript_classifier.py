@@ -87,8 +87,8 @@ def identify_job(date,id):
 def process_daterange(config):
     data = {}
 
-    start_date = datetime.datetime.strptime(config("start_date"),'%Y-%m-%d').date()
-    stop_date = datetime.datetime.strptime(config("stop_date"),'%Y-%m-%d').date()
+    start_date = datetime.datetime.strptime(config["start_date"],'%Y-%m-%d').date()
+    stop_date = datetime.datetime.strptime(config["stop_date"],'%Y-%m-%d').date()
 
     current_date = start_date
 
