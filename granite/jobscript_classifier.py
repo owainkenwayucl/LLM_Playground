@@ -85,6 +85,7 @@ def identify_job(date,id):
     t_elapsed = time.time() - t_start
     return response, t_elapsed, script
 
+
 def process_daterange(config):
     data = {}
 
@@ -104,7 +105,7 @@ def process_daterange(config):
                     date_timing += t
                     data[current_date.isoformat()][jobfile.name] = r
         timing[current_date.isoformat()] = date_timing
-        
+        date += datetime.timedelta(days=1)
     return data
 
 def main():
