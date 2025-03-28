@@ -7,9 +7,10 @@ import transformers
 import torch
 import sys
 import copy
-import time
+import datetime
 import logging
 import json
+import tqdm
 finish_imports = time.time()
 timing["imports"] = finish_imports - start_imports
 
@@ -83,9 +84,36 @@ def identify_job(date,id):
     t_elapsed = time.time() - t_start
     return response, t_elapsed, script
 
-def main():
-    print("Don't run application this way")
+def process_daterange(config):
+    data = {}
 
+    start_date = datetime.datetime.strptime(config("start_date"),'%Y-%m-%d').date()
+    stop_date = datetime.datetime.strptime(config("stop_date"),'%Y-%m-%d').date()
+
+    current_date = start_date
+
+    while current_date <= stop_date:
+        date_timing = 0
+        data[date.isoformat()] = {}
+        print(date.isoformat())
+        for jobfile in os.scandir(jobscript_dirs + date.isoformat()):
+            if os.path.isdir(jobscript_dirs + date.isoformat()):
+                if jobfile.is_file():
+                    r, t, _ = identify_job(jobfile.name)
+                    date_timing += t
+                    data[date.isoformat()][jobfile.name] = r
+        timing[date.isoformat()] = date_timing
+        
+    return data
+
+def main():
+    if (len(sys.argv) != 2):
+        print("Run this program with a single argument that is a JSON settings file.")
+    else:
+        config_fn = sys.argv[1]
+        with open(config_fn) as f:
+            config = json.load(f)
+            print(process_daterange(config))
 
 if __name__ == "__main__":
     main()
