@@ -98,7 +98,7 @@ def process_daterange(config):
     for current_date in tdqm(daterange_generator(start_date, stop_date)):
         date_timing = 0
         data[current_date.isoformat()] = {}
-        print(current_date.isoformat())
+
         for jobfile in os.scandir(jobscript_directory + current_date.isoformat()):
             if os.path.isdir(jobscript_directory + current_date.isoformat()):
                 if jobfile.is_file():
