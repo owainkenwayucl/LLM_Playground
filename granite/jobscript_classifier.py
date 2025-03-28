@@ -95,7 +95,7 @@ def process_daterange(config):
     start_date = datetime.datetime.strptime(config["start_date"],'%Y-%m-%d').date()
     stop_date = datetime.datetime.strptime(config["stop_date"],'%Y-%m-%d').date()
 
-    for current_date in tqdm.qdm(daterange_generator(start_date, stop_date)):
+    for current_date in tqdm.tqdm(daterange_generator(start_date, stop_date)):
         date_timing = 0
         data[current_date.isoformat()] = {}
 
