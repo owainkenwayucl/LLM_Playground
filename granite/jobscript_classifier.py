@@ -114,6 +114,7 @@ def main():
         with open(config_fn) as f:
             config = json.load(f)
             print(process_daterange(config))
+            print(timing)
 
 if __name__ == "__main__":
     main()
