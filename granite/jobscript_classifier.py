@@ -97,8 +97,8 @@ def process_daterange(config):
         date_timing = 0
         data[current_date.isoformat()] = {}
         print(current_date.isoformat())
-        for jobfile in os.scandir(jobscript_directory + date.isoformat()):
-            if os.path.isdir(jobscript_directory + date.isoformat()):
+        for jobfile in os.scandir(jobscript_directory + current_date.isoformat()):
+            if os.path.isdir(jobscript_directory + current_date.isoformat()):
                 if jobfile.is_file():
                     r, t, _ = identify_job(jobfile.name)
                     date_timing += t
