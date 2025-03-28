@@ -95,11 +95,11 @@ def process_daterange(config):
     start_date = datetime.datetime.strptime(config["start_date"],'%Y-%m-%d').date()
     stop_date = datetime.datetime.strptime(config["stop_date"],'%Y-%m-%d').date()
 
-    for current_date in tqdm(daterange_generator(start_date, stop_date)):
+    for current_date in tqdm.qdm(daterange_generator(start_date, stop_date)):
         date_timing = 0
         data[current_date.isoformat()] = {}
 
-        for jobfile in tdqm(os.scandir(jobscript_directory + current_date.isoformat())):
+        for jobfile in tqdm.tdqm(os.scandir(jobscript_directory + current_date.isoformat())):
             if os.path.isdir(jobscript_directory + current_date.isoformat()):
                 if jobfile.is_file():
                     r, t, _ = identify_job(current_date.isoformat(), jobfile.name)
