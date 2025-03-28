@@ -85,6 +85,9 @@ def identify_job(date,id):
     t_elapsed = time.time() - t_start
     return response, t_elapsed, script
 
+def daterange_generateor(start_date, stop_date):
+    for a in range(int ((stop_date - start_date).days)):
+        yield start_date + datetime.timedelta(days=1)
 
 def process_daterange(config):
     data = {}
@@ -92,9 +95,7 @@ def process_daterange(config):
     start_date = datetime.datetime.strptime(config["start_date"],'%Y-%m-%d').date()
     stop_date = datetime.datetime.strptime(config["stop_date"],'%Y-%m-%d').date()
 
-    current_date = start_date
-
-    while current_date <= stop_date:
+    for current_date in tdqm(daterange_generator(start_date, stop_date)):
         date_timing = 0
         data[current_date.isoformat()] = {}
         print(current_date.isoformat())
@@ -105,7 +106,7 @@ def process_daterange(config):
                     date_timing += t
                     data[current_date.isoformat()][jobfile.name] = r
         timing[current_date.isoformat()] = date_timing
-        date += datetime.timedelta(days=1)
+
     return data
 
 def main():
