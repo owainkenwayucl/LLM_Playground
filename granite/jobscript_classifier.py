@@ -19,7 +19,7 @@ logging.disable(logging.WARNING)
 bold_on = "\033[1m"
 style_off = "\033[0m"
 
-size="3.2-8b"
+size="3.2-2b"
 checkpoint_name = f"ibm-granite/granite-{size}-instruct"  
 jobscript_directory = "/var/opt/sge/shared/saved_job_scripts/"
 
