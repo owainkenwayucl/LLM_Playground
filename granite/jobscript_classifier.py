@@ -94,15 +94,15 @@ def process_daterange(config):
 
     while current_date <= stop_date:
         date_timing = 0
-        data[date.isoformat()] = {}
-        print(date.isoformat())
+        data[current_date.isoformat()] = {}
+        print(current_date.isoformat())
         for jobfile in os.scandir(jobscript_directory + date.isoformat()):
             if os.path.isdir(jobscript_directory + date.isoformat()):
                 if jobfile.is_file():
                     r, t, _ = identify_job(jobfile.name)
                     date_timing += t
-                    data[date.isoformat()][jobfile.name] = r
-        timing[date.isoformat()] = date_timing
+                    data[current_date.isoformat()][jobfile.name] = r
+        timing[current_date.isoformat()] = date_timing
         
     return data
 
