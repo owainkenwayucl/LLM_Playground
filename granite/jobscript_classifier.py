@@ -85,7 +85,7 @@ def identify_job(date,id):
     t_elapsed = time.time() - t_start
     return response, t_elapsed, script
 
-def daterange_generateor(start_date, stop_date):
+def daterange_generator(start_date, stop_date):
     for a in range(int ((stop_date - start_date).days)):
         yield start_date + datetime.timedelta(days=1)
 
