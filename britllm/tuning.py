@@ -47,7 +47,7 @@ args = trl.SFTConfig(
 trainer = trl.SFTTrainer(
     model=model,
     args=args,
-    train_dataset=dataset,
+    train_dataset=dataset["train"],
     peft_config=peft_config,
     processing_class=tokeniser,
 )
