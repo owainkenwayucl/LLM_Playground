@@ -49,6 +49,6 @@ trainer = trl.SFTTrainer(
     args=args,
     train_dataset=dataset,
     peft_config=peft_config,
-    tokenizer=tokeniser,
+    processing_class=tokeniser,
 )
 trainer.train()
