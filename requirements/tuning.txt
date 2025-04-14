@@ -1,3 +1,4 @@
 evaluate
 datasets
 peft
+trl
