@@ -3,6 +3,7 @@ import torch
 import sys
 import copy
 import time
+import trl
 
 import logging
 
@@ -24,7 +25,7 @@ else:
     print(f"{bold_on}Running on CPU.{style_off}")
 
 tokeniser = transformers.AutoTokenizer.from_pretrained(checkpoint_name)
-_, tokeniser = setup_chat_format(model=model, tokenizer=tokenizer)
+_, tokeniser = trl.setup_chat_format(model=model, tokenizer=tokeniser)
 
 
 model = transformers.AutoModelForCausalLM.from_pretrained(
