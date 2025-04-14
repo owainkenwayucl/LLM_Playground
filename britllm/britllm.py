@@ -10,7 +10,8 @@ logging.disable(logging.WARNING)
 bold_on = "\033[1m"
 style_off = "\033[0m"
 
-checkpoint_name = f"./Peft_wgts_merged"
+local_checkpoint_name = f"./Peft_wgts_merged"
+checkpoint_name = f"britllm/britllm-{size}-v0.1"
 
 print(f"{bold_on}Starting up - Checkpoint = {style_off}{checkpoint_name}")
 
@@ -24,7 +25,7 @@ else:
 tokeniser = transformers.AutoTokenizer.from_pretrained(checkpoint_name)
 
 model = transformers.AutoModelForCausalLM.from_pretrained(
-    checkpoint_name,
+    local_checkpoint_name,
     torch_dtype=torch.bfloat16,
     device_map="auto"
 )
