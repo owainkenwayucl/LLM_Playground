@@ -24,6 +24,8 @@ else:
     print(f"{bold_on}Running on CPU.{style_off}")
 
 tokeniser = transformers.AutoTokenizer.from_pretrained(checkpoint_name)
+_, tokeniser = setup_chat_format(model=model, tokenizer=tokenizer)
+
 
 model = transformers.AutoModelForCausalLM.from_pretrained(
     local_checkpoint_name,
