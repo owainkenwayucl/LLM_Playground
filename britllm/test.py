@@ -36,7 +36,7 @@ model = transformers.AutoModelForCausalLM.from_pretrained(
 
 _, tokeniser = trl.setup_chat_format(model=model, tokenizer=tokeniser)
 
-pipe = transformers.pipeline("text-generation", model=model, tokenizer=tokeniser, device=0)
+pipe = transformers.pipeline("text-generation", model=model, tokenizer=tokeniser)
 
 # Define test prompts
 prompts = [
