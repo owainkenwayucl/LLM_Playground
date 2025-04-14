@@ -5,6 +5,7 @@ import transformers
 import datasets
 import trl
 import peft
+import torch
 
 # filename = "databricks-dolly-15k.jsonl"
 # dataset = dbl.load_file(filename)
