@@ -26,7 +26,7 @@ model = transformers.AutoModelForCausalLM.from_pretrained(
 
 model, tokeniser = trl.setup_chat_format(model=model, tokenizer=tokeniser)
 
-'''
+
 def t_fn(examples):
     prompt = f"""### Instruction:
 {examples['Instruction']}
@@ -37,10 +37,10 @@ def t_fn(examples):
 ### Response
 {examples['Response']}
 """
-    return tokeniser(prompt, padding="max_length", trucation=True)
+    return prompt
 
-dataset = dataset.map(t_fn, batched=True)
-'''
+#dataset = dataset.map(t_fn, batched=True)
+
 
 peft_config = peft.LoraConfig(
     r=6,  # Rank dimension for the update matrices
@@ -66,5 +66,6 @@ trainer = trl.SFTTrainer(
     train_dataset=dataset["train"],
     peft_config=peft_config,
     processing_class=tokeniser,
+    formatting_func=t_fn
 )
 trainer.train()
