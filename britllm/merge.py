@@ -1,7 +1,7 @@
 from peft import AutoPeftModelForCausalLM
 
 # Load the trained model
-model = AutoPeftModelForCausalLM.from_pretrained("./Peft_wgts/checkpoint-2000")
+model = AutoPeftModelForCausalLM.from_pretrained("./Peft_wgts/checkpoint-1876")
 
 # Merge LoRA and save the full model
 merged_model = model.merge_and_unload()
