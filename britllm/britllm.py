@@ -10,6 +10,7 @@ logging.disable(logging.WARNING)
 bold_on = "\033[1m"
 style_off = "\033[0m"
 
+size="3b"
 local_checkpoint_name = f"./Peft_wgts_merged"
 checkpoint_name = f"britllm/britllm-{size}-v0.1"
 
