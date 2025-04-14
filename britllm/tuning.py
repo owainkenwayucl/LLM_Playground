@@ -29,13 +29,13 @@ model, tokeniser = trl.setup_chat_format(model=model, tokenizer=tokeniser)
 
 def t_fn(examples):
     prompt = f"""### Instruction:
-{examples['Instruction']}
+{examples['instruction']}
 
 ### Context
-{examples['Context']}
+{examples['context']}
 
 ### Response
-{examples['Response']}
+{examples['response']}
 """
     return prompt
 
