@@ -15,7 +15,7 @@ size="3b"
 local_checkpoint_name = f"./Peft_wgts_merged"
 checkpoint_name = f"britllm/britllm-{size}-v0.1"
 
-print(f"{bold_on}Starting up - Checkpoint = {style_off}{checkpoint_name}")
+print(f"{bold_on}Starting up - Checkpoint = {style_off}{local_checkpoint_name}")
 
 if torch.cuda.device_count() > 0:
     print(f"{bold_on}Detected {torch.cuda.device_count()} Cuda devices.{style_off}")
