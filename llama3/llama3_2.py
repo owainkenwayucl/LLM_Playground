@@ -14,7 +14,7 @@ warnings.filterwarnings("ignore")
 bold_on = "\033[1m"
 style_off = "\033[0m"
 
-size="8B"
+size="3B"
 checkpoint_name = f"meta-llama/Meta-Llama-3.2-{size}-Instruct"  
 
 print(f"{bold_on}Starting up - Checkpoint = {style_off}{checkpoint_name}")
