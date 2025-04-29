@@ -15,7 +15,7 @@ bold_on = "\033[1m"
 style_off = "\033[0m"
 
 size="8B"
-checkpoint_name = f"meta-llama/Meta-Llama-3.1-{size}-Instruct"  
+checkpoint_name = f"meta-llama/Llama-3.1-{size}-Instruct"  
 
 print(f"{bold_on}Starting up - Checkpoint = {style_off}{checkpoint_name}")
 
