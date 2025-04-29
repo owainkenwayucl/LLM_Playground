@@ -2,6 +2,7 @@ import transformers
 import torch
 import sys
 import copy
+import time
 
 import logging
 import warnings
@@ -69,6 +70,7 @@ while True:
         messages = copy.deepcopy(messages_)
         continue
 
+    t_start = time.time()
     line = line.strip()
     messages.append({"role":"user","content":line})
 
@@ -93,7 +95,9 @@ while True:
     )
     response = tokeniser.decode(outputs[0][input_ids.shape[-1]:], skip_special_tokens=True)
 
-    print(f"{bold_on}---\n{avatar} :{style_off} {response}\n{bold_on}---{style_off}\n")
+    t_elapsed = time.time() - t_start
+    print(f"{bold_on}---\n{avatar} :{style_off} {response}\n{bold_on}--- [{t_elapsed} seconds] {style_off}\n")
 
     messages.append({"role":"assistant","content":response})
 
+ 

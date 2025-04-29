@@ -2,6 +2,7 @@ import transformers
 import torch
 import sys
 import copy
+import time
 
 import logging
 import warnings
@@ -10,8 +11,20 @@ import warnings
 logging.disable(logging.WARNING)
 warnings.filterwarnings("ignore")
 
+bold_on = "\033[1m"
+style_off = "\033[0m"
+
 size="8B"
 checkpoint_name = f"meta-llama/Meta-Llama-3-{size}-Instruct"  
+
+print(f"{bold_on}Starting up - Checkpoint = {style_off}{checkpoint_name}")
+
+if torch.cuda.device_count() > 0:
+    print(f"{bold_on}Detected {torch.cuda.device_count()} Cuda devices.{style_off}")
+    for a in range(torch.cuda.device_count()):
+        print(f"{bold_on}Detected Cuda Device {a}:{style_off} {torch.cuda.get_device_name(a)}")
+else: 
+    print(f"{bold_on}Running on CPU.{style_off}")
 
 tokeniser = transformers.AutoTokenizer.from_pretrained(checkpoint_name)
 model = transformers.AutoModelForCausalLM.from_pretrained(
@@ -21,14 +34,16 @@ model = transformers.AutoModelForCausalLM.from_pretrained(
 )
 
 messages_ = [
-    {"role": "system", "content": "You are a cute fluffy bear chatbot who always talks in uwu cute anime speak"},
+    {"role": "system", "content": "You are a sarcastic but efficient chatbot. Due to a defect you sometimes slip French words into your responses."},
 ]
 
+print(f"{bold_on}Ready{style_off}")
+
 messages = copy.deepcopy(messages_)
-avatar = "🧸"
+avatar = "🤖🇫🇷"
 
 while True:
-    line = input("? ")
+    line = input(f"{bold_on}?{style_off} ")
     if 'bye' == line.strip().lower():
         sys.exit()
 
@@ -55,6 +70,7 @@ while True:
         messages = copy.deepcopy(messages_)
         continue
 
+    t_start = time.time()
     line = line.strip()
     messages.append({"role":"user","content":line})
 
@@ -79,7 +95,9 @@ while True:
     )
     response = tokeniser.decode(outputs[0][input_ids.shape[-1]:], skip_special_tokens=True)
 
-    print(f"{avatar} : {response}")
+    t_elapsed = time.time() - t_start
+    print(f"{bold_on}---\n{avatar} :{style_off} {response}\n{bold_on}--- [{t_elapsed} seconds] {style_off}\n")
 
     messages.append({"role":"assistant","content":response})
 
+ 
