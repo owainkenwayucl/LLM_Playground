@@ -30,7 +30,7 @@ embedding_model = f"ibm-granite/granite-embedding-125m-english"
 print(f"{bold_on}Starting up - embedding model = {style_off}{embedding_model}")
 
 # Choose which LLM to use - here we are using IBM's Granite 3.0 as it is very low on hallucinations.
-checkpoint_name = f"{os.path.expanduser('~')}/models/granite-3.0-8b-instruct/granite-3.0-8B-instruct-F16.gguf" 
+checkpoint_name = f"{os.path.expanduser('~')}/models/granite-3.2-8b-instruct/granite-3.2-8B-instruct-F16.gguf" 
 print(f"{bold_on}Starting up - LLM checkpoint = {style_off}{checkpoint_name}")
 
 # Work out if we have a GPU.

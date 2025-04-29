@@ -19,7 +19,7 @@ embedding_model = f"ibm-granite/granite-embedding-125m-english"
 print(f"{bold_on}Starting up - embedding model = {style_off}{embedding_model}")
 
 # Choose which LLM to use - here we are using IBM's Granite 3.0 as it is very low on hallucinations.
-size="3.0-8b" # 3.1 does odd things - need to investigate
+size="3.2-8b" # 3.3 does odd things - need to investigate
 checkpoint_name = f"ibm-granite/granite-{size}-instruct"  
 print(f"{bold_on}Starting up - LLM checkpoint = {style_off}{checkpoint_name}")
 
