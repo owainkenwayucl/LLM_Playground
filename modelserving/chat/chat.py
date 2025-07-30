@@ -81,7 +81,7 @@ while True:
     response = client.chat.completions.create(
         model = model,
         messages=messages
-    ).output_text
+    ).choices[0].message.content
 
     t_elapsed = time.time() - t_start
     print(f"{bold_on}---\n{avatar} :{style_off} {response}\n{bold_on}--- [{t_elapsed} seconds] {style_off}\n")
