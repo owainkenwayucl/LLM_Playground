@@ -78,7 +78,7 @@ while True:
     line = line.strip()
     messages.append({"role":"user","content":line})
 
-    response = client.completions.create(
+    response = client.chat.completions.create(
         model = model,
         messages=messages
     ).output_text
