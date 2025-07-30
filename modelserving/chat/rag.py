@@ -13,7 +13,6 @@ import configparser
 config = configparser.ConfigParser()
 config.read("llm.ini")
 
-
 # Some aliases to make output nicer.
 bold_on = "\033[1m"
 style_off = "\033[0m"
