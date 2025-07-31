@@ -93,5 +93,6 @@ def interactive_inference(prompt="", negative_prompt="",num_gen=1, num_iters=50,
         display(a)
 
     # Clear memory leak
+    del pipeline
     gc.collect()
     torch.cuda.empty_cache()
