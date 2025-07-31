@@ -8,6 +8,7 @@ from diffusers import FluxPipeline
 from utils import report_state, init_rng
 
 import time
+import gc
 
 model = "black-forest-labs/FLUX.1-Krea-dev"
 
@@ -90,3 +91,7 @@ def interactive_inference(prompt="", negative_prompt="",num_gen=1, num_iters=50,
 
     for a in images:
         display(a)
+
+    # Clear memory leak
+    gc.collect()
+    torch.cuda.empty_cache()
