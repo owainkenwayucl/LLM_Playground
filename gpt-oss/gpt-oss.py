@@ -8,6 +8,7 @@ import logging
 
 logging.disable(logging.WARNING)
 bold_on = "\033[1m"
+thought_on = "\033[32m"
 style_off = "\033[0m"
 
 size="20b"
@@ -82,7 +83,7 @@ while True:
 
     outputs = model.generate(
         **input_ids,
-        max_new_tokens=512,
+        max_new_tokens=256,
     )
     response = tokeniser.decode(outputs[0, input_ids["input_ids"].shape[1]:], skip_special_tokens=True)
 
@@ -91,7 +92,7 @@ while True:
     response = decoded_response[1]
 
     t_elapsed = time.time() - t_start
-    print(f"{bold_on}---\n💭 : {style_off}{reasoning}\n{bold_on}{avatar} : {style_off}{response}\n{bold_on}--- [{t_elapsed} seconds] {style_off}\n")
+    print(f"{bold_on}---\n💭 : {style_off}{thought_on}{reasoning}\n{bold_on}---\n{avatar} : {style_off}{response}\n{bold_on}--- [{t_elapsed} seconds] {style_off}\n")
 
     messages.append({"role":"assistant","content":response})
 
