@@ -95,7 +95,7 @@ while True:
 
     outputs = model.generate(
         **input_ids,
-        max_new_tokens=8192,
+        max_new_tokens=512,
     )
     response = tokeniser.decode(outputs[0, input_ids["input_ids"].shape[1]:], skip_special_tokens=True)
 
