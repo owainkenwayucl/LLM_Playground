@@ -22,7 +22,7 @@ if torch.cuda.device_count() > 0:
 else: 
     print(f"{bold_on}Running on CPU.{style_off}")
 
-tokeniser = transformers.AutoTokenizer.from_pretrained(checkpoint_name)
+tokeniser = transformers.AutoTokenizer.from_pretrained(checkpoint_name, padding_side="left")
 model = transformers.AutoModelForCausalLM.from_pretrained(
     checkpoint_name,
     torch_dtype=torch.bfloat16,
