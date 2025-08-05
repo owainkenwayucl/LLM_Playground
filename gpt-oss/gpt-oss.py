@@ -88,11 +88,15 @@ while True:
     response = tokeniser.decode(outputs[0, input_ids["input_ids"].shape[1]:], skip_special_tokens=True)
 
     decoded_response = response.split("assistantfinal")
-    reasoning = decoded_response[0][8:]
-    response = decoded_response[1]
+    if len(decoded_response) > 1:
+        reasoning = decoded_response[0][8:]
+        response = decoded_response[1]
 
-    t_elapsed = time.time() - t_start
-    print(f"{bold_on}---\n💭 : {style_off}{thought_on}{reasoning}{style_off}\n{bold_on}---\n{avatar} : {style_off}{response}\n{bold_on}--- [{t_elapsed} seconds] {style_off}\n")
-
+        t_elapsed = time.time() - t_start
+        print(f"{bold_on}---\n💭 : {style_off}{thought_on}{reasoning}{style_off}\n{bold_on}---\n{avatar} : {style_off}{response}\n{bold_on}--- [{t_elapsed} seconds] {style_off}\n")
+    else:
+        t_elapsed = time.time() - t_start
+        print(f"{bold_on}---\n{avatar} : {style_off}{response}\n{bold_on}--- [{t_elapsed} seconds] {style_off}\n")
+    
     messages.append({"role":"assistant","content":response})
 
