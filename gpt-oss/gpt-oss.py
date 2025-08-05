@@ -25,7 +25,7 @@ else:
 tokeniser = transformers.AutoTokenizer.from_pretrained(checkpoint_name, padding_side="left")
 model = transformers.AutoModelForCausalLM.from_pretrained(
     checkpoint_name,
-    torch_dtype=torch.bfloat16,
+    torch_dtype="auto",
     device_map="auto"
 )
 
@@ -87,7 +87,7 @@ while True:
     response = tokeniser.decode(outputs[0, input_ids["input_ids"].shape[1]:], skip_special_tokens=True)
 
     decoded_response = response.split("assistantfinal")
-    reasoning = decoded_respons[0][9:]
+    reasoning = decoded_response[0][9:]
     response = decoded_response[1]
 
     t_elapsed = time.time() - t_start
