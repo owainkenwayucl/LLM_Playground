@@ -92,7 +92,7 @@ while True:
     response = decoded_response[1]
 
     t_elapsed = time.time() - t_start
-    print(f"{bold_on}---\n💭 : {style_off}{thought_on}{reasoning}\n{bold_on}---\n{avatar} : {style_off}{response}\n{bold_on}--- [{t_elapsed} seconds] {style_off}\n")
+    print(f"{bold_on}---\n💭 : {style_off}{thought_on}{reasoning}{style_off}\n{bold_on}---\n{avatar} : {style_off}{response}\n{bold_on}--- [{t_elapsed} seconds] {style_off}\n")
 
     messages.append({"role":"assistant","content":response})
 
