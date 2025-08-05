@@ -88,10 +88,10 @@ while True:
 
     decoded_response = response.split("assistantfinal")
     reasoning = decoded_respons[0][9:]
-    response = decode_response[1]
+    response = decoded_response[1]
 
     t_elapsed = time.time() - t_start
-    print(f"{bold_on}---\n{avatar} Reasoning: {style_off}{reasoning}\n{bold_on}Response: {style_off}{response}\n{bold_on}--- [{t_elapsed} seconds] {style_off}\n")
+    print(f"{bold_on}---\n{avatar} Reasoning: {style_off}{reasoning}\n{bold_on}{avatar} Response: {style_off}{response}\n{bold_on}--- [{t_elapsed} seconds] {style_off}\n")
 
     messages.append({"role":"assistant","content":response})
 
