@@ -50,7 +50,7 @@ while True:
         print(f"Current prompt: {base_prompt}")
         print(f"Current avatar: {avatar}")
         print(f"Current Reasoning: {reasoning}")
-        
+
         base_prompt = input("New prompt: ")
         avatar = input("New avatar: ")
         reasoning = input("Reasoning (low, medium, high): ")
@@ -95,11 +95,11 @@ while True:
 
     decoded_response = response.split("assistantfinal")
     if len(decoded_response) > 1:
-        reasoning = decoded_response[0][8:]
+        thinking = decoded_response[0][8:]
         response = decoded_response[1]
 
         t_elapsed = time.time() - t_start
-        print(f"{bold_on}---\n💭 : {style_off}{thought_on}{reasoning}{style_off}\n{bold_on}---\n{avatar} : {style_off}{response}\n{bold_on}--- [{t_elapsed} seconds] {style_off}\n")
+        print(f"{bold_on}---\n💭 : {style_off}{thought_on}{thinking}{style_off}\n{bold_on}---\n{avatar} : {style_off}{response}\n{bold_on}--- [{t_elapsed} seconds] {style_off}\n")
     else:
         t_elapsed = time.time() - t_start
         print(f"{bold_on}---\n{avatar} : {style_off}{response}\n{bold_on}--- [{t_elapsed} seconds] {style_off}\n")
