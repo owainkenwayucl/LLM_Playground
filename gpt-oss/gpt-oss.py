@@ -32,7 +32,9 @@ model = transformers.AutoModelForCausalLM.from_pretrained(
 
 reasoning = "low"
 
-messages_ = [{"role": "system", "content": f"Reasoning: {reasoning}"}
+base_prompt=""
+
+messages_ = [{"role": "system", "content": f"{base_prompt}\nReasoning: {reasoning}"}
 ]
 
 messages = copy.deepcopy(messages_)
@@ -45,23 +47,24 @@ while True:
         sys.exit()
 
     if 'reprogram' == line.strip().lower():
-        print(f"Current prompt: {messages_}")
+        print(f"Current prompt: {base_prompt}")
         print(f"Current avatar: {avatar}")
-
-        new_prompt = input("New prompt: ")
+        print(f"Current Reasoning: {reasoning}")
+        
+        base_prompt = input("New prompt: ")
         avatar = input("New avatar: ")
-
+        reasoning = input("Reasoning (low, medium, high): ")
         messages_ = [
-            {"role": "system", "content": new_prompt},
+            {"role": "system", "content": f"{base_prompt}\nReasoning: {reasoning}"},
         ]
         messages = copy.deepcopy(messages_)
         continue
-        
+
     if 'inspect' == line.strip().lower():
         print(f"Model: {checkpoint_name}")
         print(f"Chat state: {messages}")
         print(f"Avatar: {avatar}")
-        #print(f"Reasoning: {reasoning}")
+        print(f"Reasoning: {reasoning}")
         continue
 
     if 'forget' == line.strip().lower():
