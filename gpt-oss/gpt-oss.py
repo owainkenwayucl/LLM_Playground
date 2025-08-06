@@ -30,11 +30,14 @@ model = transformers.AutoModelForCausalLM.from_pretrained(
     device_map="auto"
 )
 
-messages_ = [
+reasoning = "low"
+
+messages_ = [{"role": "system", "content": f"Reasoning: {reasoning}""}
 ]
 
 messages = copy.deepcopy(messages_)
 avatar = "🤖"
+
 
 while True:
     line = input("? ")
@@ -58,7 +61,7 @@ while True:
         print(f"Model: {checkpoint_name}")
         print(f"Chat state: {messages}")
         print(f"Avatar: {avatar}")
-        print(f"Reasoning: {reasoning}")
+        #print(f"Reasoning: {reasoning}")
         continue
 
     if 'forget' == line.strip().lower():
