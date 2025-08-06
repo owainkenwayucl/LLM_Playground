@@ -32,7 +32,7 @@ model = transformers.AutoModelForCausalLM.from_pretrained(
 
 reasoning = "low"
 
-messages_ = [{"role": "system", "content": f"Reasoning: {reasoning}""}
+messages_ = [{"role": "system", "content": f"Reasoning: {reasoning}"}
 ]
 
 messages = copy.deepcopy(messages_)
