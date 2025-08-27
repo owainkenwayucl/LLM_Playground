@@ -5,7 +5,7 @@ import os
 def select_gpu(id_string):
     control_vars=["CUDA_VISIBLE_DEVICES", "ROCR_VISIBLE_DEVICES"]
     for a in control_vars:
-        os.environ(a) = str(id_string)
+        os.environ[a] = str(id_string)
 
 def checkseed(seed):
     mi = -pow(2, 63) 
