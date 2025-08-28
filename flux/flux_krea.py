@@ -101,7 +101,7 @@ def interactive_inference(prompt="", negative_prompt="",num_gen=1, num_iters=50,
     gc.collect()
     torch.cuda.empty_cache()
 
-def inference_worker(queue, pipeline=None, prompt="", negative_prompt="", num_gen=1, num_iters=50, guidance_scale=3.5, seed=None, width=1024, height=1024, device_id=0):
+def inference_worker(queue, pipeline=None, prompt="", negative_prompt="", num_gen=1, num_iters=50, guidance_scale=3.5, cpu_offload=False, seed=None, width=1024, height=1024, device_id=0):
     pipeline = setup_pipeline(cpu_offload=cpu_offload, device_id=device_id)
     images = inference(pipeline=pipeline,prompt=prompt, negative_prompt=negative_prompt, num_gen=num_gen, num_iters=num_iters, guidance_scale=guidance_scale, seed=seed, width=width, height=height)
     del pipeline
