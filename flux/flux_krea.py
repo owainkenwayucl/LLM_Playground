@@ -101,8 +101,8 @@ def interactive_inference(prompt="", negative_prompt="",num_gen=1, num_iters=50,
     gc.collect()
     torch.cuda.empty_cache()
 
-def inference_worker(queue, pipeline=None, prompt="", negative_prompt="", num_gen=1, num_iters=50, guidance_scale=3.5, cpu_offload=False, seed=None, width=1024, height=1024, device_id=0):
-    pipeline = setup_pipeline(cpu_offload=cpu_offload, device_id=device_id)
+def inference_worker(queue, pipeline=None, prompt="", negative_prompt="", num_gen=1, num_iters=50, guidance_scale=3.5, cpu_offload=False, seed=None, width=1024, height=1024):
+    pipeline = setup_pipeline(cpu_offload=cpu_offload)
     images = inference(pipeline=pipeline,prompt=prompt, negative_prompt=negative_prompt, num_gen=num_gen, num_iters=num_iters, guidance_scale=guidance_scale, seed=seed, width=width, height=height)
     del pipeline
     gc.collect()
@@ -112,7 +112,7 @@ def inference_worker(queue, pipeline=None, prompt="", negative_prompt="", num_ge
 
 def parallel_interactive_inference(prompt="", negative_prompt="",num_gen=1, num_iters=50, guidance_scale=3.5, cpu_offload=False, seed=None, width=1024, height=1024):
     from torch.multiprocessing import Process, Queue, set_start_method
-    import os
+    from utils import select_gpu
 
     # We only want to do this the first time as we get an error if we do it repeatedly.
     try:
@@ -135,7 +135,8 @@ def parallel_interactive_inference(prompt="", negative_prompt="",num_gen=1, num_
     procs = []
 
     for a in range(number):
-        procs.append(Process(target=inference_worker, args=(q, prompt, "", chunks[a], num_iters, 3.5, False, seed, width, height, a)))
+        select_gpu(a)
+        procs.append(Process(target=inference_worker, args=(q, prompt, "", chunks[a], num_iters, 3.5, False, seed, width, height)))
         procs[a].start()
 
     images = []
