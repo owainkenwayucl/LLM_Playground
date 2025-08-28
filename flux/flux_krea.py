@@ -135,7 +135,7 @@ def parallel_interactive_inference(prompt="", negative_prompt="",num_gen=1, num_
     procs = []
 
     for a in range(number):
-        procs.append(Process(target=inference_worker, args=(q, prompt, "", chunks[a], num_iters, 3.5, False, seed, image_width, image_height)))
+        procs.append(Process(target=inference_worker, args=(q, prompt, "", chunks[a], num_iters, 3.5, False, seed, width, height)))
         procs[a].start()
 
     images = []
