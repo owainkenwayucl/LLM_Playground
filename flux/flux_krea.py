@@ -44,7 +44,7 @@ def detect_platform():
 
 platform = detect_platform()
 
-def setup_pipeline(model=model, cpu_offload=False, device_id=None):
+def setup_pipeline(model=model, cpu_offload=False):
 
     pipe = FluxPipeline.from_pretrained(model,torch_dtype=platform["size"])
 
@@ -62,11 +62,7 @@ def setup_pipeline(model=model, cpu_offload=False, device_id=None):
                 print(f"Directly enabled VAE slicing + tiling")
             except:
                 print(f"Can't directly enable VAE slicing + tiling either")
-        if device_id is not None:
-            device_string = platform["device"]
-        else:
-            device_string = f"{platform['device']}:{device_id}"
-        pipe = pipe.to(device_string)
+        pipe = pipe.to(platform["device"])
 
     return pipe
 
