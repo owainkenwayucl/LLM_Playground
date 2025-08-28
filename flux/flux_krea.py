@@ -132,7 +132,7 @@ def parallel_interactive_inference(prompt="", negative_prompt="",num_gen=1, num_
 
     for a in range(number):
         select_gpu(a)
-        procs.append(Process(target=inference_worker, args=(q, prompt, "", chunks[a], num_iters, 3.5, False, seed, width, height)))
+        procs.append(Process(target=inference_worker, args=(q, prompt, negative_prompt, chunks[a], num_iters, 3.5, False, seed, width, height)))
         procs[a].start()
 
     images = []
