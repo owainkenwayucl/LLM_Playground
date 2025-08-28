@@ -44,7 +44,7 @@ def detect_platform():
 
 platform = detect_platform()
 
-def setup_pipeline(model=model, cpu_offload=False):
+def setup_pipeline(model=model, cpu_offload=False, device_id=None):
 
     pipe = FluxPipeline.from_pretrained(model,torch_dtype=platform["size"])
 
@@ -62,7 +62,11 @@ def setup_pipeline(model=model, cpu_offload=False):
                 print(f"Directly enabled VAE slicing + tiling")
             except:
                 print(f"Can't directly enable VAE slicing + tiling either")
-        pipe = pipe.to(platform["device"])
+        if device_id is not None:
+            device_string = platform["device"]
+        else:
+            device_string = f"{platform['device']}:{device_id}"
+        pipe = pipe.to(device_string)
 
     return pipe
 
@@ -96,3 +100,47 @@ def interactive_inference(prompt="", negative_prompt="",num_gen=1, num_iters=50,
     del pipeline
     gc.collect()
     torch.cuda.empty_cache()
+
+def inference_worker(queue, pipeline=None, prompt="", negative_prompt="", num_gen=1, num_iters=50, guidance_scale=3.5, seed=None, width=1024, height=1024, device_id=0):
+    pipeline = setup_pipeline(cpu_offload=cpu_offload, device_id)
+    images = inference(pipeline=pipeline,prompt=prompt, negative_prompt=negative_prompt, num_gen=num_gen, num_iters=num_iters, guidance_scale=guidance_scale, seed=seed, width=width, height=height)
+    del pipeline
+    gc.collect()
+    torch.cuda.empty_cache()
+    for a in images:
+        q.put(a)
+
+def parallel_interactive_inference(prompt="", negative_prompt="",num_gen=1, num_iters=50, guidance_scale=3.5, cpu_offload=False, seed=None, width=1024, height=1024):
+    from torch.multiprocessing import Process, Queue, set_start_method
+    import os
+
+    # We only want to do this the first time as we get an error if we do it repeatedly.
+    try:
+        set_start_method("spawn")
+    except:
+        pass
+
+    number = platform["number"]
+
+    if num_gen < number:
+        print(f"Number of images to generate < number of GPUs, setting number of GPUs to {num_gen}")
+        number = num_gen
+    
+    # Decompose range into chunks
+    chunks = [ int(num_gen/number) ] * number
+    for a in range(num_gen - sum(chunks)):
+        chunks[a] +=1
+
+    q = Queue()
+    procs = []
+
+    for a in range(number):
+        procs.append(Process(target=inference_worker, args=(q, prompt, "", chunks[a], num_iters, 3.5, False, seed, image_width, image_height)
+        procs[a].start()
+
+    images []
+    for a in range(num_gen):
+        images.append(q.get())
+
+    for a in images:
+        display(a)
