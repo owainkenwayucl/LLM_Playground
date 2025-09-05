@@ -86,6 +86,8 @@ def inference(pipeline=None, prompt="", negative_prompt="", num_gen=1, num_iters
     return images
 
 def interactive_inference(prompt="", negative_prompt="",num_gen=1, num_iters=50, guidance_scale=3.5, cpu_offload=False, seed=None, width=1024, height=1024):
+    if platform["device"] == "cuda":
+        torch.cuda.reset_peak_memory_stats()
     pipeline = setup_pipeline(cpu_offload=cpu_offload)
     images = inference(pipeline=pipeline,prompt=prompt, negative_prompt=negative_prompt, num_gen=num_gen, num_iters=num_iters, guidance_scale=guidance_scale, seed=seed, width=width, height=height)
 
@@ -93,18 +95,27 @@ def interactive_inference(prompt="", negative_prompt="",num_gen=1, num_iters=50,
         display(a)
 
     # Clear memory leak
-    del pipeline
-    gc.collect()
-    torch.cuda.empty_cache()
+    if platform["device"] == "cuda":
+        del pipeline
+        gc.collect()
+        torch.cuda.empty_cache()
+        print(f"Maximum GPU memory allocated: {torch.cuda.max_memory_reserved() / (1024**3)} GiB.")
 
 def inference_worker(q, prompt="", negative_prompt="", num_gen=1, num_iters=50, guidance_scale=3.5, cpu_offload=False, seed=None, width=1024, height=1024):
+    if platform["device"] == "cuda":
+        torch.cuda.reset_peak_memory_stats()
+
     pipeline = setup_pipeline(cpu_offload=cpu_offload)
     images = inference(pipeline=pipeline,prompt=prompt, negative_prompt=negative_prompt, num_gen=num_gen, num_iters=num_iters, guidance_scale=guidance_scale, seed=seed, width=width, height=height)
-    del pipeline
-    gc.collect()
-    torch.cuda.empty_cache()
+    if platform["device"] == "cuda":
+        del pipeline
+        gc.collect()
+        torch.cuda.empty_cache()
+        print(f"Maximum GPU memory allocated: {torch.cuda.max_memory_reserved() / (1024**3)} GiB.")
+        
     for a in images:
         q.put(a)
+
 
 def parallel_interactive_inference(prompt="", negative_prompt="",num_gen=1, num_iters=50, guidance_scale=3.5, cpu_offload=False, seed=None, width=1024, height=1024):
     from torch.multiprocessing import Process, Queue, set_start_method
