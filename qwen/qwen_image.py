@@ -96,9 +96,9 @@ def interactive_inference(prompt="", negative_prompt="",num_gen=1, num_iters=50,
 
     # Clear memory leak
     if platform["device"] == "cuda":
-        #del pipeline
-        #gc.collect()
-        #torch.cuda.empty_cache()
+        del pipeline
+        gc.collect()
+        torch.cuda.empty_cache()
         print(f"Maximum GPU memory allocated: {torch.cuda.max_memory_reserved() / (1024**3)} GiB.")
 
 def inference_worker(q, prompt="", negative_prompt="", num_gen=1, num_iters=50, guidance_scale=3.5, cpu_offload=False, seed=None, width=1024, height=1024):
@@ -108,9 +108,9 @@ def inference_worker(q, prompt="", negative_prompt="", num_gen=1, num_iters=50, 
     pipeline = setup_pipeline(cpu_offload=cpu_offload)
     images = inference(pipeline=pipeline,prompt=prompt, negative_prompt=negative_prompt, num_gen=num_gen, num_iters=num_iters, guidance_scale=guidance_scale, seed=seed, width=width, height=height)
     if platform["device"] == "cuda":
-        #del pipeline
-        #gc.collect()
-        #torch.cuda.empty_cache()
+        del pipeline
+        gc.collect()
+        torch.cuda.empty_cache()
         print(f"Maximum GPU memory allocated: {torch.cuda.max_memory_reserved() / (1024**3)} GiB.")
 
     for a in images:
