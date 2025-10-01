@@ -88,11 +88,6 @@ while True:
         return_dict=True 
     ).to(model.device)
 
-    terminators = [
-        tokeniser.eos_token_id,
-        tokeniser.convert_tokens_to_ids("<|eot_id|>")
-    ]
-
     outputs = model.generate(
         **input_ids,
         max_new_tokens=8192,
