@@ -68,7 +68,7 @@ while True:
 
     t_start = time.time()
     line = line.strip()
-    messages.append({"role":"user","content":line})
+    messages.append({"role":"user","content":[{"type": "text", "text": line}]})
     transformers.set_seed(42) 
     input_ids = tokeniser.apply_chat_template(
         messages,
