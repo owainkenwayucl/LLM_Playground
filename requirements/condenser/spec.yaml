@@ -1,5 +1,5 @@
   image:
-    cpu: determinedai/environments:py-3.9-pytorch-1.12-tf-2.11-cpu-f66cbce
+    cpu: determinedai/environments:py-3.10-pytorch-2.0-cpu-0.31.1
     cuda: determinedai/environments:cuda-11.8-pytorch-2.0-gpu-0.31.1
   pod_spec:
     spec:

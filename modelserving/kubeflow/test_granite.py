@@ -1,6 +1,6 @@
 import requests
 
-base_model_endpoint = "" # Replace with your endpoint
+base_model_endpoint = "http://huggingface-granite.kubeflow-o-kenway.svc.cluster.local"
 api_endpoint = f"{base_model_endpoint}/openai/v1/completions"
 headers = {
     "Content-Type": "application/json",
