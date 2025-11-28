@@ -6,8 +6,9 @@ logging.set_verbosity_error() # Decrease somewhat unhinged log spam!
 import torch
 from diffusers import Flux2Pipeline
 from utils import report_state, init_rng
-import gc
+
 import time
+import gc
 
 model = "black-forest-labs/FLUX.2-dev"
 
@@ -77,7 +78,7 @@ def inference(pipeline=None, prompt="", negative_prompt="", num_gen=1, num_iters
         t_s = time.time()
         temp_s = generator.get_state()
         report_state(temp_s)
-        images.append(pipeline(prompt=prompt, generator=generator, num_inference_steps=num_iters, guidance_scale=guidance_scale, width=width, height=height).images[0])
+        images.append(pipeline(promp=prompt, generator=generator, num_inference_steps=num_iters, guidance_scale=guidance_scale, width=width, height=height).images[0])
         t_f = time.time()
         times.append(t_f - t_s)
 
@@ -85,6 +86,8 @@ def inference(pipeline=None, prompt="", negative_prompt="", num_gen=1, num_iters
     return images
 
 def interactive_inference(prompt="", negative_prompt="",num_gen=1, num_iters=50, guidance_scale=3.5, cpu_offload=False, seed=None, width=1024, height=1024):
+    if platform["device"] == "cuda":
+        torch.cuda.reset_peak_memory_stats()
     pipeline = setup_pipeline(cpu_offload=cpu_offload)
     images = inference(pipeline=pipeline,prompt=prompt, negative_prompt=negative_prompt, num_gen=num_gen, num_iters=num_iters, guidance_scale=guidance_scale, seed=seed, width=width, height=height)
 
@@ -92,6 +95,60 @@ def interactive_inference(prompt="", negative_prompt="",num_gen=1, num_iters=50,
         display(a)
 
     # Clear memory leak
-    del pipeline
-    gc.collect()
-    torch.cuda.empty_cache()
+    if platform["device"] == "cuda":
+        del pipeline
+        gc.collect()
+        torch.cuda.empty_cache()
+        print(f"Maximum GPU memory allocated: {torch.cuda.max_memory_reserved() / (1024**3)} GiB.")
+
+def inference_worker(q, prompt="", negative_prompt="", num_gen=1, num_iters=50, guidance_scale=3.5, cpu_offload=False, seed=None, width=1024, height=1024):
+    if platform["device"] == "cuda":
+        torch.cuda.reset_peak_memory_stats()
+
+    pipeline = setup_pipeline(cpu_offload=cpu_offload)
+    images = inference(pipeline=pipeline,prompt=prompt, negative_prompt=negative_prompt, num_gen=num_gen, num_iters=num_iters, guidance_scale=guidance_scale, seed=seed, width=width, height=height)
+    if platform["device"] == "cuda":
+        del pipeline
+        gc.collect()
+        torch.cuda.empty_cache()
+        print(f"Maximum GPU memory allocated: {torch.cuda.max_memory_reserved() / (1024**3)} GiB.")
+
+    for a in images:
+        q.put(a)
+
+
+def parallel_interactive_inference(prompt="", negative_prompt="",num_gen=1, num_iters=50, guidance_scale=3.5, cpu_offload=False, seed=None, width=1024, height=1024):
+    from torch.multiprocessing import Process, Queue, set_start_method
+    from utils import select_gpu
+
+    # We only want to do this the first time as we get an error if we do it repeatedly.
+    try:
+        set_start_method("spawn")
+    except:
+        pass
+
+    number = platform["number"]
+
+    if num_gen < number:
+        print(f"Number of images to generate < number of GPUs, setting number of GPUs to {num_gen}")
+        number = num_gen
+    
+    # Decompose range into chunks
+    chunks = [ int(num_gen/number) ] * number
+    for a in range(num_gen - sum(chunks)):
+        chunks[a] +=1
+
+    q = Queue()
+    procs = []
+
+    for a in range(number):
+        select_gpu(a)
+        procs.append(Process(target=inference_worker, args=(q, prompt, negative_prompt, chunks[a], num_iters, guidance_scale, cpu_offload, seed, width, height)))
+        procs[a].start()
+
+    images = []
+    for a in range(num_gen):
+        images.append(q.get())
+
+    for a in images:
+        display(a)
