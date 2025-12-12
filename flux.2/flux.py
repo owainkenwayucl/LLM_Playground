@@ -53,15 +53,11 @@ def setup_pipeline(model=model, cpu_offload=False):
         pipe.enable_sequential_cpu_offload()
     else:
         try:
-            pipe.enable_vae_tiling()
+            pipe.vae.enable_slicing()
+            pipe.vae.enable_tiling()
+            print(f"Directly enabled VAE slicing + tiling")
         except:
-            print(f"This version of diffusers doesn't support VAE tiling yet.")
-            try:
-                pipe.vae.enable_slicing()
-                pipe.vae.enable_tiling()
-                print(f"Directly enabled VAE slicing + tiling")
-            except:
-                print(f"Can't directly enable VAE slicing + tiling either")
+            print(f"Can't directly enable VAE slicing + tiling either")
         pipe = pipe.to(platform["device"])
 
     return pipe
