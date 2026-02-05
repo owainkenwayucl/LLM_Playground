@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gpt-oss-20b
+  annotations:
+    sidecar.istio.io/inject: "false"
+spec:
+  containers:
+    - name: gpt-oss-vllm
+      image: vllm/vllm-openai:latest
+      command:
+      - vllm 
+      - serve
+      - openai/gpt-oss-20b
+      ports:
+        - containerPort: 8000
+      
+      resources:
+        limits:
+          cpu: "6"
+          memory: 24Gi
+          nvidia.com/gpu: "1"
+        requests:
+          cpu: "6"
+          memory: 24Gi
+          nvidia.com/gpu: "1"      
+  restartPolicy: Always
