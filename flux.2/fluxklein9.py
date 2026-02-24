@@ -62,7 +62,7 @@ def setup_pipeline(model=model, cpu_offload=False):
 
     return pipe
 
-def inference(pipeline=None, prompt="", negative_prompt="", num_gen=1, num_iters=50, guidance_scale=3.5, seed=None, width=1024, height=1024):
+def inference(pipeline=None, prompt="", negative_prompt="", num_gen=1, num_iters=4, guidance_scale=3.5, seed=None, width=1024, height=1024):
     if pipeline == None:
         pipeline = setup_pipeline()
 
@@ -81,7 +81,7 @@ def inference(pipeline=None, prompt="", negative_prompt="", num_gen=1, num_iters
     print(f"Timing Data: {times}")
     return images
 
-def interactive_inference(prompt="", negative_prompt="",num_gen=1, num_iters=50, guidance_scale=3.5, cpu_offload=False, seed=None, width=1024, height=1024):
+def interactive_inference(prompt="", negative_prompt="",num_gen=1, num_iters=4, guidance_scale=3.5, cpu_offload=False, seed=None, width=1024, height=1024):
     if platform["device"] == "cuda":
         torch.cuda.reset_peak_memory_stats()
     pipeline = setup_pipeline(cpu_offload=cpu_offload)
@@ -97,7 +97,7 @@ def interactive_inference(prompt="", negative_prompt="",num_gen=1, num_iters=50,
         torch.cuda.empty_cache()
         print(f"Maximum GPU memory allocated: {torch.cuda.max_memory_reserved() / (1024**3)} GiB.")
 
-def inference_worker(q, prompt="", negative_prompt="", num_gen=1, num_iters=50, guidance_scale=3.5, cpu_offload=False, seed=None, width=1024, height=1024):
+def inference_worker(q, prompt="", negative_prompt="", num_gen=1, num_iters=4, guidance_scale=3.5, cpu_offload=False, seed=None, width=1024, height=1024):
     if platform["device"] == "cuda":
         torch.cuda.reset_peak_memory_stats()
 
@@ -113,7 +113,7 @@ def inference_worker(q, prompt="", negative_prompt="", num_gen=1, num_iters=50, 
         q.put(a)
 
 
-def parallel_interactive_inference(prompt="", negative_prompt="",num_gen=1, num_iters=50, guidance_scale=3.5, cpu_offload=False, seed=None, width=1024, height=1024):
+def parallel_interactive_inference(prompt="", negative_prompt="",num_gen=1, num_iters=4, guidance_scale=3.5, cpu_offload=False, seed=None, width=1024, height=1024):
     from torch.multiprocessing import Process, Queue, set_start_method
     from utils import select_gpu
 
