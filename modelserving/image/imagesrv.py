@@ -17,7 +17,7 @@ config.read("imagesrv.ini")
 MODEL_ID = config['huggingface']['model'].strip()
 STEPS = int(config['image']['steps'].strip())
 SIZE = config['image']['size'].strip()
-GS = float(config['image']['guidance_scale'].strip)
+GS = float(config['image']['guidance_scale'].strip())
 PORT = int(config['server']['port'])
 DEVICE = "cuda" 
 DTYPE = torch.float16
