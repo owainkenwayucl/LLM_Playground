@@ -1,0 +1,10 @@
+pip
+torch
+torchvision
+diffusers
+transformers
+accelerate
+safetensors
+scipy
+fastapi
+uvicorn
