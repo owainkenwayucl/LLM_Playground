@@ -13,15 +13,14 @@ import gc
 from transformers import Mistral3ForConditionalGeneration
 
 model = "black-forest-labs/FLUX.2-dev"
-dtype = torch.bfloat16
 platform = {"name": "Nvidia", "device":"cuda", "size":torch.bfloat16, "attention_slicing":False}
 
 def setup_pipeline():
-	text_encoder = Mistral3ForConditionalGeneration.from_pretrained(model, subfolder="text_encoder", torch_dtype=dtype).to("cuda:1")
+	text_encoder = Mistral3ForConditionalGeneration.from_pretrained(model, subfolder="text_encoder", torch_dtype=platform["size"]).to("cuda:1")
 	text_encoder_pipeline = Flux2Pipeline.from_pretrained(model, text_encoder=text_encoder, transformer=None, vae=None, torch_dtype=dtype)
 
 	transformer = Flux2Transformer2DModel.from_pretrained(model, subfolder="transformer", torch_dtype=dtype).to("cuda:0")
-	pipe = Flux2Pipeline.from_pretrained(model, text_encoder=None, tokenizer=None, transformer=transformer, torch_dtype=dtype).to("cuda:0")
+	pipe = Flux2Pipeline.from_pretrained(model, text_encoder=None, tokenizer=None, transformer=transformer, torch_dtype=platform["size"]).to("cuda:0")
 
 	return pipe, text_encoder_pipeline
 
@@ -52,7 +51,7 @@ def inference(pipe, text_encoder_pipeline, prompt="", negative_prompt="", num_ge
 	print(f"Timing Data: {times}")
 	return images
 
-def interactive_inference(prompt="", negative_prompt="",num_gen=1, num_iters=50, guidance_scale=3.5, cpu_offload=False, seed=None, width=1024, height=1024):
+def interactive_inference(prompt="", negative_prompt="",num_gen=1, num_iters=50, guidance_scale=3.5, seed=None, width=1024, height=1024):
 	torch.cuda.reset_peak_memory_stats()
 	pipeline,text_encoder = setup_pipeline()
 	images = inference(pipe=pipeline, text_encoder_pipeline=text_encoder,prompt=prompt, negative_prompt=negative_prompt, num_gen=num_gen, num_iters=num_iters, guidance_scale=guidance_scale, seed=seed, width=width, height=height)
