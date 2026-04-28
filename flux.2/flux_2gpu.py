@@ -17,7 +17,7 @@ platform = {"name": "Nvidia", "device":"cuda", "size":torch.bfloat16, "attention
 
 def setup_pipeline():
 	text_encoder = Mistral3ForConditionalGeneration.from_pretrained(model, subfolder="text_encoder", torch_dtype=platform["size"]).to("cuda:1")
-	text_encoder_pipeline = Flux2Pipeline.from_pretrained(model, text_encoder=text_encoder, transformer=None, vae=None, torch_dtype=dtype)
+	text_encoder_pipeline = Flux2Pipeline.from_pretrained(model, text_encoder=text_encoder, transformer=None, vae=None, torch_dtype=platform["size"])
 
 	transformer = Flux2Transformer2DModel.from_pretrained(model, subfolder="transformer", torch_dtype=platform["size"]).to("cuda:0")
 	pipe = Flux2Pipeline.from_pretrained(model, text_encoder=None, tokenizer=None, transformer=transformer, torch_dtype=platform["size"]).to("cuda:0")
