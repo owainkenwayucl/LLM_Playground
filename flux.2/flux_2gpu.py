@@ -7,6 +7,8 @@ logging.set_verbosity_error() # Decrease somewhat unhinged log spam!
 import torch
 from diffusers import Flux2Pipeline, Flux2Transformer2DModel
 from utils import report_state, init_rng
+import time
+import gc
 
 from transformers import Mistral3ForConditionalGeneration
 
