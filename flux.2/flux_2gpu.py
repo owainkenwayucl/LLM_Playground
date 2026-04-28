@@ -18,7 +18,7 @@ def setup_pipeline():
 	text_encoder_pipeline = Flux2Pipeline.from_pretrained(model, text_encoder=text_encoder, transformer=None, vae=None, torch_dtype=dtype)
 
 	transformer = Flux2Transformer2DModel.from_pretrained(model, subfolder="transformer", torch_dtype=dtype).to("cuda:0")
-	pipe = Flux2Pipeline.from_pretrained(mdoel, text_encoder=None, tokenizer=None, transformer=transformer, torch_dtype=dtype).to("cuda:0")
+	pipe = Flux2Pipeline.from_pretrained(model, text_encoder=None, tokenizer=None, transformer=transformer, torch_dtype=dtype).to("cuda:0")
 
 	return pipe, text_encoder_pipeline
 
