@@ -12,6 +12,7 @@ from transformers import Mistral3ForConditionalGeneration
 
 model = "black-forest-labs/FLUX.2-dev"
 dtype = torch.bfloat16
+platform = {"name": "Nvidia", "device":"cuda", "size":torch.bfloat16, "attention_slicing":False}
 
 def setup_pipeline():
 	text_encoder = Mistral3ForConditionalGeneration.from_pretrained(model, subfolder="text_encoder", torch_dtype=dtype).to("cuda:1")
