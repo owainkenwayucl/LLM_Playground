@@ -48,7 +48,7 @@ def inference(pipe, text_encoder_pipeline, prompt="", negative_prompt="", num_ge
 
 def interactive_inference(prompt="", negative_prompt="",num_gen=1, num_iters=50, guidance_scale=3.5, cpu_offload=False, seed=None, width=1024, height=1024):
 	torch.cuda.reset_peak_memory_stats()
-	pipeline,text_encoder = setup_pipeline(cpu_offload=cpu_offload)
+	pipeline,text_encoder = setup_pipeline()
 	images = inference(pipeline=pipeline, text_encoder_pipeline=text_encoder,prompt=prompt, negative_prompt=negative_prompt, num_gen=num_gen, num_iters=num_iters, guidance_scale=guidance_scale, seed=seed, width=width, height=height)
 
 	for a in images:
