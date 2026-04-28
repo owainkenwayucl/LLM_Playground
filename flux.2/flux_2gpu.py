@@ -42,7 +42,7 @@ def inference(pipe, text_encoder_pipeline, prompt="", negative_prompt="", num_ge
 		t_s = time.time()
 		temp_s = generator.get_state()
 		report_state(temp_s)
-		images.append(pipeline(prompt_embeds=embeds, generator=generator, num_inference_steps=num_iters, guidance_scale=guidance_scale, width=width, height=height).images[0])
+		images.append(pipe(prompt_embeds=embeds, generator=generator, num_inference_steps=num_iters, guidance_scale=guidance_scale, width=width, height=height).images[0])
 		t_f = time.time()
 		times.append(t_f - t_s)
 
