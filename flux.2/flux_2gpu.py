@@ -26,14 +26,17 @@ def setup_pipeline():
 	return pipe, text_encoder_pipeline
 
 def inference(pipe, text_encoder_pipeline, prompt="", negative_prompt="", num_gen=1, num_iters=50, guidance_scale=3.5, seed=None, width=1024, height=1024):
+	# Note we have to copy the embeds from GPU 1 to CPU and then to GPU 0 from CPU because otherwise Torch doesn't copy correctly.
+
 	with torch.no_grad():
 		prompt_embeds = text_encoder_pipeline.encode_prompt(prompt=prompt)
 
 		if isinstance(prompt_embeds, tuple):
-			prompt_embeds = tuple(t.to("cuda:0") if torch.is_tensor(t) else t for t in prompt_embeds)
+			prompt_embeds = tuple(t.to("cpu") if torch.is_tensor(t) else t for t in prompt_embeds)
 			embeds = prompt_embeds[0]
 		else:
-			embeds = prompt_embeds.to("cuda:0")
+			embeds = prompt_embeds.to("cpu")
+	embeds = embeds.to("cuda:0")
 	generator = init_rng(platform, seed)
     
 	images = []
