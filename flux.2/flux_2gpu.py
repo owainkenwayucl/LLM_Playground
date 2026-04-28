@@ -24,7 +24,7 @@ def setup_pipeline():
 
 def inference(pipe, text_encoder_pipeline, prompt="", negative_prompt="", num_gen=1, num_iters=50, guidance_scale=3.5, seed=None, width=1024, height=1024):
 	with torch.no_grad():
-		prompt_embeds = text_pipe.encode_prompt(prompt=prompt)
+		prompt_embeds = text_encoder_pipeline.encode_prompt(prompt=prompt)
 
 		if isinstance(prompt_embeds, tuple):
 			prompt_embeds = tuple(t.to("cuda:0") if torch.is_tensor(t) else t for t in prompt_embeds)
