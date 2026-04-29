@@ -37,6 +37,7 @@ def inference(pipe, text_encoder_pipeline, prompt="", negative_prompt="", num_ge
 			embeds = prompt_embeds[0]
 		else:
 			embeds = prompt_embeds.to("cpu")
+	text_encoder_pipeline.to("cpu")
 	del text_encoder_pipeline
 	gc.collect()
 	torch.cuda.empty_cache()
