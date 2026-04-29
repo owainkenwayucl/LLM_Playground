@@ -1,6 +1,9 @@
 # This is a deliberate hacky version of my usual pipeline to allow inference of Flux.2-dev in GPUs with less than the
 # required 120-odd GiB RAM, e.g. Blackwell RTX6000 Pro Server edition or A100
 
+# It does this by using the same process as the 2 GPU version, but instead of using a second GPU, manually pages the models
+# between CPU and GPU.
+
 from diffusers.utils import logging
 logging.set_verbosity_error() # Decrease somewhat unhinged log spam!
 
@@ -37,6 +40,8 @@ def inference(pipe, text_encoder_pipeline, prompt="", negative_prompt="", num_ge
 			embeds = prompt_embeds[0]
 		else:
 			embeds = prompt_embeds.to("cpu")
+
+	# for some reason if we don't copy back to CPU, it doesn't get pulled out of GPU memory which means I need to read the manual more.
 	text_encoder_pipeline.to("cpu")
 	del text_encoder_pipeline
 	gc.collect()
