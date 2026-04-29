@@ -76,4 +76,8 @@ def interactive_inference(prompt="", negative_prompt="",num_gen=1, num_iters=50,
 	for a in images:
 		display(a)
 
+	del pipeline
+	del text_encoder
+	gc.collect()
+	torch.cuda.empty_cache()
 	print(f"Maximum GPU memory allocated: {torch.cuda.max_memory_reserved() / (1024**3)} GiB.")
