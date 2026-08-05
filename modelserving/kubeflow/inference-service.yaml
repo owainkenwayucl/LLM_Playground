@@ -9,6 +9,8 @@ spec:
   predictor:
     model:
       args:
+      - --host=0.0.0.0
+      - --port=8000
       - --model=RedHatAI/gemma-4-26B-A4B-it-FP8-dynamic
       - --served-model-name=Gemma 
       - --enable-auto-tool-choice 

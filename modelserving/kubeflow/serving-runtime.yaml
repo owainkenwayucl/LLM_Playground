@@ -9,12 +9,6 @@ spec:
 
   containers:
   - env:
-    - name: LMCACHE_USE_EXPERIMENTAL
-      value: "True"
-    - name: VLLM_PORT
-      value: "8000"
-    - name: VLLM_HOST
-      value: "0.0.0.0"
     - name: HOME
       value: "/tmp"
     - name: VLLM_CACHE_ROOT
