@@ -1,0 +1,32 @@
+apiVersion: serving.kserve.io/v1beta1
+kind: InferenceService
+metadata:
+  annotations:
+    sidecar.istio.io/inject: "false"
+    serving.kserve.io/enable-prometheus-scraping: "true"
+  name: gemma
+spec:
+  predictor:
+    model:
+      args:
+      - --model=RedHatAI/gemma-4-26B-A4B-it-FP8-dynamic
+      - --served-model-name=Gemma 
+      - --enable-auto-tool-choice 
+      - --tool-call-parser=gemma4 
+      - --reasoning-parser=gemma4 
+      - --chat-template=examples/tool_chat_template_gemma4.jinja
+      modelFormat:
+        name: vllm
+      resources:
+        limits:
+          cpu: "6"
+          memory: 64Gi
+          nvidia.com/gpu: "1"
+          ephemeral-storage: 40Gi
+        requests:
+          cpu: "6"
+          memory: 64Gi
+          nvidia.com/gpu: "1"
+          ephemeral-storage: 40Gi
+      runtime: kserve-vllm
+      storageUri: "pvc://scratch-volume"

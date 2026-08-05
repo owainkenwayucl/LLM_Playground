@@ -1,0 +1,83 @@
+apiVersion: serving.kserve.io/v1alpha1
+kind: ServingRuntime
+metadata:
+  name: kserve-vllm
+spec:
+  annotations:
+    prometheus.kserve.io/path: /metrics
+    prometheus.kserve.io/port: "8000"
+
+  containers:
+  - env:
+    - name: LMCACHE_USE_EXPERIMENTAL
+      value: "True"
+    - name: VLLM_PORT
+      value: "8000"
+    - name: VLLM_HOST
+      value: "0.0.0.0"
+    - name: HOME
+      value: "/tmp"
+    - name: VLLM_CACHE_ROOT
+      value: "/tmp"
+    - name: VLLM_CONFIG_ROOT
+      value: "/tmp"
+    image: docker.io/vllm/vllm-openai:nightly
+    name: kserve-container
+    command: [vllm, serve]
+    ports:
+    - containerPort: 8000
+    livenessProbe:
+      httpGet:
+        path: /health
+        port: 8000
+      failureThreshold: 200
+      periodSeconds: 60
+      successThreshold: 1
+      timeoutSeconds: 60
+    readinessProbe:
+      httpGet:
+        path: /health
+        port: 8000
+      failureThreshold: 200
+      periodSeconds: 60
+      successThreshold: 1
+      timeoutSeconds: 60
+    startupProbe:
+      httpGet:
+        path: /health
+        port: 8000
+      failureThreshold: 400
+      periodSeconds: 30
+      successThreshold: 1
+      timeoutSeconds: 60
+      initialDelaySeconds: 120
+    resources:
+      limits:
+        cpu: "1"
+        memory: 2Gi
+      requests:
+        cpu: "1"
+        memory: 2Gi
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      privileged: false
+      runAsNonRoot: true
+      runAsUser: 1000
+    volumeMounts:
+    - mountPath: /dev/shm
+      name: shm
+  hostIPC: false
+  supportedModelFormats:
+  - name: vllm
+    version: "1"
+    autoSelect: true
+    priority: 1
+  protocolVersions:
+    - v2
+  volumes:
+  - emptyDir:
+      medium: Memory
+    name: shm
