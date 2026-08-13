@@ -8,7 +8,7 @@ def run(command, stdin=None, cwd=None):
 mcp = MCPServer("Slurm")
 
 @mcp.resource("clusterinfo://")
-def cluster_info() -> str:
+def clusterinfo() -> str:
 	command = ["sinfo", "--json"]
 	return run(command).stdout
 
