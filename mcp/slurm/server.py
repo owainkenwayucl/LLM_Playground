@@ -37,13 +37,14 @@ def jobstatus(jobid: int) -> str:
 	command = ["squeue", "--json", "-j", str(jobid)]
 	return run(command).stdout
 
-@mcp.tool()
-def clusterrun(command: str, directory: str) -> str:
-	command_s = command.split()
-	command_a = ["srun"]
-	for a in command_s:
-		command_a.append(a)
-	return run(command_a, cwd=directory).stdout
+# This tool was too tempting to Claude lmao
+#@mcp.tool()
+#def clusterrun(command: str, directory: str) -> str:
+#	command_s = command.split()
+#	command_a = ["srun"]
+#	for a in command_s:
+#		command_a.append(a)
+#	return run(command_a, cwd=directory).stdout
 
 # Run through stdio
 if __name__ == "__main__":
