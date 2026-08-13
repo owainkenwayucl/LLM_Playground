@@ -18,9 +18,9 @@ def clusterqueue() -> str:
 	return run(command).stdout
 
 @mcp.tool()
-def submitjob(jobscript: str) -> int:
+def submitjob(jobscript: str) -> str:
 	command = ["sbatch", jobscript]
-	return int(run(command.stdout))
+	return run(command).stdout
 
 @mcp.tool()
 def canceljob(jobid: int):
@@ -33,12 +33,12 @@ def jobstatus(jobid: int) -> str:
 	return run(command).stdout
 
 @mcp.tool()
-def clusterrun(command: str) -> int:
+def clusterrun(command: str) -> str:
 	command_s = command.split()
 	command_a = ["srun"]
 	for a in command_s:
 		command_a.append(a)
-	return int(run(command_a).stdout)
+	return run(command_a).stdout
 
 # Run through stdio
 if __name__ == "__main__":
