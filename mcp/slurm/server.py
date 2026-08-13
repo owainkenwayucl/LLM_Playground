@@ -23,6 +23,11 @@ def submitjob(jobscript: str, directory: str) -> str:
 	return run(command, stdin=jobscript, cwd=directory).stdout
 
 @mcp.tool()
+def submitjobscriptfile(file: str, directory: str) -> str:
+	command = ["sbatch", file]
+	return run(command, cwd=directory).stdout
+
+@mcp.tool()
 def canceljob(jobid: int):
 	command = ["scancel", str(jobid)]
 	run(command)
