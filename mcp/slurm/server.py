@@ -29,7 +29,7 @@ def canceljob(jobid: int):
 
 @mcp.tool()
 def jobstatus(jobid: int) -> str:
-	command = ["squeue", "--json", "-j", jobid]
+	command = ["squeue", "--json", "-j", str(jobid)]
 	return run(command).stdout
 
 @mcp.tool()
