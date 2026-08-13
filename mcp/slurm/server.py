@@ -38,7 +38,7 @@ def clusterrun(command: str) -> int:
 	command_a = ["srun"]
 	for a in command_s:
 		command_a.append(a)
-	return int(run(command_a).stdout
+	return int(run(command_a).stdout)
 
 # Run through stdio
 if __name__ == "__main__":
