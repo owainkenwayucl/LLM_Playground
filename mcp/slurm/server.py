@@ -1,9 +1,9 @@
 from mcp.server import MCPServer
 import asyncio
 
-def run(command):
+def run(command, stdin=None):
 	import subprocess
-	return subprocess.run(command, capture_output=True, encoding='UTF-8')
+	return subprocess.run(command, input=stdin, capture_output=True, encoding='UTF-8')
 
 mcp = MCPServer("Slurm")
 
@@ -19,8 +19,8 @@ def clusterqueue() -> str:
 
 @mcp.tool()
 def submitjob(jobscript: str) -> str:
-	command = ["sbatch", jobscript]
-	return run(command).stdout
+	command = ["sbatch"]
+	return run(command, stdin=jobscript).stdout
 
 @mcp.tool()
 def canceljob(jobid: int):
