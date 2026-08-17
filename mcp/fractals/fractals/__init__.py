@@ -72,13 +72,13 @@ def generate_greyscale_palette(levels):
     return palette    
 
 def normalise_greyscale(image_data):
-    imax = image_data.max()
-    imin = image_data.min()
+    imax = image_data[0].max()
+    imin = image_data[0].min()
 
     if imax == imin:
-        return numpy.zeros(image_data.shape, dtype=numpy.uint8)
+        return numpy.zeros(image_data[0].shape, dtype=numpy.uint8)
 
-    nimg = (image_data.astype(float) - imin) / (imax - imin) * 255
+    nimg = (image_data[0].astype(float) - imin) / (imax - imin) * 255
     return nimg.astype(uint8)
 
 def write_image_pillow(image_data, filename=None):
