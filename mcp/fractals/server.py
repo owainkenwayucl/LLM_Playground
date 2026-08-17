@@ -6,7 +6,7 @@ from mcp.types import ImageContent, TextContent
 mcp = MCPServer("Fractals")
 
 @mcp.tool(structured_output=False)
-def mandelbrot(width: int, height: int, xmin: float, xmax: float, ymin: float, ymax: float, max_iter: int) -> list[ImageContent | TextContent]
+def mandelbrot(width: int, height: int, xmin: float, xmax: float, ymin: float, ymax: float, max_iter: int) -> list[ImageContent | TextContent]:
 	image = fractals.write_image_base64(fractals.generate_fractal(width, height, fractals.mandel, xmin, xmax, ymin, ymax, max_iter))
 	
 	return [
