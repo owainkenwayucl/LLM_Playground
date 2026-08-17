@@ -89,7 +89,9 @@ def normalise_greyscale(image_data):
 
 def write_image_pillow(image_data, filename=None):
     from PIL import Image
-    image = Image.fromarray(normalise_greyscale(image_data))
+    image_data = normalise_greyscale(image_data)
+    image_data = numpy.flipud(numpy.rot90(image_data))
+    image = Image.fromarray(image_data)
 
     if filename == None:
         filename = NEXT_PLOT('png')
