@@ -85,7 +85,7 @@ def normalise_greyscale(image_data):
         imin = 0
 
     nimg = (image_data[0].astype(float) - imin) / (imax - imin) * 255
-    return nimg.astype(uint8)
+    return nimg.astype(numpy.uint8)
 
 def write_image_pillow(image_data, filename=None):
     from PIL import Image
