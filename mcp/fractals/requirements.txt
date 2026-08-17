@@ -1,4 +1,4 @@
-matplotlib
 numpy
 numba
 mcp[cli]
+pillow
