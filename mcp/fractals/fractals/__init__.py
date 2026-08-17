@@ -78,8 +78,8 @@ def normalise_greyscale(image_data):
     if imax == imin:
         return numpy.zeros(image_data[0].shape, dtype=numpy.uint8)
 
-    if imax < imagedata[1]:
-        imax = imagedata[1]
+    if imax < image_data[1]:
+        imax = image_data[1]
 
     if imin > 0:
         imin = 0
