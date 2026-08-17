@@ -8,6 +8,7 @@ import os
 import numba
 import io
 import base64
+from PIL import Image
 
 MAX_ITERATIONS=1000
 NEXT_PLOT_NUM=0
@@ -88,17 +89,25 @@ def normalise_greyscale(image_data):
     return nimg.astype(numpy.uint8)
 
 def write_image_pillow(image_data, filename=None):
-    from PIL import Image
-    image_data = normalise_greyscale(image_data)
-    image_data = numpy.flipud(numpy.rot90(image_data))
-    image = Image.fromarray(image_data)
+    image = Image.fromarray(numpy.flipud(numpy.rot90(normalise_greyscale(image_data))))
 
     if filename == None:
         filename = NEXT_PLOT('png')
 
     image.save(filename)
     
-    
+def write_image_base64(image_data):
+    image = Image.fromarray(numpy.flipud(numpy.rot90(normalise_greyscale(image_data))))
+
+    buffer = io.BytesIO()
+
+    image.save(buffer)
+
+    buffer.seek(0)
+
+    return base64.b64encode(buffer.getvalue()).decode('utf-8')
+
+
 # Plot our image with matplotlib to a base64 encoded string
 def write_image_matplotlib_base64(image_data, palette=None):
     import matplotlib.pyplot
