@@ -61,17 +61,7 @@ def generate_fractal(width, height, func, xmin=-2, xmax=1, ymin=-1, ymax=1, max_
             image[px,height - py - 1] = func(c,max_iter)
     return (image, max_iter + 1)
 
-# generate a greyscale palette of colours for a given number of levels.
-def generate_greyscale_palette(levels):
-    palette = []
-    for i in numpy.linspace(0,255,levels,dtype=int):
-        shade = hex(i)[2:]
-        if len(shade) == 1:
-            shade='0' + shade
-        colour = '#' + shade + shade + shade
-        palette.append(colour)
-    return palette    
-
+# Convert image data into 255 levels.
 def normalise_greyscale(image_data):
     imax = image_data[0].max()
     imin = image_data[0].min()
@@ -88,6 +78,7 @@ def normalise_greyscale(image_data):
     nimg = (image_data[0].astype(float) - imin) / (imax - imin) * 255
     return nimg.astype(numpy.uint8)
 
+# Write image data as a file
 def write_image_pillow(image_data, filename=None):
     image = Image.fromarray(numpy.flipud(numpy.rot90(normalise_greyscale(image_data))))
 
@@ -96,6 +87,7 @@ def write_image_pillow(image_data, filename=None):
 
     image.save(filename)
     
+# Write image data as a base64 string
 def write_image_base64(image_data):
     image = Image.fromarray(numpy.flipud(numpy.rot90(normalise_greyscale(image_data))))
 
@@ -104,32 +96,6 @@ def write_image_base64(image_data):
     image.save(buffer, format='PNG')
 
     buffer.seek(0)
-
-    return base64.b64encode(buffer.getvalue()).decode('utf-8')
-
-
-# Plot our image with matplotlib to a base64 encoded string
-def write_image_matplotlib_base64(image_data, palette=None):
-    import matplotlib.pyplot
-
-    image = numpy.flipud(numpy.rot90(image_data[0]))
-
-    buffer = io.BytesIO()
-        
-    if PRINT_MESSAGES:
-        print('Writing to in memory buffer ...', end='', flush=True)
-    matplotlib.pyplot.axis('off')
-    if palette == None:
-        matplotlib.pyplot.imshow(image)
-    else:
-        matplotlib.pyplot.imshow(image, cmap=palette)
-
-    matplotlib.pyplot.savefig(buffer, bbox_inches='tight')
-    
-    buffer.seek(0)
-
-    if PRINT_MESSAGES:
-        print('done.')
 
     return base64.b64encode(buffer.getvalue()).decode('utf-8')
 

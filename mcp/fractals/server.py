@@ -7,7 +7,7 @@ mcp = MCPServer("Fractals")
 
 @mcp.tool(structured_output=False)
 def mandelbrot(width: int, height: int, xmin: float, xmax: float, ymin: float, ymax: float, max_iter: int) -> list[ImageContent]:
-	image = fractals.write_image_matplotlib_base64(fractals.generate_fractal(width, height, fractals.mandel, xmin, xmax, ymin, ymax, max_iter))
+	image = fractals.write_image_base64(fractals.generate_fractal(width, height, fractals.mandel, xmin, xmax, ymin, ymax, max_iter))
 	
 	return [
 		ImageContent(
@@ -20,7 +20,7 @@ def mandelbrot(width: int, height: int, xmin: float, xmax: float, ymin: float, y
 @mcp.tool(structured_output=False)
 def julia(width: int, height: int, xmin: float, xmax: float, ymin: float, ymax: float, max_iter: int, c: float, n: int) -> list[ImageContent]:
 	j = fractals.generate_julia(c,n)
-	image = fractals.write_image_matplotlib_base64(fractals.generate_fractal(width, height, j, xmin, xmax, ymin, ymax, max_iter))
+	image = fractals.write_image_base64(fractals.generate_fractal(width, height, j, xmin, xmax, ymin, ymax, max_iter))
 	
 	return [
 		ImageContent(
