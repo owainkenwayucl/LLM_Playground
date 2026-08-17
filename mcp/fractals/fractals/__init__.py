@@ -101,7 +101,7 @@ def write_image_base64(image_data):
 
     buffer = io.BytesIO()
 
-    image.save(buffer)
+    image.save(buffer, format='PNG')
 
     buffer.seek(0)
 
