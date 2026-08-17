@@ -6,10 +6,11 @@ from mcp.types import ImageContent
 mcp = MCPServer("Fractals")
 
 @mcp.tool(structured_output=False)
-def mandelbrot(width: int, height: int, xmin: float, xmax: float, ymin: float, ymax: float, max_iter: int) -> list[ImageContent]:
+def mandelbrot(width: int, height: int, xmin: float, xmax: float, ymin: float, ymax: float, max_iter: int) -> list[TextContent | ImageContent]:
 	image = fractals.write_image_base64(fractals.generate_fractal(width, height, fractals.mandel, xmin, xmax, ymin, ymax, max_iter))
 	
 	return [
+		TextContent(type="text", text=f"Generated a Mandelbrot set: width: {width}, height: {height}, xmin: {xmin}, xmax: {xmax}, ymin: {ymin}, ymax: {ymax}, max_iter: {max_iter}"), 
 		ImageContent(
 			type="image",
 			data=image,
@@ -18,11 +19,12 @@ def mandelbrot(width: int, height: int, xmin: float, xmax: float, ymin: float, y
 	]
 
 @mcp.tool(structured_output=False)
-def julia(width: int, height: int, xmin: float, xmax: float, ymin: float, ymax: float, max_iter: int, c: float, n: int) -> list[ImageContent]:
+def julia(width: int, height: int, xmin: float, xmax: float, ymin: float, ymax: float, max_iter: int, c: float, n: int) -> list[TextContent | ImageContent]:
 	j = fractals.generate_julia(c,n)
 	image = fractals.write_image_base64(fractals.generate_fractal(width, height, j, xmin, xmax, ymin, ymax, max_iter))
 	
 	return [
+		TextContent(type="text", text=f"Generated a Julia set: width: {width}, height: {height}, xmin: {xmin}, xmax: {xmax}, ymin: {ymin}, ymax: {ymax}, max_iter: {max_iter}, c: {c}, n: {n}"), 
 		ImageContent(
 			type="image",
 			data=image,
@@ -31,4 +33,5 @@ def julia(width: int, height: int, xmin: float, xmax: float, ymin: float, ymax: 
 	]
 
 if __name__ == "__main__":
+	# asyncio.run(mcp.run(transport="streamable-http", host="0.0.0.0", port=8000))
 	asyncio.run(mcp.run(transport="stdio"))
