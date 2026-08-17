@@ -1,7 +1,7 @@
 from mcp.server import MCPServer
 import asyncio
 import fractals
-from mcp.types import ImageContent
+from mcp.types import ImageContent, TextContent
 
 mcp = MCPServer("Fractals")
 
