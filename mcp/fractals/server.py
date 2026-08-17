@@ -14,8 +14,8 @@ def mandelbrot(width: int, height: int, xmin: float, xmax: float, ymin: float, y
 			type="image",
 			data=image,
 			mimeType="image/png",
-		)
-		TextContent(type="text", text=f"Generated a Mandelbrot set: width: {width}, height: {height}, xmin: {xmin}, xmax: {xmax}, ymin: {ymin}, ymax: {ymax}, max_iter: {max_iter}"), 
+		),
+		TextContent(type="text", text=f"Generated a Mandelbrot set: width: {width}, height: {height}, xmin: {xmin}, xmax: {xmax}, ymin: {ymin}, ymax: {ymax}, max_iter: {max_iter}") 
 	]
 
 @mcp.tool(structured_output=False)
@@ -28,8 +28,8 @@ def julia(width: int, height: int, xmin: float, xmax: float, ymin: float, ymax: 
 			type="image",
 			data=image,
 			mimeType="image/png"
-		TextContent(type="text", text=f"Generated a Julia set: width: {width}, height: {height}, xmin: {xmin}, xmax: {xmax}, ymin: {ymin}, ymax: {ymax}, max_iter: {max_iter}, c: {c}, n: {n}"), 
 		)
+		TextContent(type="text", text=f"Generated a Julia set: width: {width}, height: {height}, xmin: {xmin}, xmax: {xmax}, ymin: {ymin}, ymax: {ymax}, max_iter: {max_iter}, c: {c}, n: {n}")
 	]
 
 if __name__ == "__main__":
