@@ -60,6 +60,7 @@ def inference(pipe, text_encoder_pipeline, prompt="", negative_prompt="", num_ge
 
 	print(f"Timing Data: {times}")
 	del pipe
+	del embeds
 	gc.collect()
 	torch.cuda.empty_cache()
 
