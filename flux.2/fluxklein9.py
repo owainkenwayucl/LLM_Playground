@@ -46,7 +46,7 @@ platform = detect_platform()
 
 def setup_pipeline(model=model, cpu_offload=False):
 
-    pipe = Flux2KleinPipeline.from_pretrained(model,torch_dtype=platform["size"])
+    pipe = Flux2KleinPipeline.from_pretrained(model,dtype=platform["size"])
 
     if cpu_offload:
         print(f"Enabling sequential cpu offload. This will massively decrease memory usage but may break device selection.")

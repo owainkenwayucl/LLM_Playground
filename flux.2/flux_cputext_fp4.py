@@ -19,11 +19,11 @@ model = "diffusers/FLUX.2-dev-bnb-4bit"
 platform = {"name": "Nvidia", "device":"cuda", "size":torch.bfloat16, "attention_slicing":False}
 
 def setup_pipeline():
-	text_encoder = Mistral3ForConditionalGeneration.from_pretrained(model, subfolder="text_encoder", torch_dtype=platform["size"], device_map="cpu")
-	text_encoder_pipeline = Flux2Pipeline.from_pretrained(model, text_encoder=text_encoder, transformer=None, vae=None, torch_dtype=platform["size"])
+	text_encoder = Mistral3ForConditionalGeneration.from_pretrained(model, subfolder="text_encoder", dtype=platform["size"], device_map="cpu")
+	text_encoder_pipeline = Flux2Pipeline.from_pretrained(model, text_encoder=text_encoder, transformer=None, vae=None, dtype=platform["size"])
 
-	transformer = Flux2Transformer2DModel.from_pretrained(model, subfolder="transformer", torch_dtype=platform["size"])
-	pipe = Flux2Pipeline.from_pretrained(model, text_encoder=None, tokenizer=None, transformer=transformer, torch_dtype=platform["size"])
+	transformer = Flux2Transformer2DModel.from_pretrained(model, subfolder="transformer", dtype=platform["size"])
+	pipe = Flux2Pipeline.from_pretrained(model, text_encoder=None, tokenizer=None, transformer=transformer, dtype=platform["size"])
 
 	return pipe, text_encoder_pipeline
 
